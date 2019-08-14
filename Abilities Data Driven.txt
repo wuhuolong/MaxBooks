@@ -1,3 +1,4 @@
+--https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools/Scripting/Abilities_Data_Driven#Data_Driven_Ability_Example
 Abilities Data Driven
 < Dota 2 Workshop Tools‎ | Scripting
 Русский  简体中文
