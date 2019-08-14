@@ -1,0 +1,515 @@
+Abilities Data Driven
+< Dota 2 Workshop Tools‎ | Scripting
+Русский  简体中文
+Contents
+1	Data Driven Ability Example
+1.1	Example Breakdown
+2	Behavior Flags
+3	Ability Events and Actions
+3.1	Events
+3.2	Actions
+3.3	Example
+4	Action Target Values
+4.1	Single Target
+4.2	Multiple Targets
+5	Modifiers
+5.1	Modifier Properties
+5.1.1	Available Modifier Properties
+5.2	Modifier States
+5.2.1	Available Modifier States
+5.3	Modifier Events
+6	Additional Examples
+7	Precaching
+Most abilities in Dota 2 are defined by C++ code. When looking at these abilities, the npc_abilities.txt keyvalues file contains some ability metadata and exposes some tuning knobs, these are mostly metadata with all the actual behavior defined in code. The data driven ability system is a method to create custom abilities for Dota 2 and assign special properties and events to occur when they're used.
+Data Driven Ability Example
+Here is what a simple data driven ability looks like. This example is a passive ability that applies a visual effect to the unit that has the ability.
+
+"fx_test_ability"
+{
+    // General
+    //-------------------------------------------------------------------------------------------------------------
+    "BaseClass"             "ability_datadriven"
+    "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE"
+    "AbilityTextureName"    "axe_battle_hunger"
+
+    // Modifiers
+    //-------------------------------------------------------------------------------------------------------------
+    "Modifiers"
+    {
+        "fx_test_modifier"
+        {
+            "Passive" "1"
+            "OnCreated"
+            {
+                "AttachEffect"
+                {
+                    "Target" "CASTER"
+                    "EffectName" "particles/econ/generic/generic_buff_1/generic_buff_1.vpcf"
+                    "EffectAttachType" "follow_overhead"
+                    "EffectLifeDurationScale" "1"
+                    "EffectColorA" "255 255 0"
+                }
+            }
+        }
+    }
+}
+The BaseClass, AbilityBehavior and AbilityTextureName keys are common to all abilities.
+
+Example Breakdown
+BaseClass
+Normally Dota chooses the C++ class to connect to an ability by looking at the ability name (in this case "fx_test_ability"). If you'd like to force Dota to use a different C++ class, the BaseClass key will do that. In this example we're using the ability_datadriven class to connect to the data driven ability system. It's possible to use this key to connect to any other existing ability code to make a new variant of an existing Dota 2 ability with different settings for whatever that ability exposes to keyvalues.
+AbilityBehavior
+A set of flags describing some properties of the ability. You can put flags in here separated by spaces and | for example "DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_NO_TARGET" - The spaces are important!
+ID
+Not used. This is used only by core Dota 2 abilities and is not used for data driven abilities. As such, the above example does not include it but you will see it when looking at core Dota 2 abilities. But data driven items must have ID.
+AbilityTextureName
+The icon file name that should be used in the UI for this ability. You can use this to borrow the icon from another ability just by putting that ability name here if desired.
+Modifiers
+Unique to data-driven abilities. This block describes a set of modifiers (commonly seen as buffs/debuffs in game when visible) that are unique to this ability. Each modifier is named by the name of the keyvalues block that defines the modifier.
+Passive
+Flags the modifier as a passive modifier that should automatically be applied to the ability owner in this example.
+OnCreated
+The action block that is triggered when the modifier is first attached to the owner. In the above example, we attach a visual effect to the ability caster.
+Behavior Flags
+Available flags to use with the "AbilityBehavior" key. These will define how the ability works.
+
+DOTA_ABILITY_BEHAVIOR_HIDDEN               = 1 << 0, //Can be owned by a unit but can't be cast and won't show up on the HUD.
+DOTA_ABILITY_BEHAVIOR_PASSIVE              = 1 << 1, //Cannot be cast like above but this one shows up on the ability HUD.
+DOTA_ABILITY_BEHAVIOR_NO_TARGET            = 1 << 2, //Doesn't need a target to be cast, ability fires off as soon as the button is pressed.
+DOTA_ABILITY_BEHAVIOR_UNIT_TARGET          = 1 << 3, //Needs a target to be cast on.
+DOTA_ABILITY_BEHAVIOR_POINT                = 1 << 4, //Can be cast anywhere the mouse cursor is (if a unit is clicked it will just be cast where the unit was standing).
+DOTA_ABILITY_BEHAVIOR_AOE                  = 1 << 5, //Draws a radius where the ability will have effect. Kinda like POINT but with a an area of effect display.
+DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE        = 1 << 6, //Probably can be cast or have a casting scheme but cannot be learned (these are usually abilities that are temporary like techie's bomb detonate).
+DOTA_ABILITY_BEHAVIOR_CHANNELLED           = 1 << 7, //Channeled ability. If the user moves or is silenced the ability is interrupted.
+DOTA_ABILITY_BEHAVIOR_ITEM                 = 1 << 8, //Ability is tied up to an item.
+DOTA_ABILITY_BEHAVIOR_TOGGLE               = 1 << 9, //Can be insta-toggled.
+DOTA_ABILITY_BEHAVIOR_DIRECTIONAL          = 1 << 10, //Has a direction from the hero, such as miranas arrow or pudge's hook.
+DOTA_ABILITY_BEHAVIOR_IMMEDIATE            = 1 << 11, //Can be used instantly without going into the action queue.
+DOTA_ABILITY_BEHAVIOR_AUTOCAST             = 1 << 12, //Can be cast automatically.
+DOTA_ABILITY_BEHAVIOR_NOASSIST             = 1 << 13, //Ability has no reticle assist.
+DOTA_ABILITY_BEHAVIOR_AURA                 = 1 << 14, //Ability is an aura.  Not really used other than to tag the ability as such.
+DOTA_ABILITY_BEHAVIOR_ATTACK               = 1 << 15, //Is an attack and cannot hit attack-immune targets.
+DOTA_ABILITY_BEHAVIOR_DONT_RESUME_MOVEMENT = 1 << 16, //Should not resume movement when it completes. Only applicable to no-target, non-immediate abilities.
+DOTA_ABILITY_BEHAVIOR_ROOT_DISABLES        = 1 << 17, //Cannot be used when rooted
+DOTA_ABILITY_BEHAVIOR_UNRESTRICTED         = 1 << 18, //Ability is allowed when commands are restricted
+DOTA_ABILITY_BEHAVIOR_IGNORE_PSEUDO_QUEUE  = 1 << 19, //Can be executed while stunned, casting, or force-attacking. Only applicable to toggled abilities.
+DOTA_ABILITY_BEHAVIOR_IGNORE_CHANNEL       = 1 << 20, //Can be executed without interrupting channels.
+DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_MOVEMENT = 1 << 21, //Doesn't cause certain modifiers to end, used for courier and speed burst.
+DOTA_ABILITY_BEHAVIOR_DONT_ALERT_TARGET    = 1 << 22, //Does not alert enemies when target-cast on them.
+DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK   = 1 << 23, //Ability should not resume command-attacking the previous target when it completes. Only applicable to no-target, non-immediate abilities and unit-target abilities.
+DOTA_ABILITY_BEHAVIOR_NORMAL_WHEN_STOLEN   = 1 << 24, //Ability still uses its normal cast point when stolen.
+DOTA_ABILITY_BEHAVIOR_IGNORE_BACKSWING     = 1 << 25, //Ability ignores backswing psuedoqueue.
+DOTA_ABILITY_BEHAVIOR_RUNE_TARGET          = 1 << 26, //Targets runes.
+Ability Events and Actions
+Abilities can have various in-game events which can trigger actions.
+
+Events
+Each of these keys is a block that can trigger actions.
+
+
+OnAbilityEndChannel
+OnAbilityPhaseStart -- Triggers when the ability is cast (before the unit turns toward the target)
+OnAbilityStart
+OnAttack
+OnAttackAllied
+OnAttackFailed
+OnChannelFinish
+OnChannelInterrupted
+OnChannelSucceeded
+OnCreated
+OnEquip
+OnHealReceived
+OnHealthGained
+OnHeroKilled
+OnManaGained
+OnOrder
+OnOwnerDied
+OnOwnerSpawned
+OnProjectileDodge
+OnProjectileFinish
+OnProjectileHitUnit -- Adding the KV pair "DeleteOnHit" "0" in this block will cause the projectile to not disappear when it hits a unit.
+OnRespawn
+OnSpellStart
+OnSpentMana
+OnStateChanged
+OnTeleported
+OnTeleporting
+OnToggleOff
+OnToggleOn
+OnUnitMoved
+OnUpgrade
+
+Actions
+Each of these keys is a block that contains one or more action descriptions.
+
+
+AddAbility
+Target, AbilityName
+ActOnTargets
+Target, Action
+ApplyModifier
+Target, ModifierName
+AttachEffect
+EffectName, EffectAttachType, Target, ControlPoints,
+TargetPoint, EffectRadius, EffectDurationScale, EffectLifeDurationScale ,EffectColorA, EffectColorB, EffectAlphaScale
+Blink
+Target
+CleaveAttack
+CleavePercent, CleaveRadius
+CreateThinker
+Target, ModifierName
+Damage
+Target, Type, MinDamage/MaxDamage, Damage, CurrentHealthPercentBasedDamage, MaxHealthPercentBasedDamage
+DelayedAction
+Delay, Action
+DestroyTrees
+Target, Radius
+FireEffect
+EffectName, EffectAttachType, Target, ControlPoints
+TargetPoint, EffectRadius, EffectDurationScale, EffectLifeDurationScale ,EffectColorA, EffectColorB, EffectAlphaScale
+FireSound
+EffectName, Target
+Heal
+HealAmount, Target
+Knockback
+Target, Center, Duration, Distance, Height, IsFixedDistance, ShouldStun
+LevelUpAbility
+Target, AbilityName
+Lifesteal
+Target, LifestealPercent
+LinearProjectile
+Target, EffectName, MoveSpeed, StartRadius, EndRadius, FixedDistance, StartPosition, TargetTeams, TargetTypes, TargetFlags, HasFrontalCone, ProvidesVision, VisionRadius
+Random
+Chance, PseudoRandom, OnSuccess, OnFailure
+RemoveAbility
+Target, AbilityName
+RemoveModifier
+Target, ModifierName
+RunScript
+Target, ScriptFile, Function
+SpawnUnit
+UnitName, UnitCount, UnitLimit, SpawnRadius, Duration, Target, GrantsGold, GrantsXP
+Stun
+Target, Duration
+TrackingProjectile
+Target, EffectName, Dodgeable, ProvidesVision, VisionRadius, MoveSpeed, SourceAttachment
+
+
+ Note:	AddAbility adds a new ability at level 0. RemoveAbility deletes the ability even if it has been leveled. More complex ability management should be done through script as opposed to the data driven system.
+Example
+An example block showing an event and the accompanying action. In this case, when the spell is cast fire a particular sound event using the caster as the target source of the sound.
+
+"OnSpellStart"      // Event
+{
+    "FireSound"     // Action
+    {
+        "EffectName"    "SoundEventName"
+        "Target"        "CASTER"
+    }
+}
+Action Target Values
+Within an action the Target key can be given a value to specify what it is that the target is. This exposes some choices to make as to what you may want to target.
+
+Single Target
+Valid target values are as follows for single-target selection:
+
+
+CASTER
+TARGET
+POINT
+ATTACKER
+UNIT
+
+In the above example where a sound is being played, notice that Target is set to CASTER. It will play the sound on the caster of the spell when it starts.
+
+ Note:	These names mean different things in different events. It may require some experimentation to discover exactly what in each case.
+Multiple Targets
+For selecting multiple targets in an area, make the Target key a block with the following subkeys:
+
+Center - Center point of the circle.
+CASTER, TARGET, POINT, PROJECTILE, UNIT, ATTACKER
+Radius - Number in units defining the radius to search for target(s) in.
+IntegerValue
+Teams - Affect which teams.
+
+DOTA_UNIT_TARGET_TEAM_BOTH
+DOTA_UNIT_TARGET_TEAM_CUSTOM
+DOTA_UNIT_TARGET_TEAM_ENEMY
+DOTA_UNIT_TARGET_TEAM_FRIENDLY
+DOTA_UNIT_TARGET_TEAM_NONE
+
+Types, ExcludeTypes - Target units of specified type or exclude units of specified type.
+
+DOTA_UNIT_TARGET_ALL
+DOTA_UNIT_TARGET_BASIC
+DOTA_UNIT_TARGET_BUILDING
+DOTA_UNIT_TARGET_COURIER
+DOTA_UNIT_TARGET_CREEP
+DOTA_UNIT_TARGET_CUSTOM
+DOTA_UNIT_TARGET_HERO
+DOTA_UNIT_TARGET_MECHANICAL
+DOTA_UNIT_TARGET_NONE
+DOTA_UNIT_TARGET_OTHER
+DOTA_UNIT_TARGET_TREE
+
+Flags, ExcludeFlags - Target units with specific flags or reject units with specific flag.
+
+DOTA_UNIT_TARGET_FLAG_CHECK_DISABLE_HELP
+DOTA_UNIT_TARGET_FLAG_DEAD
+DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE
+DOTA_UNIT_TARGET_FLAG_INVULNERABLE
+DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES
+DOTA_UNIT_TARGET_FLAG_MANA_ONLY
+DOTA_UNIT_TARGET_FLAG_MELEE_ONLY
+DOTA_UNIT_TARGET_FLAG_NO_INVIS
+DOTA_UNIT_TARGET_FLAG_NONE
+DOTA_UNIT_TARGET_FLAG_NOT_ANCIENTS
+DOTA_UNIT_TARGET_FLAG_NOT_ATTACK_IMMUNE
+DOTA_UNIT_TARGET_FLAG_NOT_CREEP_HERO
+DOTA_UNIT_TARGET_FLAG_NOT_DOMINATED
+DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS
+DOTA_UNIT_TARGET_FLAG_NOT_MAGIC_IMMUNE_ALLIES
+DOTA_UNIT_TARGET_FLAG_NOT_NIGHTMARED
+DOTA_UNIT_TARGET_FLAG_NOT_SUMMONED
+DOTA_UNIT_TARGET_FLAG_OUT_OF_WORLD
+DOTA_UNIT_TARGET_FLAG_PLAYER_CONTROLLED
+DOTA_UNIT_TARGET_FLAG_RANGED_ONLY
+
+MaxTargets - Maximum number of targets to select.
+IntegerValue
+Random - Whether to select a random unit if more than MaxTargets exist.
+BooleanValue
+ScriptSelectPoints
+ScriptFile, Function, Radius, Count
+ Note:	Random set to 0 in conjunction with a MaxTargets value will cause the ability to only function if there is MaxTargets or less targets in the area.
+Modifiers
+Modifiers may have following keys:
+
+Attributes
+MODIFIER_ATTRIBUTE_IGNORE_INVULNERABLE
+MODIFIER_ATTRIBUTE_MULTIPLE
+MODIFIER_ATTRIBUTE_NONE
+MODIFIER_ATTRIBUTE_PERMANENT
+Duration
+FloatValue
+EffectAttachType
+follow_origin, follow_overhead, start_at_customorigin, world_origin
+EffectName
+StringValue
+IsBuff
+BooleanValue
+IsDebuff
+BooleanValue
+IsHidden
+BooleanValue
+IsPurgable
+BooleanValue
+OverrideAnimation
+Other actions can be found at the action list, but these are the most commonly available ones.
+
+ACT_DOTA_ATTACK
+ACT_DOTA_CAST_ABILITY_1 (2, 3, 4, 5, 6)
+ACT_DOTA_DISABLED
+ACT_DOTA_RUN
+ACT_DOTA_SPAWN
+ACT_DOTA_TELEPORT
+ACT_DOTA_VICTORY
+Passive
+BooleanValue
+TextureName
+StringValue
+ThinkInterval
+FloatValue
+
+Modifier Properties
+Modifier properties are gameplay values a modifier can change on the unit it is applied to. Included here is a simple example of a modifier that slows attacks and movement speed (this chunk is a block inside the "Modifiers" block of an ability).
+
+To specify numeric values, you can put in a number or you can use %name formatting to grab values out of the "AbilitySpecial" block of the ability. The advantage to using the %name syntax is that the value can change as the ability levels up and the numeric value can be formatted into tooltips.
+
+In this example, the slow duration comes from an "AbilitySpecial" block, but the slow values are just numbers.
+
+"creature_slithereen_crush_slow"
+{
+    "Duration"      "%slow_duration"
+    "Properties"
+    {
+        "MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE"      "-20"
+        "MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT"      "-20"
+    }
+}
+Available Modifier Properties
+
+MODIFIER_PROPERTY_ABSOLUTE_NO_DAMAGE_MAGICAL
+MODIFIER_PROPERTY_ABSOLUTE_NO_DAMAGE_PHYSICAL
+MODIFIER_PROPERTY_ABSOLUTE_NO_DAMAGE_PURE
+MODIFIER_PROPERTY_ABSORB_SPELL
+MODIFIER_PROPERTY_ATTACK_RANGE_BONUS
+MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT
+MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT_POWER_TREADS
+MODIFIER_PROPERTY_ATTACKSPEED_BONUS_CONSTANT_SECONDARY
+MODIFIER_PROPERTY_AVOID_CONSTANT
+MODIFIER_PROPERTY_AVOID_SPELL
+MODIFIER_PROPERTY_BASEATTACK_BONUSDAMAGE
+MODIFIER_PROPERTY_BASE_ATTACK_TIME_CONSTANT
+MODIFIER_PROPERTY_BASEDAMAGEOUTGOING_PERCENTAGE
+MODIFIER_PROPERTY_BASE_MANA_REGEN
+MODIFIER_PROPERTY_BONUS_DAY_VISION
+MODIFIER_PROPERTY_BONUS_NIGHT_VISION
+MODIFIER_PROPERTY_BONUS_VISION_PERCENTAGE
+MODIFIER_PROPERTY_CHANGE_ABILITY_VALUE
+MODIFIER_PROPERTY_COOLDOWN_REDUCTION_CONSTANT
+MODIFIER_PROPERTY_DAMAGEOUTGOING_PERCENTAGE
+MODIFIER_PROPERTY_DAMAGEOUTGOING_PERCENTAGE_ILLUSION
+MODIFIER_PROPERTY_DEATHGOLDCOST
+MODIFIER_PROPERTY_DISABLE_AUTOATTACK
+MODIFIER_PROPERTY_DISABLE_HEALING
+MODIFIER_PROPERTY_DISABLE_TURNING //unhandled
+MODIFIER_PROPERTY_EVASION_CONSTANT
+MODIFIER_PROPERTY_EXTRA_HEALTH_BONUS
+MODIFIER_PROPERTY_EXTRA_MANA_BONUS
+MODIFIER_PROPERTY_EXTRA_STRENGTH_BONUS
+MODIFIER_PROPERTY_FORCE_DRAW_MINIMAP
+MODIFIER_PROPERTY_HEALTH_BONUS
+MODIFIER_PROPERTY_HEALTH_REGEN_CONSTANT
+MODIFIER_PROPERTY_HEALTH_REGEN_PERCENTAGE
+MODIFIER_PROPERTY_IGNORE_CAST_ANGLE
+MODIFIER_PROPERTY_INCOMING_DAMAGE_PERCENTAGE
+MODIFIER_PROPERTY_INCOMING_PHYSICAL_DAMAGE_PERCENTAGE
+MODIFIER_PROPERTY_INCOMING_SPELL_DAMAGE_CONSTANT
+MODIFIER_PROPERTY_INVISIBILITY_LEVEL
+MODIFIER_PROPERTY_IS_ILLUSION
+MODIFIER_PROPERTY_IS_SCEPTER
+MODIFIER_PROPERTY_LIFETIME_FRACTION
+MODIFIER_PROPERTY_MAGICAL_RESISTANCE_BONUS
+MODIFIER_PROPERTY_MAGICAL_RESISTANCE_DECREPIFY_UNIQUE
+MODIFIER_PROPERTY_MAGICAL_RESISTANCE_ITEM_UNIQUE
+MODIFIER_PROPERTY_MANA_BONUS
+MODIFIER_PROPERTY_MANA_REGEN_CONSTANT
+MODIFIER_PROPERTY_MANA_REGEN_CONSTANT_UNIQUE
+MODIFIER_PROPERTY_MANA_REGEN_PERCENTAGE
+MODIFIER_PROPERTY_MANA_REGEN_TOTAL_PERCENTAGE
+MODIFIER_PROPERTY_MIN_HEALTH
+MODIFIER_PROPERTY_MISS_PERCENTAGE
+MODIFIER_PROPERTY_MODEL_CHANGE
+MODIFIER_PROPERTY_MODEL_SCALE // unhandled
+MODIFIER_PROPERTY_MOVESPEED_ABSOLUTE
+MODIFIER_PROPERTY_MOVESPEED_BASE_OVERRIDE
+MODIFIER_PROPERTY_MOVESPEED_BONUS_CONSTANT
+MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE
+MODIFIER_PROPERTY_MOVESPEED_BONUS_PERCENTAGE_UNIQUE
+MODIFIER_PROPERTY_MOVESPEED_BONUS_UNIQUE
+MODIFIER_PROPERTY_MOVESPEED_LIMIT // unhandled
+MODIFIER_PROPERTY_MOVESPEED_MAX // unhandled
+MODIFIER_PROPERTY_OVERRIDE_ANIMATION
+MODIFIER_PROPERTY_OVERRIDE_ANIMATION_RATE
+MODIFIER_PROPERTY_OVERRIDE_ANIMATION_WEIGHT
+MODIFIER_PROPERTY_OVERRIDE_ATTACK_MAGICAL
+MODIFIER_PROPERTY_PERSISTENT_INVISIBILITY
+MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS
+MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS_ILLUSIONS
+MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS_UNIQUE
+MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS_UNIQUE_ACTIVE
+MODIFIER_PROPERTY_PHYSICAL_CONSTANT_BLOCK
+MODIFIER_PROPERTY_POST_ATTACK
+MODIFIER_PROPERTY_PREATTACK_BONUS_DAMAGE
+MODIFIER_PROPERTY_PREATTACK_BONUS_DAMAGE_POST_CRIT
+MODIFIER_PROPERTY_PREATTACK_CRITICALSTRIKE
+MODIFIER_PROPERTY_PROCATTACK_BONUS_DAMAGE_COMPOSITE
+MODIFIER_PROPERTY_PROCATTACK_BONUS_DAMAGE_MAGICAL
+MODIFIER_PROPERTY_PROCATTACK_BONUS_DAMAGE_PHYSICAL
+MODIFIER_PROPERTY_PROCATTACK_BONUS_DAMAGE_PURE
+MODIFIER_PROPERTY_PROCATTACK_FEEDBACK
+MODIFIER_PROPERTY_PROVIDES_FOW_POSITION
+MODIFIER_PROPERTY_REINCARNATION
+MODIFIER_PROPERTY_RESPAWNTIME
+MODIFIER_PROPERTY_RESPAWNTIME_PERCENTAGE
+MODIFIER_PROPERTY_RESPAWNTIME_STACKING
+MODIFIER_PROPERTY_STATS_AGILITY_BONUS
+MODIFIER_PROPERTY_STATS_INTELLECT_BONUS
+MODIFIER_PROPERTY_STATS_STRENGTH_BONUS
+MODIFIER_PROPERTY_TOOLTIP
+MODIFIER_PROPERTY_TOTAL_CONSTANT_BLOCK
+MODIFIER_PROPERTY_TOTAL_CONSTANT_BLOCK_UNAVOIDABLE_PRE_ARMOR
+MODIFIER_PROPERTY_TOTALDAMAGEOUTGOING_PERCENTAGE // unhandled
+MODIFIER_PROPERTY_TRANSLATE_ACTIVITY_MODIFIERS
+MODIFIER_PROPERTY_TRANSLATE_ATTACK_SOUND
+MODIFIER_PROPERTY_TURN_RATE_PERCENTAGE
+
+Modifier States
+States are very similar to properties, except they are tri-state values. A state can have the value "MODIFIER_STATE_VALUE_NO_ACTION", "MODIFIER_STATE_VALUE_ENABLED" or "MODIFIER_STATE_VALUE_DISABLED". This example modifier attaches a simple stunned effect, overrides the base unit's animation and forces the unit into the stunned state:
+
+"creature_bash_ministun"
+{
+    "EffectName"            "generic_stunned"
+    "EffectAttachType"      "follow_overhead"
+    "Duration"              "%stun_duration"
+    "OverrideAnimation"     "ACT_DOTA_DISABLED"
+    "States"
+    {
+        "MODIFIER_STATE_STUNNED" "MODIFIER_STATE_VALUE_ENABLED"
+    }         
+}
+Available Modifier States
+Here is a list of all the states available to a modifier:
+
+MODIFIER_STATE_ATTACK_IMMUNE
+MODIFIER_STATE_BLIND
+MODIFIER_STATE_BLOCK_DISABLED
+MODIFIER_STATE_CANNOT_MISS
+MODIFIER_STATE_COMMAND_RESTRICTED
+MODIFIER_STATE_DISARMED
+MODIFIER_STATE_DOMINATED
+MODIFIER_STATE_EVADE_DISABLED
+MODIFIER_STATE_FLYING
+MODIFIER_STATE_FROZEN
+MODIFIER_STATE_HEXED
+MODIFIER_STATE_INVISIBLE
+MODIFIER_STATE_INVULNERABLE
+MODIFIER_STATE_LOW_ATTACK_PRIORITY
+MODIFIER_STATE_MAGIC_IMMUNE
+MODIFIER_STATE_MUTED
+MODIFIER_STATE_NIGHTMARED
+MODIFIER_STATE_NO_HEALTH_BAR
+MODIFIER_STATE_NO_TEAM_MOVE_TO
+MODIFIER_STATE_NO_TEAM_SELECT
+MODIFIER_STATE_NOT_ON_MINIMAP
+MODIFIER_STATE_NOT_ON_MINIMAP_FOR_ENEMIES
+MODIFIER_STATE_NO_UNIT_COLLISION
+MODIFIER_STATE_OUT_OF_GAME
+MODIFIER_STATE_PASSIVES_DISABLED
+MODIFIER_STATE_PROVIDES_VISION
+MODIFIER_STATE_ROOTED
+MODIFIER_STATE_SILENCED
+MODIFIER_STATE_SOFT_DISARMED
+MODIFIER_STATE_SPECIALLY_DENIABLE
+MODIFIER_STATE_STUNNED
+MODIFIER_STATE_UNSELECTABLE
+
+Modifier Events
+Modifiers can also describe actions that should happen on various in-game events. Each of these keys is a block that describes actions. The action description system is documented elsewhere on this page.
+
+OnAbilityExecuted
+OnAttacked - The unit this modifier is attached to has been attacked.
+OnAttackLanded - The unit this modifier is attached to has landed an attack on a target. "%attack_damage" is set to the damage value before mitigation. Autoattack damage is dealt after this block executes.
+OnAttackStart - The unit this modifier is attached to has started to attack a target (when the attack animation begins, not when the autoattack projectile is created).
+OnCreated - The modifier has been created.
+OnDealDamage - The unit this modifier is attached to has dealt damage. "%attack_damage" is set to the damage value after mitigation.
+OnDeath
+OnDestroy - The modifier has been removed.
+OnIntervalThink
+OnKill
+OnOrbFire
+OnOrbImpact
+OnTakeDamage - The unit this modifier is attached to has taken damage. "%attack_damage" is set to the damage value after mitigation.
+Orb
+A full list of modifier events is available but not all have been exposed to the data driven system and are unsupported at this time. These events are used by the modifier events data driven system and cannot be called directly.
+
+Additional Examples
+Data Driven Ability Examples
+Precaching
+When creating data-driven abilities the "precache" block is not required. This ONLY applies to data-driven abilities that have the BaseClass defined as ability_datadriven.
+
+Notes
+Particle effects require the full path with extension in addition to the file name. For example:
+particles/econ/generic/generic_buff_1/generic_buff_1.vpcf - The _c is not required.
+Sound effects only require the event name.
