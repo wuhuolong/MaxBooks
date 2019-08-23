@@ -54,7 +54,7 @@ void Vlog (ArrayData **data){
 }
 
 
-int main(int argv,char *argc){
+int mainArrayinput(int argv,char *argc){
  	printf("hello maxwell");
  	printf("请输入数据长度");
  	int len = 0;
