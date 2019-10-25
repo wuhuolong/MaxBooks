@@ -1,0 +1,12 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# Sprite sheet: unlock.png (128 x 256)
+# $TexturePacker:SmartUpdate:ddd80f9f28229dd4e56a03a2cb299e58:90fd9249e429f3251ac7828931d6f213:d4604769d608467ac3fed34413d0f453$
+#
+
+guanggao;2;179;75;75;0.5;0.5
+zuanshi;2;102;75;75;0.5;0.5

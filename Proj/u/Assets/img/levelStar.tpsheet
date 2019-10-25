@@ -1,0 +1,12 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# Sprite sheet: levelStar.png (64 x 128)
+# $TexturePacker:SmartUpdate:a27676a9f5eee4e39c2b273d8e183a9f:285787249c448e92b21e11a531430258:f84be912f81feba0426149f390fe017a$
+#
+
+guanqiaxuanzexing1;2;72;54;54;0.5;0.5
+guanqiaxuanzexing2;2;16;54;54;0.5;0.5

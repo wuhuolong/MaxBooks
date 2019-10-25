@@ -1,0 +1,69 @@
+version: 2
+importPivots: 1
+tpsheetFileNames:
+- Assets/FakeResources/Atlas/common.tpsheet
+- Assets/img/level/10001.tpsheet
+- Assets/img/level/10002.tpsheet
+- Assets/img/level/10003.tpsheet
+- Assets/img/level/10004.tpsheet
+- Assets/img/level/10005.tpsheet
+- Assets/img/level/10006.tpsheet
+- Assets/img/level/10007.tpsheet
+- Assets/img/level/10008.tpsheet
+- Assets/img/level/10009.tpsheet
+- Assets/img/level/10010.tpsheet
+- Assets/img/level/10011.tpsheet
+- Assets/img/level/10012.tpsheet
+- Assets/img/level/10013.tpsheet
+- Assets/img/level/10014.tpsheet
+- Assets/img/level/10015.tpsheet
+- Assets/img/level/10016.tpsheet
+- Assets/img/level/10017.tpsheet
+- Assets/img/level/10018.tpsheet
+- Assets/img/star.tpsheet
+- Assets/img/unlock.tpsheet
+textureFileNames:
+- Assets/FakeResources/Atlas/common.png
+- Assets/img/level/10001.png
+- Assets/img/level/10002.png
+- Assets/img/level/10003.png
+- Assets/img/level/10004.png
+- Assets/img/level/10005.png
+- Assets/img/level/10006.png
+- Assets/img/level/10007.png
+- Assets/img/level/10008.png
+- Assets/img/level/10009.png
+- Assets/img/level/10010.png
+- Assets/img/level/10011.png
+- Assets/img/level/10012.png
+- Assets/img/level/10013.png
+- Assets/img/level/10014.png
+- Assets/img/level/10015.png
+- Assets/img/level/10016.png
+- Assets/img/level/10017.png
+- Assets/img/level/10018.png
+- Assets/img/star.png
+- Assets/img/unlock.png
+normalmapFileNames:
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+enableDebugOutput: 0

@@ -1,0 +1,12 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# http://www.codeandweb.com/texturepacker/unity
+#
+# Sprite sheet: star.png (128 x 256)
+# $TexturePacker:SmartUpdate:dc2ff65500f1434ddfaf6ce7693bcacd:d7cf5a632412731fedde882d50724757:b4ac43d9655dad1f1e6846f66e6b8053$
+#
+
+xingxing;2;174;80;80;0.5;0.5
+xingxinghui;2;92;80;80;0.5;0.5
