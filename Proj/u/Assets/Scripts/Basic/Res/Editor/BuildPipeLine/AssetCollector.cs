@@ -1,16 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
 public class AssetInfo
 {
     public string Path;
-    //public bool isAssetBundle;
-
+    public bool isAssetBundle;
+    public List<string> depends = new List<string>();
+    public List<string> bedepends = new List<string>();
     public static void SetTag(AssetInfo asset)
     {
+        if (!asset.isAssetBundle||asset.Path.EndsWith(".cs"))
+        {
+            return;
+        }
         string path = asset.Path.Substring(asset.Path.LastIndexOf("Assets"));
         AssetImporter importer = AssetImporter.GetAtPath(path);
         if (path.Contains("FakeResources"))
@@ -42,25 +49,51 @@ public class AssetInfo
         importer.assetBundleName = "";
         importer.assetBundleVariant = "";
     }
+
+    public override string ToString()
+    {
+        StringBuilder ab = new StringBuilder();
+        ab.Append("路径:" + Path + ",");
+        ab.Append("依赖:" + depends.Count + ",");
+        ab.Append("被依赖:" + bedepends.Count + "\n");
+        ab.Append("依赖============\n");
+        for (int i = 0; i < depends.Count; i++)
+        {
+            ab.Append(depends[i] + "\n");
+        }
+        ab.Append("被依赖============\n");
+        for (int i = 0; i < bedepends.Count; i++)
+        {
+            ab.Append(bedepends[i] + "\n");
+        }
+        //ab.Append("路径:" + Path + "\n");
+        return ab.ToString();
+    }
 }
 public static class AssetCollector
 {
+    private static object _obj = new object();
+    private static bool islog = true;
+    private static void Log(string msg)
+    {
+        if (!islog) return;
+        _obj.Log(msg);
+    }
     public static List<string> tags = new List<string>
     {
-        "*.prefab","*.png","*.controller","*.anim","*.TTF","*.mat"
+        "*.prefab"/*,"*.png","*.controller","*.anim","*.TTF","*.mat"*/
     };
     public static string Variant = "XXX";
+    private static Dictionary<string, AssetInfo> AllAssets = new Dictionary<string, AssetInfo>();
 
-
-    //文件路径和对应的对象
-    private static Dictionary<string, AssetInfo> AbPathDic = new Dictionary<string, AssetInfo>();
-    //文件路径和是否ab//专门保存被依赖的资源
-    private static Dictionary<string, bool> DependsPathList = new Dictionary<string, bool>();
+    ////文件路径和对应的对象
+    //private static Dictionary<string, AssetInfo> AbPathDic = new Dictionary<string, AssetInfo>();
 
     private static int length;
     public static void Collecttions(string path)
     {
-        Debug.Log("AssetCollector--Collecttions==>"+path);
+        Log("======AssetCollector--Collecttions==>" + path);
+        Debuger.EnableLog = true;
         DirectoryInfo di = new DirectoryInfo(path);
         if (di.Exists)
         {
@@ -70,97 +103,149 @@ public static class AssetCollector
                 FileInfo[] fi = di.GetFiles(tags[ii], SearchOption.AllDirectories);
                 filelist.AddRange(fi);
             }
-
-            //分析依赖
             length = Application.dataPath.Length - "Assets".Length;
-            AbPathDic.Clear();
-            Debug.Log("找到的文件数：" + filelist.Count);
+            /*AbPathDic.Clear();*/
+            AllAssets.Clear();
+            Log("找到的文件数：" + filelist.Count);
             for (int i = 0; i < filelist.Count; i++)
             {
                 EditorUtility.DisplayProgressBar("收集资源中", i + "/" + filelist.Count, (i * 1.0f / filelist.Count));
                 string filepath = filelist[i].FullName;
-                if (filepath.EndsWith(".meta") || filepath.EndsWith(".bin"))
+                Log("处理资源==>" + filepath);
+                if (filepath.EndsWith(".meta")/* || filepath.EndsWith(".bin")*/)
                 {
                     continue;
                 }
-                AssetInfo ai = new AssetInfo();
+
                 string assetpath = filepath.Substring(length);
                 assetpath = assetpath.Replace("\\", "/");
-                ai.Path = assetpath;
-                if (AbPathDic.ContainsKey(assetpath))
+                AssetInfo ai;
+                if (!AllAssets.TryGetValue(assetpath, out ai))
                 {
-                    if (!DependsPathList.ContainsKey(assetpath))
+                    ai = new AssetInfo
                     {
-                        Debug.LogError("bit shit");
-                    }
-                }
-                else
-                {
-                    AbPathDic.Add(assetpath, ai);
+                        Path = assetpath,
+                        isAssetBundle = true
+                    };
+                    AllAssets.Add(ai.Path, ai);
                 }
 
                 string[] depends = AssetDatabase.GetDependencies(assetpath);
-                Debug.Log("==>" + ai.Path);
-                if (depends.Length > 1)
+                List<string> list = new List<string>(depends);
+                list.Remove(assetpath);
+
+                for (int ii = 0; ii < list.Count; ii++)
                 {
-                    List<string> outputs = new List<string>();
-                    AnalysisDepend(assetpath, depends, ref outputs);
+                    if (!ai.depends.Contains(list[ii]))
+                    {
+                        ai.depends.Add(list[ii]);
+                    }
+                    AnalysisDepend(list[ii], assetpath);
                 }
             }
-            Debug.Log("分析过后变成：" + AbPathDic.Count);
+            Log("分析==>" + AllAssets.Count);
+            Print();
+            //分析依赖
+            Log("===分析依赖====");
+            SortDepends();
+            Print();
+            SetAb();
             EditorUtility.ClearProgressBar();
+            Debuger.EnableLog = false;
         }
         else
         {
-            Debug.Log("文件夹不存在");
+            Log("文件夹不存在");
         }
     }
-    private static bool AnalysisDepend(string orginPath, string[] depends, ref List<string> commondepends)
+
+    private static void Print()
     {
-        for (int i = 0; i < depends.Length; i++)
+        var ie = AllAssets.GetEnumerator();
+        while (ie.MoveNext())
         {
-            string path = depends[i];
-            if (path.EndsWith(".cs") || orginPath.Equals(path))
+            Log(ie.Current.Value.ToString());
+        }
+    }
+
+    private static void AnalysisDepend(string assetpath, string bedepend)
+    {
+        Log("AnalysisDepend==>" + assetpath + "==>" + bedepend);
+        if (AllAssets.ContainsKey(assetpath))
+        {
+            if (!AllAssets[assetpath].bedepends.Contains(bedepend))
+            {
+                AllAssets[assetpath].bedepends.Add(bedepend);
+            }
+            return;
+        }
+        List<string> temp = new List<string>();
+        temp.AddRange(AssetDatabase.GetDependencies(assetpath));
+        temp.Remove(assetpath);
+        AssetInfo ai = new AssetInfo();
+        ai.depends = temp;
+        ai.Path = assetpath;
+        ai.bedepends.Add(bedepend);
+        AllAssets.Add(ai.Path, ai);
+        for (int i = 0; i < temp.Count; i++)
+        {
+            AnalysisDepend(temp[i], assetpath);
+        }
+        Log("AnalysisDepend==>" + assetpath + "==>" + bedepend + "*Over");
+    }
+    private static void SetAb()
+    {
+        var ie = AllAssets.GetEnumerator();
+        AssetInfo ai;
+        while (ie.MoveNext())
+        {
+            ai = ie.Current.Value;
+            if (ai.isAssetBundle)
             {
                 continue;
             }
-            //如果这个资源本身是ab，那么标记ab
-            if (AbPathDic.ContainsKey(path))
+            if (ai.bedepends.Count != 1)
             {
-                if (DependsPathList.ContainsKey(path))
-                {
-                    DependsPathList[path] = true;
-                }
-                else
-                {
-                    DependsPathList.Add(path, true);
-                }
+                ai.isAssetBundle = true;
+                continue;
             }
-            else
+
+        }
+    }
+    private static void SortDepends()
+    {
+        var ie = AllAssets.GetEnumerator();
+        AssetInfo ai;
+        while (ie.MoveNext())
+        {
+            ai = ie.Current.Value;
+            AssetInfo aiparent;
+            for (int i = 0; i < ai.bedepends.Count; i++)
             {
-                //不是的话根据情况，有重复就标记为ab，没有重复则默认被收集到ab上
-                if (DependsPathList.ContainsKey(path))
-                {
-                    //把这个路径单独设置assetinfo 要设置tag打包
-                    AssetInfo ai = new AssetInfo();
-                    //path = path.Substring(length);
-                    ai.Path = path;
-                    Debug.Log("被重复依赖的资源" + path);
-                    AbPathDic.Add(path, ai);
-                    DependsPathList[path] = true;
-                }
-                else
-                {
-                    DependsPathList.Add(path, false);
-                }
+                aiparent = AllAssets[ai.bedepends[i]];
+                SortDepends(aiparent.Path, ai.Path, ai.bedepends);
             }
         }
-        return false;
+    }
+    private static void SortDepends(string assetpath, string tag, List<string> bedepends)
+    {
+        AssetInfo ai = AllAssets[assetpath];
+        AssetInfo aiparent;
+        for (int i = 0; i < ai.bedepends.Count; i++)
+        {
+            aiparent = AllAssets[ai.bedepends[i]];
+            if (bedepends.Contains(ai.bedepends[i]))
+            {
+                aiparent.depends.Remove(tag);
+                AllAssets[tag].bedepends.Remove(aiparent.Path);
+            }
+            SortDepends(aiparent.Path, tag, bedepends);
+        }
     }
 
     public static void AllSetTag()
     {
-        foreach (var item in AbPathDic)
+        foreach (var item in AllAssets)
         {
             AssetInfo.SetTag(item.Value);
         }
@@ -189,15 +274,4 @@ public static class AssetCollector
         }
         EditorUtility.ClearProgressBar();
     }
-    //Todo 留到更加复杂的资源处理流程再完善
-    //public abstract class AssetHandler
-    //{
-    //    protected string m_Tag;
-    //    public AssetHandler(string tag)
-    //    {
-    //        m_Tag = tag;
-    //    }
-    //    public abstract bool Process();
-    //}
-
 }

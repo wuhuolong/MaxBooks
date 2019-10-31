@@ -24,17 +24,18 @@ namespace X.Res {
     static LevelConfigReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Ch9nZW4veGxzMnByb3RvL0xldmVsQ29uZmlnLnByb3RvEgVYLlJlcyLAAQoL",
+            "Ch9nZW4veGxzMnByb3RvL0xldmVsQ29uZmlnLnByb3RvEgVYLlJlcyLTAQoL",
             "TGV2ZWxDb25maWcSEAoIbGV2ZWxfaWQYASABKA0SEgoKbGV2ZWxfbmFtZRgC",
             "IAEoCRITCgtsZXZlbF90aGVtZRgDIAEoCRIVCg1sZXZlbF9waWN0dXJlGAQg",
             "ASgFEhQKDGxldmVsX3VubG9jaxgFIAEoBRIQCghyYXRpbmdfMRgGIAEoBRIQ",
             "CghyYXRpbmdfMhgHIAMoBRIQCghyYXRpbmdfMxgIIAMoBRITCgtsZXZlbF9w",
-            "aXhlbBgJIAMoCSI2ChFMZXZlbENvbmZpZ19BUlJBWRIhCgVpdGVtcxgBIAMo",
-            "CzISLlguUmVzLkxldmVsQ29uZmlnYgZwcm90bzM="));
+            "aXhlbBgJIAMoCRIRCglhZF9wdXp6bGUYCiABKAUiNgoRTGV2ZWxDb25maWdf",
+            "QVJSQVkSIQoFaXRlbXMYASADKAsyEi5YLlJlcy5MZXZlbENvbmZpZ2IGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LevelConfig), global::X.Res.LevelConfig.Parser, new[]{ "LevelId", "LevelName", "LevelTheme", "LevelPicture", "LevelUnlock", "Rating1", "Rating2", "Rating3", "LevelPixel" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LevelConfig), global::X.Res.LevelConfig.Parser, new[]{ "LevelId", "LevelName", "LevelTheme", "LevelPicture", "LevelUnlock", "Rating1", "Rating2", "Rating3", "LevelPixel", "AdPuzzle" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LevelConfig_ARRAY), global::X.Res.LevelConfig_ARRAY.Parser, new[]{ "Items" }, null, null, null, null)
           }));
     }
@@ -76,6 +77,7 @@ namespace X.Res {
       rating2_ = other.rating2_.Clone();
       rating3_ = other.rating3_.Clone();
       levelPixel_ = other.levelPixel_.Clone();
+      adPuzzle_ = other.adPuzzle_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -207,6 +209,20 @@ namespace X.Res {
       get { return levelPixel_; }
     }
 
+    /// <summary>Field number for the "ad_puzzle" field.</summary>
+    public const int AdPuzzleFieldNumber = 10;
+    private int adPuzzle_;
+    /// <summary>
+    ///* 广告方块,0表示不使用，1表示使用 
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int AdPuzzle {
+      get { return adPuzzle_; }
+      set {
+        adPuzzle_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as LevelConfig);
@@ -229,6 +245,7 @@ namespace X.Res {
       if(!rating2_.Equals(other.rating2_)) return false;
       if(!rating3_.Equals(other.rating3_)) return false;
       if(!levelPixel_.Equals(other.levelPixel_)) return false;
+      if (AdPuzzle != other.AdPuzzle) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -244,6 +261,7 @@ namespace X.Res {
       hash ^= rating2_.GetHashCode();
       hash ^= rating3_.GetHashCode();
       hash ^= levelPixel_.GetHashCode();
+      if (AdPuzzle != 0) hash ^= AdPuzzle.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -284,6 +302,10 @@ namespace X.Res {
       rating2_.WriteTo(output, _repeated_rating2_codec);
       rating3_.WriteTo(output, _repeated_rating3_codec);
       levelPixel_.WriteTo(output, _repeated_levelPixel_codec);
+      if (AdPuzzle != 0) {
+        output.WriteRawTag(80);
+        output.WriteInt32(AdPuzzle);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -313,6 +335,9 @@ namespace X.Res {
       size += rating2_.CalculateSize(_repeated_rating2_codec);
       size += rating3_.CalculateSize(_repeated_rating3_codec);
       size += levelPixel_.CalculateSize(_repeated_levelPixel_codec);
+      if (AdPuzzle != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(AdPuzzle);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -345,6 +370,9 @@ namespace X.Res {
       rating2_.Add(other.rating2_);
       rating3_.Add(other.rating3_);
       levelPixel_.Add(other.levelPixel_);
+      if (other.AdPuzzle != 0) {
+        AdPuzzle = other.AdPuzzle;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -392,6 +420,10 @@ namespace X.Res {
           }
           case 74: {
             levelPixel_.AddEntriesFrom(input, _repeated_levelPixel_codec);
+            break;
+          }
+          case 80: {
+            AdPuzzle = input.ReadInt32();
             break;
           }
         }

@@ -1,7 +1,6 @@
 version: 2
 importPivots: 1
 tpsheetFileNames:
-- Assets/FakeResources/Atlas/common.tpsheet
 - Assets/img/level/10001.tpsheet
 - Assets/img/level/10002.tpsheet
 - Assets/img/level/10003.tpsheet
@@ -20,10 +19,11 @@ tpsheetFileNames:
 - Assets/img/level/10016.tpsheet
 - Assets/img/level/10017.tpsheet
 - Assets/img/level/10018.tpsheet
+- Assets/img/levelStar.tpsheet
 - Assets/img/star.tpsheet
 - Assets/img/unlock.tpsheet
+- Assets/RefSprites/common.tpsheet
 textureFileNames:
-- Assets/FakeResources/Atlas/common.png
 - Assets/img/level/10001.png
 - Assets/img/level/10002.png
 - Assets/img/level/10003.png
@@ -42,9 +42,12 @@ textureFileNames:
 - Assets/img/level/10016.png
 - Assets/img/level/10017.png
 - Assets/img/level/10018.png
+- Assets/img/levelStar.png
 - Assets/img/star.png
 - Assets/img/unlock.png
+- Assets/RefSprites/common.png
 normalmapFileNames:
+- 
 - 
 - 
 - 

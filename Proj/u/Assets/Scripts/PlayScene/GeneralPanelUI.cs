@@ -23,21 +23,21 @@ public class GeneralPanelUI : MonoBehaviour
     }
 
     //场景对象/组件：
-    // public RectTransform spaceTrans;//MainUICanvas中的Space，用于面板大小初始化
-    // public Camera playFieldCamera;//playFieldCanvas对应的Camera
-    // public RectTransform playFieldCanvasTrans;//playFieldCanvas，处于世界空间
-    public CanvasScaler canvasScaler;//当前canvas
+    public Transform puzzleBarTrans;//拼图栏的Transform，用处是读取存档时要根据已知的索引值获取其子对象
     public Transform preCheckPanelTrans;//预判断面板preCheckPanel的Transfrom，即预判断的红色和绿色的块所处的对象的父对象的Transform，位于playField
     public Transform puzzleContainPanelTrans;//放置puzzle的面板puzzleContainPanel的Transform，位于playField
     public Transform whiteLightPanelTrans;//放置白光的面板whiteLightPanel的Transform，位于playField上层
     public GameObject deleteArea;//删除区对象
     public OperationHistoryRecorder operationHistoryRecorder;//操作历史记录器
     public UIPlay uiplayPage;
+    public RectTransform playFieldMaskRectTrans;
+    public RectTransform topBarRectTrans;
 
     //各种格子的Prefab：
     public GameObject nonGridPrefab;
     public GameObject blankGridPrefab;
     public GameObject fixGridPrefab;
+    public List<GameObject> fixGridPrefabList;
     public GameObject preCheckGreenGridPrefab;
     public GameObject preCheckRedGridPrefab;
     public GameObject whiteLightGridPrefab;
@@ -49,7 +49,7 @@ public class GeneralPanelUI : MonoBehaviour
     private GridLayoutGroup gridLayoutGroup;
 
     //面板中的拼图：
-    private List<GameObject> settlePuzzleList = new List<GameObject>();
+    // private List<GameObject> settlePuzzleList = new List<GameObject>();
 
     // private float xRatio = 0.0f;
     // private float yRatio = 0.0f;
@@ -63,37 +63,16 @@ public class GeneralPanelUI : MonoBehaviour
 
     public void InitGeneralPanelUI()
     {
+        //TODO:根据分辨率判断机型，进而修改UI中的topbar和playfieldmask的高度
+        InitTopBarHeight();
+
+
+        //修改delete粒子效果的位置
         deleteParticleEffect.transform.position = new Vector3(deleteArea.transform.position.x, deleteArea.transform.position.y, deleteParticleEffect.transform.position.z);
 
-        settlePuzzleList.Clear();
+        // settlePuzzleList.Clear();
 
         gridLayoutGroup = GetComponent<GridLayoutGroup>();
-
-        // //通过一个不渲染的UI对象Space确定面板的中心位置、长度、宽度等
-
-        // playFieldCanvasTrans.position = new Vector3(spaceTrans.position.x, spaceTrans.position.y, playFieldCanvasTrans.transform.position.z);
-
-        // //获取Space的长宽
-        // Vector3[] worldCornersOfSpace = new Vector3[4];
-        // spaceTrans.GetWorldCorners(worldCornersOfSpace);
-
-        // Vector3 leftUpperCornerPos = worldCornersOfSpace[1];
-        // Vector3 rightLowerCornerPos = worldCornersOfSpace[3];
-
-        // //!test
-        // Debug.Log("rightLowerCornerPos:" + rightLowerCornerPos);
-        // Debug.Log("leftUpperCornerPos:" + leftUpperCornerPos);
-
-
-        // float spaceX = rightLowerCornerPos.x - leftUpperCornerPos.x;
-        // float spaceY = leftUpperCornerPos.y - rightLowerCornerPos.y;
-
-        // //奇怪的bug：如果长和宽是1080*1920（与canvasScaler里设置的referenceResolution一致），就会导致GetWorldCorners获取到的四个角的坐标的x被拉到很远的位置
-        // 解决方法：
-        // if (Screen.width == canvasScaler.referenceResolution.x && Screen.height == canvasScaler.referenceResolution.y)
-        // {
-        //     spaceX = playFieldCamera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x * 2;
-        // }
 
         int Pwidth = generalPanelData.Pwidth;
         int Pheight = generalPanelData.Pheight;
@@ -103,9 +82,6 @@ public class GeneralPanelUI : MonoBehaviour
 
         float spaceX = playFieldRectTrans.rect.width;
         float spaceY = playFieldRectTrans.rect.height;
-
-        // xRatio = canvasScaler.referenceResolution.x / (float)Screen.width;
-        // yRatio = canvasScaler.referenceResolution.y / (float)Screen.height;
 
         //根据面板的长度和宽度（两个方向的格子数量）、playField的长度和宽度，计算出面板的真实长宽
         float GPratio = (float)Pwidth / (float)Pheight;
@@ -120,14 +96,11 @@ public class GeneralPanelUI : MonoBehaviour
             PY = PX / GPratio;
         }
 
-        // //修改PlayFieldCanvas的真实长宽、其中的面板（当前面板、puzzleContainPanel）的真实长宽、以及一个格子的真实边长
-        // playFieldCanvasTrans.sizeDelta = new Vector2(spaceX, spaceY);
-
         //FINISH：修改面板（当前面板、puzzleContainPanel）的真实长宽、以及一个格子的真实边长
         this.GetComponent<RectTransform>().sizeDelta = new Vector2(PX, PY);
         gridLength = PX / Pwidth;
-        Debug.Log("PX=" + PX);
-        Debug.Log("gridLength:" + gridLength);
+        // Debug.Log("PX=" + PX);
+        // Debug.Log("gridLength:" + gridLength);
         gridLayoutGroup.cellSize = new Vector2(gridLength, gridLength);
 
         puzzleContainPanelTrans.GetComponent<RectTransform>().sizeDelta = new Vector2(PX, PY);
@@ -172,6 +145,11 @@ public class GeneralPanelUI : MonoBehaviour
                     }
                 case GeneralPanelData.GridType.Fix:
                     {
+                        //TODO:为了达到无缝的效果，检查邻接的格子，判断使用哪种prefab
+                        GameObject finalFixGridPrefab = null;
+                        generalPanelData.CheckFixGrid((int)i);
+
+
                         GameObject grid = GameObject.Instantiate(fixGridPrefab, this.transform);
                         GameObject preCheckGrid = new GameObject("PreCheckGrid");
                         preCheckGrid.AddComponent<RectTransform>();
@@ -199,12 +177,91 @@ public class GeneralPanelUI : MonoBehaviour
                 default:
                     break;
             }
-
         }
-
     }
 
 
+
+    public IEnumerator InitPuzzleContainPanel(bool isregen = false)
+    {
+        yield return new WaitForFixedUpdate();
+        //TODO:如果有存档，就根据存档把拼图加进去
+        if (isregen)
+        {
+            uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
+            Recorder rec = XPlayerPrefs.GetRec(curLevelID);
+
+            List<SettlePuzzle> settlePuzzleList = rec.settlePuzzleList;
+
+            Debug.Log("settlePuzzleList length:" + settlePuzzleList.Count);
+            foreach (SettlePuzzle settlePuzzle in settlePuzzleList)
+            {
+                int pid = settlePuzzle.puzzleID;
+                int prs = settlePuzzle.puzzleRotateState;
+                int pgi = settlePuzzle.puzzleGridIndex;
+
+                Debug.Log("pid:" + pid);
+                Debug.Log("puzzleBarTrans.childCount:" + puzzleBarTrans.childCount);
+
+                GameObject settlePuzzleOrigin = puzzleBarTrans.GetChild(pid).gameObject;
+                GameObject settlePuzzleTemp = GameObject.Instantiate(settlePuzzleOrigin);
+
+                PuzzleItemUI settlePuzzleOriginUI = settlePuzzleOrigin.GetComponent<PuzzleItemUI>();
+                PuzzleItemData settlePuzzleOriginData = settlePuzzleOriginUI.puzzleItemData;
+
+                PuzzleItemUI settlePuzzleTempUI = settlePuzzleTemp.GetComponent<PuzzleItemUI>();
+                PuzzleItemData settlePuzzleTempData = settlePuzzleTempUI.puzzleItemData;
+
+                settlePuzzleTempData.InitButtomPuzzleItemData(
+                settlePuzzleOriginData.PID,
+                settlePuzzleOriginData.Pwidth,
+                settlePuzzleOriginData.Pheight,
+                settlePuzzleOriginData.Playout,
+                settlePuzzleOriginData.Pcenter);
+
+                settlePuzzleTempUI.cloneForMove = settlePuzzleOriginUI.cloneForMove;
+                settlePuzzleTempUI.screenSpaceRectTransform = settlePuzzleOriginUI.screenSpaceRectTransform;
+
+                settlePuzzleTempData.PanelGridIndex = pgi;
+
+                settlePuzzleTempUI.RotatePuzzleToState(prs);
+
+                InsertPuzzle(settlePuzzleTemp, false);
+
+                Destroy(settlePuzzleTemp);
+            }
+        }
+    }
+
+
+    private bool isInitHeight = false;//判断是否已适配刘海屏
+    private void InitTopBarHeight()
+    {
+        if (!isInitHeight)
+        {
+            if (Screen.height / Screen.width - 2.16f < 0.1f)//判断是否是刘海屏iphone
+            {
+                Vector2 originTopBarSizeDelta = topBarRectTrans.sizeDelta;
+                topBarRectTrans.sizeDelta = new Vector2(originTopBarSizeDelta.x, 300);
+                Vector2 originPlayFieldMaskOffsetMax = playFieldMaskRectTrans.offsetMax;
+                playFieldMaskRectTrans.offsetMax = new Vector2(originPlayFieldMaskOffsetMax.x, -300);
+            }
+            isInitHeight = true;
+        }
+    }
+
+
+    bool onDeleteAreaFlag = false;
+    public bool OnDeleteAreaFlag
+    {
+        set { onDeleteAreaFlag = value; }
+    }
+    // Coroutine deleteAreaCorou;
+    // public Coroutine DeleteAreaCorou
+    // {
+    //     get { return deleteAreaCorou; }
+    //     set { deleteAreaCorou = value; }
+    // }
     public int InteractWithPuzzle(PuzzleItemUI puzzleItemUI, out int panelGridIndex, out int[] outputBlankLayout)
     {
         //关于返回值：0表示拼图在面板中的位置是满足填充条件的位置，可以填充；1表示拼图在面板中，但不满足填充条件；2表示拼图不在面板中，也不在删除区；3表示拼图在删除区
@@ -212,7 +269,10 @@ public class GeneralPanelUI : MonoBehaviour
 
         PointerEventData pointerData = new PointerEventData(EventSystem.current);
 
-        pointerData.position = Camera.main.WorldToScreenPoint(puzzleItemUI.transform.GetChild((int)(puzzleItemData.Pcenter[0] + puzzleItemData.Pwidth * puzzleItemData.Pcenter[1])).position);
+        // Debug.Log("grid index of puzzle:" + (puzzleItemData.Pcenter[0] + puzzleItemData.Pwidth * puzzleItemData.Pcenter[1]).ToString());//!Test
+
+        //!show precheck grid不正确对应的bug发生原因：原本通过centerx和centery寻找下标，实际上并不需要寻找，因为顺序是固定的，下标不改变
+        pointerData.position = Camera.main.WorldToScreenPoint(puzzleItemUI.transform.GetChild((int)(puzzleItemData.PcenterOrigin)).position);
 
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerData, results);
@@ -230,7 +290,7 @@ public class GeneralPanelUI : MonoBehaviour
                 bool isFit = generalPanelData.IsFit(puzzleItemData, gridIndex, out blankLayout);
 
                 panelGridIndex = gridIndex;
-                outputBlankLayout = blankLayout;
+                outputBlankLayout = MatrixUtil.ArrayCopy(blankLayout);
 
 
                 if (isFit)
@@ -255,14 +315,47 @@ public class GeneralPanelUI : MonoBehaviour
             GameObject hitObj2 = results.Find((RaycastResult a) => a.gameObject.transform == deleteArea.transform).gameObject;
             if (hitObj2 != null)
             {
-                deleteArea.transform.localScale = Vector3.one * 1.1f;
+                if (onDeleteAreaFlag)
+                {
+
+                }
+                else
+                {
+                    onDeleteAreaFlag = true;
+                    //TODO:deleteArea放大
+                    StartCoroutine(DeleteAreaLinearScaleUp());
+
+                    // deleteArea.transform.localScale = Vector3.one * 1.1f;
+                }
+
                 panelGridIndex = -1;
                 outputBlankLayout = null;
                 return 3;
             }
             else
             {
-                deleteArea.transform.localScale = Vector3.one;
+                if (Mathf.Abs(deleteAreaScaleRatioMax - deleteAreaScaleRatio) > 0.1f)
+                {
+                    if (!onDeleteAreaFlag)
+                    {
+                        // Debug.Log("没在放大区域");
+                    }
+                    else
+                    {
+                        onDeleteAreaFlag = false;
+                        //TODO:deleteArea缩小为1
+                        StartCoroutine(DeleteAreaLinearScaleDown());
+                        // deleteArea.transform.localScale = Vector3.one;
+                    }
+                }
+                else
+                {
+                    onDeleteAreaFlag = false;
+                    //TODO:deleteArea缩小为1
+                    StartCoroutine(DeleteAreaLinearScaleDown());
+                }
+
+
             }
 
 
@@ -273,6 +366,7 @@ public class GeneralPanelUI : MonoBehaviour
         outputBlankLayout = null;
         return 2;
     }
+
 
     public void ClearBothIndices()
     {
@@ -319,8 +413,8 @@ public class GeneralPanelUI : MonoBehaviour
     public void ShowPreCheckResult(int state, PuzzleItemUI puzzleItemUI = null, int[] blankLayout = null)
     {
         //Fit state：
-        //0表示Fit，
-        //1表示unFit，
+        //0 表示Fit，
+        //1 表示unFit，
         //2 及以上表示没在格子上，全部PreCheck的红绿格都要隐藏
         if (state >= 2)
         {
@@ -328,12 +422,10 @@ public class GeneralPanelUI : MonoBehaviour
             return;
         }
 
+        //FINISH：bug fixed 旋转之后产生了无法正确对应的问题，有可能是panelgridindex计算出错，真实原因是中心格子下标固定，不需要通过计算获取
+
         PuzzleItemData puzzleItemData = puzzleItemUI.puzzleItemData;
         int gridIndex = puzzleItemData.PanelGridIndex;
-
-        int x = gridIndex % generalPanelData.Pwidth;
-        int y = gridIndex / generalPanelData.Pheight;
-        int[] puzzleLayout = puzzleItemData.Playout;
 
         if (generalPanelData.CheckDirtyFlag(gridIndex))
         {
@@ -387,8 +479,9 @@ public class GeneralPanelUI : MonoBehaviour
             //FINISH：如果在puzzleContainPanel中（即settlePuzzleList中）存在一个位置（gridIndex）相同，playout和rotatestate也相同的拼图，直接setactive即可
             bool existFlag = false;
             GameObject opPuzzle = null;
-            foreach (GameObject settlePuzzle in settlePuzzleList)
+            for (int i = 0; i < puzzleContainPanelTrans.childCount; ++i)
             {
+                GameObject settlePuzzle = puzzleContainPanelTrans.GetChild(i).gameObject;
                 PuzzleItemUI settlePuzzleItemUI = settlePuzzle.GetComponent<PuzzleItemUI>();
                 PuzzleItemData settlePuzzleItemData = settlePuzzleItemUI.puzzleItemData;
 
@@ -399,17 +492,18 @@ public class GeneralPanelUI : MonoBehaviour
                 //     MatrixUtil.PrintIntArray(settlePuzzleItemData.Playout) + " " + MatrixUtil.PrintIntArray(puzzleItemData.Playout)
                 // );
 
-                //!数组不可直接用==进行对比
+                //!数组不可直接用==进行对比//已修改成直接用PID进行对比
 
                 if (settlePuzzleItemUI.RotateState == puzzleItemUI.RotateState
                 && settlePuzzleItemData.PanelGridIndex == puzzleItemData.PanelGridIndex
-                && Enumerable.SequenceEqual(settlePuzzleItemData.Playout, puzzleItemData.Playout))
+                && settlePuzzleItemData.PID==puzzleItemData.PID)
                 {
                     existFlag = true;
                     opPuzzle = settlePuzzle;
                     break;
                 }
             }
+
 
             if (existFlag)
             {
@@ -441,13 +535,17 @@ public class GeneralPanelUI : MonoBehaviour
                 // "gridLength:" + gridLength + "\n" +
                 // "canvasScaler.scaleFactor:" + canvasScaler.scaleFactor);
 
+                Debug.Log("Insert Puzzle:" + puzzle.name);
+
                 GameObject newPuzzle = GameObject.Instantiate(puzzle, puzzleContainPanelTrans);
                 RectTransform newPuzzleRectTrans = newPuzzle.GetComponent<RectTransform>();
                 newPuzzleRectTrans.anchorMin = new Vector2(0, 1);
                 newPuzzleRectTrans.anchorMax = new Vector2(0, 1);
                 newPuzzleRectTrans.anchoredPosition = newPos;
 
-                settlePuzzleList.Add(newPuzzle);
+                Debug.LogWarning(gridIndex + " " + gridTransCanvasSpacePos + " " + gridTrans.position + " " + newPos);
+
+                // settlePuzzleList.Add(newPuzzle);
                 newPuzzle.name = "SettlePuzzle";
                 //将raycastTarget设为false避免触摸空白区域会拖动当前拼图
                 newPuzzle.GetComponent<Image>().raycastTarget = false;
@@ -459,14 +557,22 @@ public class GeneralPanelUI : MonoBehaviour
                 PuzzleItemData newPuzzleItemData = newPuzzleItemUI.puzzleItemData;
 
                 //newPuzzleItemData=puzzleItemData;
-                newPuzzleItemData.Pwidth = puzzleItemData.Pwidth;
-                newPuzzleItemData.Pheight = puzzleItemData.Pheight;
-                newPuzzleItemData.Playout = puzzleItemData.Playout;
-                newPuzzleItemData.Pcenter = puzzleItemData.Pcenter;
+
+                newPuzzleItemData.InitButtomPuzzleItemData(
+                puzzleItemData.PID,
+                puzzleItemData.Pwidth,
+                puzzleItemData.Pheight,
+                puzzleItemData.Playout,
+                puzzleItemData.Pcenter);
+
+
                 newPuzzleItemData.PanelGridIndex = puzzleItemData.PanelGridIndex;
 
                 newPuzzleItemUI.ScaleRatio = puzzleItemUI.ScaleRatio;
                 newPuzzleItemUI.RotateState = puzzleItemUI.RotateState;
+
+                newPuzzleItemUI.screenSpaceRectTransform = puzzleItemUI.screenSpaceRectTransform;
+
 
 
 
@@ -499,6 +605,7 @@ public class GeneralPanelUI : MonoBehaviour
             if (opRecordFlag)
             {
                 //操作历史记录
+                //TODO:记录摆放的拼图
                 Operation op = new Operation(0, oldLayout, newLayout, opPuzzle);
                 operationHistoryRecorder.Record(op);
 
@@ -613,6 +720,61 @@ public class GeneralPanelUI : MonoBehaviour
         sparkParticleEffect.transform.position = puzzle.transform.position;
         sparkParticleEffect.Play();
         afterAnimAction();
+    }
+
+    float deleteAreaScaleRatio = 1.0f;
+    float deleteAreaScaleRatioMax = 1.3f;
+
+
+    public IEnumerator DeleteAreaLinearScaleUp(float speed = 2.0f)
+    {
+        float dis = deleteAreaScaleRatioMax - deleteAreaScaleRatio;
+        if (dis > 0)
+        {
+            float time = dis / speed;
+            while (time > 0)
+            {
+                if (!onDeleteAreaFlag)
+                {
+                    break;
+                }
+                deleteAreaScaleRatio += speed * Time.deltaTime;
+                time -= Time.deltaTime;
+                if (deleteAreaScaleRatio > deleteAreaScaleRatioMax)
+                {
+                    deleteAreaScaleRatio = deleteAreaScaleRatioMax;
+                }
+
+                deleteArea.transform.localScale = Vector3.one * deleteAreaScaleRatio;
+                yield return null;
+            }
+        }
+
+    }
+    public IEnumerator DeleteAreaLinearScaleDown(float speed = 2.0f)
+    {
+        float dis = deleteAreaScaleRatio - 1.0f;
+        if (dis > 0)
+        {
+            float time = dis / speed;
+            while (time > 0)
+            {
+                if (onDeleteAreaFlag)
+                {
+                    break;
+                }
+                deleteAreaScaleRatio -= speed * Time.deltaTime;
+                time -= Time.deltaTime;
+                if (deleteAreaScaleRatio < 1.0f)
+                {
+                    deleteAreaScaleRatio = 1.0f;
+                }
+
+                deleteArea.transform.localScale = Vector3.one * deleteAreaScaleRatio;
+                yield return null;
+            }
+        }
+
     }
 
 

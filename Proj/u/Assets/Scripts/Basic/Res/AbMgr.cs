@@ -6,6 +6,7 @@ using System;
 
 public class AbMgr : MonoSingleton<AbMgr>
 {
+    private static string Tag = "AbMgr";
     private static string m_manifest_name = "AssetBundle";
     //private static string m_AssetBundle_name = "/AssetBundleManifest/";
     private Dictionary<int, AbAbstractLoader> m_Ab_Dic = new Dictionary<int, AbAbstractLoader>();
@@ -70,9 +71,9 @@ public class AbMgr : MonoSingleton<AbMgr>
 #endif
     public IEnumerator Init()
     {
-        this.Log("Start Async Init");
+        ResMgr.Log(Tag, "Init", "Start Async Init");
         string path = XGamePath.GetStreamingAbPath(m_manifest_name);
-        this.Log("==>" + path);
+        ResMgr.Log(Tag, "Init", "==>" + path);
         if (File.Exists(path))
         {
             //同步加载
@@ -94,7 +95,7 @@ public class AbMgr : MonoSingleton<AbMgr>
                 m_manifest = request.assetBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
                 if (m_Ab_Dic.Count > 0)
                 {
-                    this.LogError("this should never happen !!!!");
+                    ResMgr.LogError(Tag, "Init", "this should never happen !!!!");
                 }
                 //string[] depends = m_manifest.GetAllAssetBundles();
                 //foreach (var item in depends)
@@ -102,16 +103,16 @@ public class AbMgr : MonoSingleton<AbMgr>
                 //    Debug.Log("depends log ==>" + item);
                 //}
                 m_Ab_Dic.Clear();
-                this.Log("load manifest success");
+                ResMgr.Log(Tag, "Init", "load manifest success");
             }
             else
             {
-                this.Log("load manifest fail");
+                ResMgr.Log(Tag, "Init", "load manifest fail");
             }
         }
         else
         {
-            this.Log("manifest not exist");
+            ResMgr.Log(Tag, "Init", "manifest not exist");
         }
     }
 
@@ -136,7 +137,7 @@ public class AbMgr : MonoSingleton<AbMgr>
         string[] depends = AbMgr.GetInstance().GetDepends(abname);
         for (int i = 0; i < depends.Length; i++)
         {
-            ResMgr.Log("SyncLoad|depends" , depends[i]);
+            ResMgr.Log(Tag,"SyncLoad|depends" , depends[i]);
             int hash2 = depends[i].GetHashCode();
             AbAbstractLoader loader2 = null;
             if (m_Ab_Dic.TryGetValue(hash2, out loader2))
@@ -178,7 +179,7 @@ public class AbMgr : MonoSingleton<AbMgr>
     {
         if (m_manifest == null)
         {
-            ResMgr.Log("AsyncLoad", "manifest is null");
+            ResMgr.Log(Tag,"AsyncLoad", "manifest is null");
             return;
         }
         string abname;
@@ -204,7 +205,7 @@ public class AbMgr : MonoSingleton<AbMgr>
         string[] depends = AbMgr.GetInstance().GetDepends(abname);
         for (int i = 0; i < depends.Length; i++)
         {
-            ResMgr.Log("AsyncLoad|depends", depends[i]);
+            ResMgr.Log(Tag,"AsyncLoad|depends", depends[i]);
             int hash2 = depends[i].GetHashCode();
             AbAbstractLoader loader2 = null;
             if (m_Ab_Dic.TryGetValue(hash2, out loader2))
@@ -245,7 +246,7 @@ public enum AbBundleState
 }
 public abstract class AbAbstractLoader
 {
-
+    protected string Tag = "AbAbstractLoader";
     protected string m_Ab_Name;
     protected string m_Ab_Path;
     public bool isSync;
@@ -267,13 +268,15 @@ public class AbSyncLoader : AbAbstractLoader
         m_Ab_Path = path;
         isSync = true;
         m_Ab_Name = abname;
+        Tag = "AbSyncLoader";
     }
     public AbSyncLoader()
     {
+        Tag = "AbSyncLoader";
     }
     public override void LoadAsset(string path)
     {
-        ResMgr.Log("LoadAsset" , path);
+        ResMgr.Log(Tag,"LoadAsset" , path);
         if (File.Exists(path))
         {
             AssetBundle tempbundle = AssetBundle.LoadFromFile(path);
@@ -306,6 +309,7 @@ public class AbAsyncLoader : AbAbstractLoader
         isSync = false;
         m_Ab_Name = abname;
         dynamicdepends = new List<string>();
+        Tag = "AbAsyncLoader";
     }
     public AbAsyncLoader(string path, string abname, Action<AssetBundle> callback)
     {
@@ -350,11 +354,11 @@ public class AbAsyncLoader : AbAbstractLoader
     {
         if (request != null)
         {
-            this.Log("this should never happen tooo !!");
+            ResMgr.Log(Tag, "LoadAsync", "this should never happen tooo !!");
         }
         if (!File.Exists(path))
         {
-            this.Log("async path is not exist");
+            ResMgr.Log(Tag, "LoadAsync", "async path is not exist");
             State = AbBundleState.error;
             yield break ;
         }

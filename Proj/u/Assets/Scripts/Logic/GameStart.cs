@@ -14,6 +14,7 @@ public class GameStart : MonoBehaviour
     void Start()
     {
         this.Log("GameLogicStart");
+        Application.targetFrameRate = 60;
         GameConfig.Init();
         //UIMgr.ShowPage(UIPageEnum.Main_Page);
         StartCoroutine(Preprocess());
@@ -28,19 +29,12 @@ public class GameStart : MonoBehaviour
         this.Log("ShowPage ==> Main_Page");
         UIMgr.Init();
         //UIMgr.ShowTips(UIPageEnum.Effect_Tips);
-        UIMgr.ShowPage(UIPageEnum.Main_Page);
+        UIMgr.ShowPage(UIPageEnum.Load_Page);
     }
 
     private void OnApplicationQuit()
     {
         XPlayerPrefs.Save();
         Debuger.DeInit();
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            XPlayerPrefs.Save();
-        }
-    }
+    }   
 }

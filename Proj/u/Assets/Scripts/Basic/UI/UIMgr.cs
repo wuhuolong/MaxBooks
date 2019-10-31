@@ -14,7 +14,7 @@ public enum UIType
 }
 public class UIMgr
 {
-    //private static string m_Tag = ".Prefab";
+    private static string Tag = "UIMgr";
 
 
     private static string m_UIPath = "Prefabs/UI/{0}.Prefab";
@@ -41,7 +41,7 @@ public class UIMgr
         m_uistacks = new Stack<int>();
         m_uicache = new UIBase[(int)UIPageEnum.Max];
         m_tips_cache = new List<int>();
-        sb = new StringBuilder();
+        sb = new StringBuilder(256);
     }
 
     private static StringBuilder sb;
@@ -68,22 +68,30 @@ public class UIMgr
         sb.Append(string.Format(m_UIPath, str));
         return ResMgr.LoadGameObject(sb.ToString());
     }
-    private static void LoadUIAsync(int uiid, Action<GameObject> callback)
+    public static void LoadUIAsync(int uiid, Action<GameObject> callback)
     {
         string str = UIUtil.GetUITypeName(uiid);
         if (string.IsNullOrEmpty(str))
         {
-            Debug.LogError("UIMgr uiid not exist ==>" + uiid); return;
+            ResMgr.LogError(Tag, "LoadUIAsync", " uiid not exist ==>" + uiid); return;
+        }
+        sb.Clear();
+        sb.Append(string.Format(m_UIPath, str));
+        ResMgr.LoadGobjAsync(sb.ToString(), callback);
+    }
+    public static void LoadUIAsync(int uiid, Action callback)
+    {
+        string str = UIUtil.GetUITypeName(uiid);
+        if (string.IsNullOrEmpty(str))
+        {
+            ResMgr.LogError(Tag, "LoadUIAsync", "UIMgr uiid not exist ==>" + uiid); return;
         }
         sb.Clear();
         sb.Append(string.Format(m_UIPath, str));
         ResMgr.LoadGobjAsync(sb.ToString(), callback);
     }
     #region 外部接口
-    //public static void ShowUI<T>()where T :UIBase
-    //{
 
-    //}
     public static void Init()
     {
         //生成uiroot
@@ -112,19 +120,19 @@ public class UIMgr
         //ShowUI_Play((int)uiid);
         ShowUIAsync_Play((int)uiid, LoadWindCallback);
     }
-    public static void ShowTips(UIPageEnum uiid,params object[] argc)
+    public static void ShowTips(UIPageEnum uiid, params object[] argc)
     {
         //ShowUI((int)uiid);
-        ShowUIAsync((int)uiid, LoadTipsCallback, argc);
+        ShowUIAsync_Tips((int)uiid, LoadTipsCallback, argc);
     }
     public static void ShowWindows(UIPageEnum uiid)
     {
         //ShowUI((int)uiid);
         ShowUIAsync((int)uiid, LoadWindCallback);
     }
-    private static void LoadPageCallback(UIBase ub,int uiid)
+    private static void LoadPageCallback(UIBase ub, int uiid)
     {
-        if (ub!= null)
+        if (ub != null)
         {
             if (ub.IsNeedMask)
             {
@@ -135,16 +143,16 @@ public class UIMgr
                 m_bgMask.transform.SetSiblingIndex(-2);
             }
             ub.transform.SetAsLastSibling();
-            if (null!=m_curPage)
+            if (null != m_curPage)
             {
                 m_curPage.Close();
             }
             m_curPage = ub;
-            Debuger.Log("UIMgr", "LoadCallback", "load ui succ "+ub.GetType().ToString());
+            ResMgr.Log(Tag, "LoadCallback", "load ui succ " + ub.GetType().ToString());
         }
         else
         {
-            Debuger.LogError("UIMgr", "LoadCallback", "load ui fail");
+            ResMgr.LogError(Tag, "LoadCallback", "load ui fail");
         }
     }
     private static void LoadWindCallback(UIBase ub, int uiid)
@@ -161,14 +169,14 @@ public class UIMgr
             }
             ub.transform.SetAsLastSibling();
             Push(uiid);
-            Debuger.Log("UIMgr", "LoadCallback", "load ui succ " + ub.GetType().ToString());
+            ResMgr.Log("UIMgr", "LoadCallback", "load ui succ " + ub.GetType().ToString());
         }
         else
         {
-            Debuger.LogError("UIMgr", "LoadCallback", "load ui fail");
+            ResMgr.LogError("UIMgr", "LoadCallback", "load ui fail");
         }
     }
-    private static void LoadTipsCallback(UIBase ub,int uiid)
+    private static void LoadTipsCallback(UIBase ub, int uiid)
     {
         if (ub != null)
         {
@@ -221,9 +229,9 @@ public class UIMgr
         return ub;
     }
 
-    private static void ShowUIAsync(int uiid, Action<UIBase,int> callback = null,params object[] argc)
+    private static void ShowUIAsync(int uiid, Action<UIBase, int> callback = null, params object[] argc)
     {
-        AbMgr.GetInstance().Log("ShowUIAsync==>"+uiid);
+        ResMgr.Log(Tag, "ShowUIAsync", "==>" + uiid);
         UIBase ub = _Ins.m_uicache[uiid];
         if (ub == null)
         {
@@ -261,10 +269,9 @@ public class UIMgr
                 callback(ub, uiid);
             }
         }
-
     }
 
-    private static void ShowUIAsync_Play(int uiid, Action<UIBase,int> callback = null)
+    private static void ShowUIAsync_Play(int uiid, Action<UIBase, int> callback = null)
     {
         UIBase ub = _Ins.m_uicache[uiid];
         if (ub == null)
@@ -304,6 +311,52 @@ public class UIMgr
             }
         }
 
+    }
+
+    private static void ShowUIAsync_Tips(int uiid, Action<UIBase, int> callback = null, params object[] argc)
+    {
+        ResMgr.Log(Tag, "ShowUIAsync", "==>" + uiid);
+        UITips ub = (UITips)_Ins.m_uicache[uiid];
+        if (ub == null)
+        {
+            Action<GameObject> cb = (go) =>
+            {
+                if (m_uiRoot == null)
+                    Debug.Log("muiRoot is null");
+                go.transform.SetParent(m_uiRoot.transform, false);
+                go.transform.localPosition = Vector3.zero;
+                go.transform.localScale = Vector3.one;
+                ub = go.GetComponent<UITips>();
+                ub.argc = argc;
+                ub.OnShowTips();
+                _Ins.m_uicache[uiid] = ub;
+                if (callback != null)
+                {
+                    callback(ub, uiid);
+                }
+            };
+            LoadUIAsync(uiid, cb);
+
+        }
+        else
+        {
+            ub.argc = argc;
+            ub.OnShowTips();
+            ub.gameObject.SetActive(true);
+            if (ub.IsNeedMask)
+            {
+                if (!m_bgMask.gameObject.activeInHierarchy)
+                {
+                    m_bgMask.Show();
+                }
+                m_bgMask.transform.SetSiblingIndex(-2);
+            }
+            ub.transform.SetAsLastSibling();
+            if (callback != null)
+            {
+                callback(ub, uiid);
+            }
+        }
     }
 
     private static UIBase ShowUI_Play(int uiid)
@@ -369,7 +422,7 @@ public class UIMgr
         }
         int uiid = _ins.m_uistacks.Pop();
         _ins.m_uicache[uiid].Close(); ;
-        { 
+        {
             uiid = _ins.m_uistacks.Peek();
             UIBase ub = _ins.m_uicache[uiid];
             ub.gameObject.SetActive(true);

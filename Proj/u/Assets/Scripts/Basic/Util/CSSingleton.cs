@@ -10,7 +10,9 @@ public class CSSingleton<T> where T:CSSingleton<T> ,new()
         if (_ins == null)
         {
             _ins = new T();
+            _ins.Init();
         }
         return _ins;
     }
+    protected virtual void Init() { }
 }

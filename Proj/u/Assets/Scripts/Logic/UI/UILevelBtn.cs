@@ -6,16 +6,19 @@ using UnityEngine.UI;
 public class UILevelBtn : UIWindows
 {
     private string themeID;
-    private string nextThemeID;
     private uint levelID;
-    private uint nextLevelID;//0表示不存在
+
+    //public UILevelList levelList;
+
+    private bool buttonCheck;
 
     public Text levelText;
-    public Image[] stars;
+    //public Image[] stars;
     public Image levelImg;
     public Image unlockBtn;
 
     string isUnlock = "isUnlock";
+    string curLevel = "curLevel";
 
     protected override void InitComp()
     {
@@ -24,7 +27,7 @@ public class UILevelBtn : UIWindows
 
     protected override void InitData()
     {
-
+        buttonCheck = true;
     }
 
     public void setLevelID(uint id)
@@ -35,29 +38,26 @@ public class UILevelBtn : UIWindows
     {
         themeID = id;
     }
-    public void setNextLevelID(uint id)
-    {
-        nextLevelID = id;
-    }
-    public void setNextThemeID(string id)
-    {
-        nextThemeID = id;
-    }
 
     private void setState()
     {
+        XPlayerPrefs.SetInt(curLevel, (int)levelID);
         LevelMgr.GetInstance().SetCurLevelID(levelID);
-        LevelMgr.GetInstance().SetCurThemeID(themeID);
-        LevelMgr.GetInstance().SetNextLevelID(nextLevelID);
-        LevelMgr.GetInstance().SetNextThemeID(nextThemeID);
+        //LevelMgr.GetInstance().SetCurThemeID(themeID);
     }
 
     public void ClickEnterLevel()
     {
-        if(XPlayerPrefs.GetInt(levelID.ToString()+ isUnlock)==0)
+        if (XPlayerPrefs.GetInt(levelID.ToString() + isUnlock) == -1)
         {
-            setState();
-            UIMgr.ShowPage(UIPageEnum.Tips_Page);
+            if (buttonCheck)
+            {
+                buttonCheck = false;
+                setState();
+                gameObject.transform.GetComponentInParent<UILevelList>().EnterLevel();
+                XPlayerPrefs.SetInt(curLevel, (int)levelID);
+                XPlayerPrefs.Save();
+            }
         }
         else
         {
@@ -68,7 +68,8 @@ public class UILevelBtn : UIWindows
     public void ClickUnlock()
     {
         Debug.Log("解锁");
-        XPlayerPrefs.SetInt(levelID.ToString() + isUnlock, 0);
+        XPlayerPrefs.SetInt(levelID.ToString() + isUnlock, -1);
+        XPlayerPrefs.Save();
         Destroy(transform.Find("unlockBtn").gameObject);
     }
 }

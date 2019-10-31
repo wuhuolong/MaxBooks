@@ -4,6 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
+public class SettlePuzzle
+{
+    public SettlePuzzle() { }
+    public SettlePuzzle(int puzzleID, int puzzleRotateState, int puzzleGridIndex)
+    {
+        this.puzzleID = puzzleID;
+        this.puzzleRotateState = puzzleRotateState;
+        this.puzzleGridIndex = puzzleGridIndex;
+    }
+    public int puzzleID;
+    public int puzzleRotateState;
+    public int puzzleGridIndex;
+}
+
+
+[System.Serializable]
 public class Operation
 {
 
@@ -31,15 +47,33 @@ public class Recorder
     public uint LevelId;
     public int[] layout;
     public int TimeCount;
-    public int LeftedAdCube;
+    public int LeftedAdNum;
+
+    [System.NonSerialized]
+    public List<SettlePuzzle> settlePuzzleList = new List<SettlePuzzle>();
+
     [System.NonSerialized]
     public Stack<Operation> undoStack = new Stack<Operation>();
     [System.NonSerialized]
     public Stack<Operation> redoStack = new Stack<Operation>();
+
+    public bool isFilled()
+    {
+        for (int i = 0; i < layout.Length; i++)
+        {
+            if (layout[i] ==(int) GeneralPanelData.GridType.Fill)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 public class OperationHistoryRecorder : MonoBehaviour
 {
     public GeneralPanelUI generalPanelUI;
+
+    public Transform puzzleContainPanelTrans;
 
     public Button undoButton;
     public Button redoButton;
@@ -54,7 +88,7 @@ public class OperationHistoryRecorder : MonoBehaviour
         }
     }
 
-    public void SetLevelId(uint levelId,bool isregen = false)
+    public void SetLevelId(uint levelId, bool isregen = false)
     {
 
         //判断当前关卡有没有存档
@@ -98,6 +132,8 @@ public class OperationHistoryRecorder : MonoBehaviour
         Debug.Log("undoStack记录数： " + m_recoder.undoStack.Count);
         CheckButton();
         RefreshMiniMap();
+        RefreshSettlePuzzleList();
+
 
     }
 
@@ -115,6 +151,7 @@ public class OperationHistoryRecorder : MonoBehaviour
             Debug.Log("afterundo undoStack记录数： " + m_recoder.undoStack.Count);
             CheckButton();
             RefreshMiniMap();
+            RefreshSettlePuzzleList();
 
         }
 
@@ -135,6 +172,7 @@ public class OperationHistoryRecorder : MonoBehaviour
             Debug.Log("afterredo undoStack记录数： " + m_recoder.undoStack.Count);
             CheckButton();
             RefreshMiniMap();
+            RefreshSettlePuzzleList();
 
         }
     }
@@ -197,7 +235,25 @@ public class OperationHistoryRecorder : MonoBehaviour
                 break;
         }
     }
-    
+
+    public void RefreshSettlePuzzleList()
+    {
+        m_recoder.settlePuzzleList.Clear();
+        int childCount = puzzleContainPanelTrans.childCount;
+        for (int i = 0; i < childCount; ++i)
+        {
+            GameObject puzzle = puzzleContainPanelTrans.GetChild(i).gameObject;
+            if (puzzle.activeSelf)
+            {
+                PuzzleItemUI settlePuzzleUI = puzzle.GetComponent<PuzzleItemUI>();
+                PuzzleItemData settlePuzzleData = settlePuzzleUI.puzzleItemData;
+                SettlePuzzle settlePuzzle = new SettlePuzzle(settlePuzzleData.PID, settlePuzzleUI.RotateState, settlePuzzleData.PanelGridIndex);
+                m_recoder.settlePuzzleList.Add(settlePuzzle);
+            }
+        }
+
+    }
+
     public void Clear()
     {
         m_recoder.undoStack.Clear();

@@ -26,7 +26,7 @@ namespace X.Res {
           string.Concat(
             "Ch9nZW4veGxzMnByb3RvL1RoZW1lQ29uZmlnLnByb3RvEgVYLlJlcyIzCgtU",
             "aGVtZUNvbmZpZxIQCgh0aGVtZV9pZBgBIAEoCRISCgp0aGVtZV9uYW1lGAIg",
-            "ASgJIjYKEVRoZW1lQ29uZmlnX0FSUkFZEiEKBWl0ZW1zGAEgAygLMhIuWC5S",
+            "ASgNIjYKEVRoZW1lQ29uZmlnX0FSUkFZEiEKBWl0ZW1zGAEgAygLMhIuWC5S",
             "ZXMuVGhlbWVDb25maWdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
@@ -90,15 +90,15 @@ namespace X.Res {
 
     /// <summary>Field number for the "theme_name" field.</summary>
     public const int ThemeNameFieldNumber = 2;
-    private string themeName_ = "";
+    private uint themeName_;
     /// <summary>
     ///* ¹Ø¿¨Ãû³Æ 
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string ThemeName {
+    public uint ThemeName {
       get { return themeName_; }
       set {
-        themeName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        themeName_ = value;
       }
     }
 
@@ -124,7 +124,7 @@ namespace X.Res {
     public override int GetHashCode() {
       int hash = 1;
       if (ThemeId.Length != 0) hash ^= ThemeId.GetHashCode();
-      if (ThemeName.Length != 0) hash ^= ThemeName.GetHashCode();
+      if (ThemeName != 0) hash ^= ThemeName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -142,9 +142,9 @@ namespace X.Res {
         output.WriteRawTag(10);
         output.WriteString(ThemeId);
       }
-      if (ThemeName.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(ThemeName);
+      if (ThemeName != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(ThemeName);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -157,8 +157,8 @@ namespace X.Res {
       if (ThemeId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ThemeId);
       }
-      if (ThemeName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ThemeName);
+      if (ThemeName != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ThemeName);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -174,7 +174,7 @@ namespace X.Res {
       if (other.ThemeId.Length != 0) {
         ThemeId = other.ThemeId;
       }
-      if (other.ThemeName.Length != 0) {
+      if (other.ThemeName != 0) {
         ThemeName = other.ThemeName;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -192,8 +192,8 @@ namespace X.Res {
             ThemeId = input.ReadString();
             break;
           }
-          case 18: {
-            ThemeName = input.ReadString();
+          case 16: {
+            ThemeName = input.ReadUInt32();
             break;
           }
         }

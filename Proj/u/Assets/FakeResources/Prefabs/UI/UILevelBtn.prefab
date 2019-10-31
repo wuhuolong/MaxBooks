@@ -146,6 +146,7 @@ MonoBehaviour:
   UIType: 0
   IsNeedMask: 1
   IsClickBgClose: 0
+  levelList: {fileID: 0}
   levelText: {fileID: 3124415810521605717}
   stars:
   - {fileID: 4836334394973742202}
@@ -335,7 +336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3515644554499915768
 RectTransform:
   m_ObjectHideFlags: 0
@@ -409,7 +410,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4926087216039913288
 RectTransform:
   m_ObjectHideFlags: 0
@@ -547,7 +548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8585559809496414273
 RectTransform:
   m_ObjectHideFlags: 0
@@ -619,7 +620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4454207172902273467
 RectTransform:
   m_ObjectHideFlags: 0

@@ -23,6 +23,18 @@ public class GameConfig
         }
     }
 
+    public static LangType Language
+    {
+        get
+        {
+            return (LangType)XPlayerPrefs.GetInt(FileName+LanguageMgr.Tag);
+        }
+        set
+        {
+            XPlayerPrefs.SetInt(FileName + LanguageMgr.Tag,(int) value);
+        }
+    }
+
     public static void Init()
     {
         string path = XGamePath.GetLevelDataJsonPath(FileName);

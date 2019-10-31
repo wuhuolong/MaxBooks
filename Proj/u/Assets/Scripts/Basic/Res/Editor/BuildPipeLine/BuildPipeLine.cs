@@ -15,17 +15,17 @@ public class BuildHelper
         }
         Directory.CreateDirectory(XGamePath.OutputPath);
         AssetDatabase.Refresh();
-        string path = XGamePath.GetResRoot();
+        string path = XGamePath.GetResRoot();//Application.dataPath+ "/FakeResources/Prefabs/abtest";//
         AssetCollector.Collecttions(path);
         AssetCollector.AllSetTag();
-        BinCollector.Collecttions(path, XGamePath.OutputPath);
-        var options = BuildAssetBundleOptions.None;
+        BinCollector.Collecttions(Application.dataPath+"/Data/", XGamePath.OutputPath);
+        var options = BuildAssetBundleOptions.ChunkBasedCompression;
 
         BuildPipeline.BuildAssetBundles(XGamePath.OutputPath, options, EditorUserBuildSettings.activeBuildTarget);
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Assets/测试")]
+    [MenuItem("Assets/打印资源依赖")]
     private static void Test()
     {
         UnityEngine.Object obj = Selection.objects[0];
@@ -35,12 +35,19 @@ public class BuildHelper
             return;
         }
         string path = AssetDatabase.GetAssetPath(obj);
-        Debug.Log("path==>" + path);
+        Debug.Log("资源依赖 path==>" + path);
         string[] depends = AssetDatabase.GetDependencies(path);
         Debug.Log("Count==>" + depends.Length);
         for (int i = 0; i < depends.Length; i++)
         {
-            Debug.Log(depends[i]);
+            if (i==0)
+            {
+                Debug.Log("self==>"+depends[i]);
+            }
+            else
+            {
+                Debug.Log(depends[i]);
+            }
         }
     }
 

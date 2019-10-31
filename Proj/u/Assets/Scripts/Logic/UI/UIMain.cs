@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIMain : UIPage
 {
+    bool languageCheck = true;
+
     public CanvasGroup black;
     public CanvasGroup flash;
+    public GameObject setting;
+    public Text[] texts;
 
     private float alphaSpeed = 8.2f;
     private bool isFlashOver = false;
@@ -14,14 +19,20 @@ public class UIMain : UIPage
     private float alphaZero = 0.0f;
     private float alphaOne = 1.0f;
 
+    private uint levelID;
+
+    private bool buttonCheck;
+
     public RectTransform[] shadows;
-    public bool isShadow = false;
-    public bool isShadowFromList = false;
+    private bool isShadow = false;
+    private bool isShadowFromList = false;
     private Vector3 shadowMax = new Vector3(120.0f, 120.0f, 120.0f);
     private Vector3 shadowMin = Vector3.one;
     private float shadowSpeed = 10.0f;
     private float shadowSpeedFromList = 3.5f;
     private string shadowType = "shadowType";
+    private string curLevel = "curLevel";
+    private string isUnlock = "isUnlock";
     private int type;
 
     protected override void InitComp()
@@ -36,20 +47,29 @@ public class UIMain : UIPage
 
     private void Start()
     {
-        //Debug.Log(Time.time);
-        //black.alpha = alphaOne;
+        
     }
 
     private void OnEnable()
     {
+        
+        if(XPlayerPrefs.GetInt(curLevel)==0)
+        {
+            LevelMgr.GetInstance().SetFirstLevel();
+        }
+        levelID = (uint)XPlayerPrefs.GetInt(curLevel);
+        LevelMgr.GetInstance().SetCurLevelID(levelID);
+        XPlayerPrefs.SetInt(levelID + isUnlock, -1);
+        //XPlayerPrefs.Save();
+
+        buttonCheck = true;
         type = XPlayerPrefs.GetInt(shadowType);
         if(isFlashOver==true && type!=-1)
         {
-            Debug.Log("before shadow2");
             black.alpha = 1.0f;
             StartCoroutine(ShadowInit2());
         }
-        ShadowInit();
+        //ShadowInit();
     }
 
     private void FixedUpdate()
@@ -65,7 +85,6 @@ public class UIMain : UIPage
                     if (Mathf.Abs(alphaZero - black.alpha) <= 0.01f)
                     {
                         black.alpha = alphaZero;
-                        Debug.Log(Time.time+"over");
                         Invoke("flashChange", 2.0f);
                     }
                 }
@@ -99,8 +118,10 @@ public class UIMain : UIPage
                     {
                         shadows[type].localScale = Vector3.zero;
                         isShadow = false;
-                        //进入关卡列表界面
-                        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
+                        //进入游戏主界面
+                        black.alpha = 1.0f;
+                        //UIMgr.ShowPage(UIPageEnum.LevelList_Page);
+                        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
                     }
                 }
             }
@@ -141,10 +162,9 @@ public class UIMain : UIPage
 
     IEnumerator ShadowInit2()
     {
-        Debug.Log("shadow2");
         type = XPlayerPrefs.GetInt(shadowType);
         int waittime = (type == -1) ? 0 : 1;
-        Debug.Log("play" + waittime);
+        black.alpha = 1.0f;
         yield return new WaitForSeconds(0.2f * waittime);
         black.alpha = 0.0f;
         if(type!=-1)
@@ -161,9 +181,13 @@ public class UIMain : UIPage
 
     public void Click()
     {
-        RandomType();
-        ShadowInit();
-        isShadow = true;
+        if(buttonCheck)
+        {
+            buttonCheck = false;
+            RandomType();
+            ShadowInit();
+            isShadow = true;
+        }
     }
 
     private void flashChange()
@@ -186,5 +210,39 @@ public class UIMain : UIPage
     public void CallGM()
     {
         UIMgr.ShowWindows(UIPageEnum.GM_Page);
+    }
+
+    public void ClickOpenSetting()
+    {
+        setting.SetActive(true);
+        Refresh();
+    }
+
+    public void ClickCloseSetting()
+    {
+        
+        setting.SetActive(false);
+    }
+
+    public void ClickSettingSave()
+    {
+        XPlayerPrefs.Save();
+        setting.SetActive(false);
+    }
+
+    public void ClickChangeLanguage()
+    {
+        languageCheck = !languageCheck;
+        GameConfig.Language = languageCheck ? LangType.cn : LangType.en;
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        texts[0].text = LanguageMgr.GetInstance().GetLangStrByID(3);
+        texts[1].text = LanguageMgr.GetInstance().GetLangStrByID(4);
+        texts[2].text = LanguageMgr.GetInstance().GetLangStrByID(5);
+        texts[3].text = LanguageMgr.GetInstance().GetLangStrByID(6);
+        texts[4].text = LanguageMgr.GetInstance().GetLangStrByID(7);
     }
 }

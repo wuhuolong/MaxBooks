@@ -8,10 +8,10 @@ public class UIPlay : UIPage
 {
     //暂停界面读取评星提示用-hzy
     uint levelID;
-    LevelData data;
-    X.Res.ValueConfig_ARRAY value;
-    public Text[] starRatingTexts;
-    public GameObject pausePage;
+    // LevelData data;
+    // X.Res.ValueConfig_ARRAY value;
+    // public Text[] starRatingTexts;
+    // public GameObject pausePage;
 
     //转场动画用-hzy
     public CanvasGroup black;
@@ -26,6 +26,11 @@ public class UIPlay : UIPage
     private string shadowType = "shadowType";
     private int type;
 
+    private bool buttonCheck;
+
+    string tmpNumStar = "tmpNumStar";
+
+
 
     private Animator animator;
 
@@ -33,6 +38,8 @@ public class UIPlay : UIPage
     //需要清空的一些父对象的Transform：
     public Transform playFieldTrans;
     public Transform puzzleBarTrans;
+    public Transform puzzleBarForFreeLayoutTrans;
+
     public Transform puzzleMoveTrans;
     public Transform whiteLightTrans;
 
@@ -40,30 +47,39 @@ public class UIPlay : UIPage
     public Canvas BGCanvas;
     public Canvas MainUICanvas;
 
+    //需要使用的一些组件：
     public GeneralPanelUI generalPanelUI;
     public PuzzleBar puzzleBar;
-    public LevelTimer levelTimer;
+    // public LevelTimer levelTimer;
     public OperationHistoryRecorder operationHistoryRecorder;
     public PanelTransformationController panelTransformationController;
     public MiniMapController miniMapController;
+    public Text levelText;
 
+    //提示框：
     public UIUseRecTips m_isUseRecPanel;
 
     private void OnEnable()
     {
+        buttonCheck = true;
         animator = GetComponent<Animator>();
         UIEvent.RegEvent(UIEvent.UI_LEVELSTART, LevelStart);
         //UIEvent.RegEvent(UIEvent.UI_LEVEL_USEREC, LevelUseRec);
 
-        //暂停界面读取评星提示用-hzy
+        //暂停界面读取评星提示用-hzy （现在单纯是为了把关卡序号显示在上方 -sjh）
         levelID = LevelMgr.GetInstance().GetCurLevelID();
+
         operationHistoryRecorder.SetLevelId(levelID);
-        data = LevelMgr.GetInstance().GetLevelConfig(levelID);
-        value = LevelMgr.GetInstance().GetValueConfig();
+        // data = LevelMgr.GetInstance().GetLevelConfig(levelID);
+        // value = LevelMgr.GetInstance().GetValueConfig();
+
+        //显示关卡序号
+        levelText.text="LEVEL "+LevelMgr.GetInstance().GetIndexByID(levelID);
+        // Debug.LogError(LevelMgr.GetInstance().GetIndexByID(levelID));
 
         black.alpha = 1.0f;
         isShadow = false;
-        levelTimer.SetTime(0);
+        // levelTimer.SetTime(0);
         StartCoroutine(ShadowInit());
         UIEvent.Broadcast(UIEvent.UI_LEVELSTART);
     }
@@ -83,7 +99,7 @@ public class UIPlay : UIPage
                 }
             }
         }
-        if(isShadowToList)
+        if (isShadowToList)
         {
             if (type != -1)
             {
@@ -96,34 +112,37 @@ public class UIPlay : UIPage
                         shadows[type].localScale = Vector3.zero;
                         isShadowToList = false;
                         //进入关卡列表界面
+                        // pausePage.SetActive(false);
+                        black.alpha = 1.0f;
                         UIMgr.ShowPage(UIPageEnum.LevelList_Page);
                     }
                 }
             }
         }
-        if(isShadowSelf)
-        {
-            if (type != -1)
-            {
-                if (shadows[type].localScale != shadowMin)
-                {
-                    shadows[type].localScale = Vector3.Lerp(shadows[type].localScale, shadowMin, Time.deltaTime * shadowSpeedToList);
+        //if (isShadowSelf)
+        //{
+        //    if (type != -1)
+        //    {
+        //        if (shadows[type].localScale != shadowMin)
+        //        {
+        //            shadows[type].localScale = Vector3.Lerp(shadows[type].localScale, shadowMin, Time.deltaTime * shadowSpeedToList);
 
-                    if (Mathf.Abs(shadows[type].localScale.x - shadowMin.x) <= 0.1f)
-                    {
-                        shadows[type].localScale = Vector3.zero;
-                        isShadowSelf = false;
-                        //Resume();
-                        uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
-                        XPlayerPrefs.DelRec(curLevelID);
-                        pausePage.SetActive(false);
-                        CloseUIPlay();
-                        UIMgr.ShowPage(UIPageEnum.Tips_Page);
-                        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
-                    }
-                }
-            }
-        }
+        //            if (Mathf.Abs(shadows[type].localScale.x - shadowMin.x) <= 0.1f)
+        //            {
+        //                shadows[type].localScale = Vector3.zero;
+        //                isShadowSelf = false;
+        //                //Resume();
+        //                uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
+        //                XPlayerPrefs.DelRec(curLevelID);
+        //                // pausePage.SetActive(false);
+        //                CloseUIPlay();
+        //                black.alpha = 1.0f;
+        //                UIMgr.ShowPage(UIPageEnum.Tips_Page);
+        //                UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     IEnumerator ShadowInit()
@@ -180,10 +199,10 @@ public class UIPlay : UIPage
 
     public void LevelStart(params object[] argv)
     {
+        puzzleBar.ResetAdPuzzleUse();//重置广告方块
         animator.enabled = true;
         animator.Play("UIPlay_Origin_Anim", 0, 0);
         StartCoroutine(WaitOriginAnimEnd());
-
     }
 
     IEnumerator WaitOriginAnimEnd()
@@ -202,11 +221,15 @@ public class UIPlay : UIPage
         RecCheck();
     }
 
-    public void GenMap(bool isReGen =false)
+    public void GenMap(bool isReGen = false)
     {
+        puzzleBar.InitPuzzleBar();
+
         generalPanelUI.InitComp(isReGen);
         generalPanelUI.InitGeneralPanelUI();
-        puzzleBar.InitPuzzleBar();
+
+        StartCoroutine(generalPanelUI.InitPuzzleContainPanel(isReGen));
+
         panelTransformationController.InitPTController();
         miniMapController.InitMiniMap();
     }
@@ -217,15 +240,17 @@ public class UIPlay : UIPage
         if (rec != null)
         {
             Debug.Log("RecCheck == true");
-            Action ac_ok = () => {
+            Action ac_ok = () =>
+            {
                 operationHistoryRecorder.SetLevelId(levelID, true);
                 GenMap(true);
-                levelTimer.SetTime(rec.TimeCount);
-                StartCoroutine(levelTimer.RestartTimer());
+                // levelTimer.SetTime(rec.TimeCount);
+                // StartCoroutine(levelTimer.RestartTimer());
             };
-            Action ac_cancel = () => {
-                levelTimer.SetTime(0);
-                StartCoroutine(levelTimer.RestartTimer());
+            Action ac_cancel = () =>
+            {
+                // levelTimer.SetTime(0);
+                // StartCoroutine(levelTimer.RestartTimer());
                 GenMap();
                 XPlayerPrefs.DelRec(levelID);
             };
@@ -234,13 +259,14 @@ public class UIPlay : UIPage
         else
         {
             GenMap();
-            StartCoroutine(levelTimer.RestartTimer());
+            // StartCoroutine(levelTimer.RestartTimer());
         }
     }
 
 
     public void LevelOverStep1()
     {
+        // CheckRating();//检查评星
         StartCoroutine(panelTransformationController.ReturnToOrigin(0.2f, LevelOverStep2));
     }
 
@@ -259,7 +285,7 @@ public class UIPlay : UIPage
     public void LevelReturn()
     {
         Debug.Log("return");
-        Resume();
+        // Resume();
         RandomType();
         ShadowInit2();
         isShadowToList = true;
@@ -271,25 +297,31 @@ public class UIPlay : UIPage
 
     public void LevelRestart()
     {
-        isShadowSelf = true;
-        RandomType();
-        Resume();
-        shadows[type].localScale = shadowMax;
-        Debug.Log("restart"+isShadowSelf);
-        Debug.Log("restart"+type);
-        
+        if (buttonCheck)
+        {
+            buttonCheck = false;
+            isShadowSelf = true;
+            RandomType();
+            // Resume();
+            shadows[type].localScale = shadowMax;
+            Debug.Log("restart" + isShadowSelf);
+            Debug.Log("restart" + type);
+        }
     }
 
     public void LevelRestartCorou()
     {
-        Debug.Log("restart");
-        Resume();
-        uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
-        XPlayerPrefs.DelRec(curLevelID);
-        pausePage.SetActive(false);
-        CloseUIPlay();
-        UIMgr.ShowPage(UIPageEnum.Tips_Page);
-        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+        if (buttonCheck)
+        {
+            buttonCheck = false;
+            Debug.Log("restart");
+            // Resume();
+            uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
+            XPlayerPrefs.DelRec(curLevelID);
+            // pausePage.SetActive(false);
+            CloseUIPlay();
+            UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+        }
     }
 
     IEnumerator ShowEndPage()
@@ -317,7 +349,7 @@ public class UIPlay : UIPage
 
     void CloseUIPlay()
     {
-        levelTimer.SetTime(0);
+        // levelTimer.SetTime(0);
         operationHistoryRecorder.Clear();
 
 
@@ -333,6 +365,11 @@ public class UIPlay : UIPage
         for (int i = 0; i < puzzleBarTrans.childCount; ++i)
         {
             Destroy(puzzleBarTrans.GetChild(i).gameObject);
+        }
+
+        if(puzzleBarForFreeLayoutTrans.childCount>0)
+        {
+            puzzleBarForFreeLayoutTrans.GetChild(0).gameObject.SetActive(false);
         }
 
         for (int i = 0; i < puzzleMoveTrans.childCount; ++i)
@@ -351,51 +388,95 @@ public class UIPlay : UIPage
     {
         Recorder rec = operationHistoryRecorder.Recoder;
         rec.LevelId = levelID;
-        rec.layout = generalPanelUI.generalPanelData.Playout;
-        rec.TimeCount = levelTimer.Time;
+        rec.layout = MatrixUtil.ArrayCopy(generalPanelUI.generalPanelData.Playout);
+        // rec.TimeCount = levelTimer.Time;
+        if (!rec.isFilled())
+        {
+            XPlayerPrefs.DelRec(rec.LevelId);
+            return;
+        }
         //todo 保存广告格子的个数
         XPlayerPrefs.SetRec(rec);
     }
 
-    public void Pause()
-    {
-        Time.timeScale = 0;
-        LoadStarTips();
-        SaveOperation();
-    }
+    // public void Pause()
+    // {
+    //     Time.timeScale = 0;
+    //     LoadStarTips();
+    //     SaveOperation();
+    // }
 
-    public void Resume()
-    {
-        Time.timeScale = 1;
-    }
+    // public void Resume()
+    // {
+    //     Time.timeScale = 1;
+    // }
 
     //暂停界面读取评星提示用-hzy
-    private void LoadStarTips()
-    {
-        Debug.Log("loadstartips");
-        //加载评星提示
-        if (data.Config.Rating1 == 0)
-        {
-            starRatingTexts[0].text = "完成关卡！";
-        }
-        LoadRating(data.Config.Rating2, 0);
-        LoadRating(data.Config.Rating3, 1);
-    }
+    // private void LoadStarTips()
+    // {
+    //     Debug.Log("loadstartips");
+    //     //加载评星提示
+    //     if (data.Config.Rating1 == 0)
+    //     {
+    //         starRatingTexts[0].text = "完成关卡！";
+    //     }
+    //     LoadRating(data.Config.Rating2, 0);
+    //     LoadRating(data.Config.Rating3, 1);
+    // }
 
-    private void LoadRating(Google.Protobuf.Collections.RepeatedField<int> rating, int index)
-    {
-        switch (rating[0])
-        {
-            case 1:
+    // private void LoadRating(Google.Protobuf.Collections.RepeatedField<int> rating, int index)
+    // {
+    //     switch (rating[0])
+    //     {
+    //         case 1:
 
-                string time = rating[1].ToString();
-                string text = string.Format(value.Items[1].RatingName, time);
-                starRatingTexts[index + 1].text = text;
-                break;
-            case 2:
-                starRatingTexts[index + 1].text = value.Items[2].RatingName;
-                break;
-        }
-    }
+    //             string time = rating[1].ToString();
+    //             string text = string.Format(value.Items[1].RatingName, time);
+    //             starRatingTexts[index + 1].text = text;
+    //             break;
+    //         case 2:
+    //             starRatingTexts[index + 1].text = value.Items[2].RatingName;
+    //             break;
+    //     }
+    // }
 
+    // private void CheckRating()
+    // {
+    //     int[] starsArr = { 0, 0, 0 };
+    //     if (data.Config.Rating1 == 0)
+    //     {
+    //         starsArr[0] = 1;
+    //         CheckRating2And3(starsArr, data.Config.Rating2, 1);
+    //         CheckRating2And3(starsArr, data.Config.Rating3, 2);
+    //     }
+    //     Debug.Log("starsArr" + starsArr);
+    //     string id = LevelMgr.GetInstance().GetCurLevelID().ToString();
+    //     XPlayerPrefs.SetInt(id + tmpNumStar, starsArr[0] * 100 + starsArr[1] * 10 + starsArr[2]);
+    // }
+
+    // private void CheckRating2And3(int[] starsArr, Google.Protobuf.Collections.RepeatedField<int> rating, int index)
+    // {
+    //     switch (rating[0])
+    //     {
+    //         case 1:
+    //             {
+    //                 if (levelTimer.Time < rating[1])
+    //                 {
+    //                     starsArr[index] = 1;
+    //                 }
+    //                 break;
+    //             }
+    //         case 2:
+    //             {
+    //                 //TODO:需要添加 如果没有使用广告拼图时 的逻辑
+    //                 if (puzzleBar.AdPuzzleUseFlag == false)
+    //                 {
+    //                     starsArr[index] = 1;
+    //                 }
+    //                 break;
+    //             }
+    //         default:
+    //             break;
+    //     }
+    // }
 }

@@ -100,7 +100,7 @@ public class MiniMapController : MonoBehaviour
         Vector3 miniMapOffset = offset * ratio / scaleRatio;
         orangeOutlineRectTrans.position = generalPanelClone.transform.position - miniMapOffset;
         Rect playFieldRect = playField.GetComponent<RectTransform>().rect;
-        orangeOutlineRectTrans.sizeDelta = new Vector2((playFieldRect.width) * (ratio + 0.01f) / scaleRatio, (playFieldRect.height) * (ratio + 0.01f) / scaleRatio);
+        orangeOutlineRectTrans.sizeDelta = new Vector2((playFieldRect.width) * (ratio + 0.05f) / scaleRatio, (playFieldRect.height) * (ratio + 0.05f) / scaleRatio);//!test
         refreshFlag = true;
     }
 

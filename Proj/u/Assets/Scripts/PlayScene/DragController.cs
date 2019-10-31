@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,20 +10,66 @@ public class DragController : MonoBehaviour
     public PanelTransformationController panelTransformationController;
     public MiniMapController miniMapController;
 
-    private float upMoveDistance = 0.0f;//上移距离，发生上移时，该值变大，OnBeginDrag和OnDrag的位置确定需要参考该值
+    public float finalUpMoveDistance = 0.6f;
+    public float finalUpMoveTime = 0.06f;
+
+    private float upMoveDistance = 0.0f;//实时上移距离，发生上移时，该值变大，OnBeginDrag和OnDrag的位置确定需要参考该值
     private bool upFlag;
     private PointerEventData curPointerEventData = new PointerEventData(EventSystem.current);
+
+    private bool generalDragFlag = false;
+    public bool GeneralDragFlag
+    {
+        get { return generalDragFlag; }
+    }
+
+    private bool gameOverFlag = false;
+    public bool GameOverFlag
+    {
+        get { return gameOverFlag; }
+        set { gameOverFlag = value; }
+    }
+
+
+
+    [DllImport("__Internal")]
+    private static extern void VibrateFeedback();
+
 
     private bool beginDragFlag = false;
     public void OnBeginDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
+        if (gameOverFlag)
+        {
+            return;
+        }
+        if (puzzleItemUI.puzzleItemData.Plockstate)
+        {
+            return;
+        }
+        if (Input.touchCount > 1)
+        {
+            return;
+        }
         miniMapController.RefreshFlag = true;
+        generalDragFlag = true;
+
         if (!beginDragFlag)
         {
             beginDragFlag = true;
             Debug.Log("Drag begin");
+
+
+            //TODO：手机震动一下
+#if UNITY_EDITOR
+            Debug.Log("Play vibration");
+#else
+       VibrateFeedback();
+    //    Handheld.Vibrate();
+#endif
+
             PuzzleItemData puzzleItemData = puzzleItemUI.puzzleItemData;
-            //FINISH:开始拖动下方的拼图时，生成（或显示）一块可以跟随手指的拼图，生成（显示）时规定好位置和大小（修改scale缩放即可）
+            //FINISH:开始拖动拼图时，生成（或显示）一块可以跟随手指的拼图，生成（显示）时规定好位置和大小（修改scale缩放即可）
 
             if (!puzzleItemData.NotSettleFlag)
             {
@@ -39,36 +86,26 @@ public class DragController : MonoBehaviour
             //FINISH:修改大小
             //FINISH:加上双指缩放的比例
             //根据摄像机的缩放比例调整拼图的scaleratio
+            puzzleItemUI.SetScaleRatio();
             float ratio = puzzleItemUI.ScaleRatio * panelTransformationController.ScaleRatio;
+            Debug.Log(ratio + " " + puzzleItemUI.ScaleRatio + " " + panelTransformationController.ScaleRatio);
             puzzleItemUI.cloneForMove.GetComponent<RectTransform>().localScale = new Vector3(ratio, ratio, 1);
 
             //FINISH:修改旋转
             //根据PuzzleItemUI的RotateState进行旋转
             PuzzleItemUI cloneForMovePuzzleItemUI = puzzleItemUI.cloneForMove.GetComponent<PuzzleItemUI>();
-            int revertRotateTimes = 4 - cloneForMovePuzzleItemUI.RotateState;
-
-
-
-            for (int i = 0; i < revertRotateTimes; ++i)
-            {
-                cloneForMovePuzzleItemUI.RotatePuzzle();
-            }
-
-            for (int i = 0; i < puzzleItemUI.RotateState; ++i)
-            {
-                cloneForMovePuzzleItemUI.RotatePuzzle();
-            }
+            cloneForMovePuzzleItemUI.RotatePuzzleToState(puzzleItemUI.RotateState);
 
             //FINISH:修改位置
             Vector3 puzzleBeginPosPre = Camera.main.ScreenToWorldPoint(pointerEventData.position);
             puzzleItemUI.cloneForMove.transform.position = new Vector3(puzzleBeginPosPre.x, puzzleBeginPosPre.y, puzzleItemUI.cloneForMove.transform.position.z);
             puzzleItemUI.cloneForMove.SetActive(true);
 
-            StartCoroutine(UpMove(Vector3.up * 0.6f, 0.06f));//!可以调整上移的距离和下落时间
+            StartCoroutine(UpMove(Vector3.up * finalUpMoveDistance, finalUpMoveTime));//!可以调整上移的距离和下落时间
             curPointerEventData.position = pointerEventData.position;
             StartCoroutine(UpdatePos(puzzleItemUI.cloneForMove.transform));
-            
-            
+
+
             beginDragFlag = false;
 
 
@@ -102,7 +139,16 @@ public class DragController : MonoBehaviour
     private bool dragFlag = false;
     public void OnDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
+        if (gameOverFlag)
+        {
+            return;
+        }
+        if (puzzleItemUI.puzzleItemData.Plockstate)
+        {
+            return;
+        }
         miniMapController.RefreshFlag = true;
+
 
         if (!dragFlag)
         {
@@ -129,6 +175,14 @@ public class DragController : MonoBehaviour
     private bool endDragFlag = false;
     public void OnEndDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
+        if (gameOverFlag)
+        {
+            return;
+        }
+        if (puzzleItemUI.puzzleItemData.Plockstate)
+        {
+            return;
+        }
         miniMapController.RefreshFlag = true;
 
         if (!endDragFlag)
@@ -177,10 +231,16 @@ public class DragController : MonoBehaviour
                 }
             }
 
-            generalPanelUI.deleteArea.transform.localScale = Vector3.one;
+            //TODO:deleteArea缩小为1
+            generalPanelUI.OnDeleteAreaFlag = false;
+            StartCoroutine(generalPanelUI.DeleteAreaLinearScaleDown());
+            // generalPanelUI.deleteArea.transform.localScale = Vector3.one;
 
             endDragFlag = false;
         }
+
+        generalDragFlag = false;
+
     }
 
 

@@ -8,6 +8,7 @@ public abstract class UIBase : MonoBehaviour
     public UIType UIType = UIType.None;
     public bool IsNeedMask = true;
     public bool IsClickBgClose = false;
+    //public object[] argc;
     private void Awake()
     {
         this.InitComp();
@@ -36,9 +37,10 @@ public abstract class UIWindows : UIBase
 }
 public abstract class UITips : UIBase
 {
-
+    public object[] argc;
+    public abstract void OnShowTips();
 }
 public abstract class UIPage : UIBase
 {
-
+    
 }

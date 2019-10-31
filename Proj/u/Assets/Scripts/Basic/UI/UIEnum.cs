@@ -6,9 +6,9 @@ public enum UIPageEnum
     MainTown_Page = 1,//主界面
     SimPleWindows_Wind,//示范用windows
     SimTips_Tips,//示范用tips
+    Load_Page,
     Main_Page,
     BG_Page,
-    MainUI_Page,
     PlayField_Page,
     LevelList_Page,
     Tips_Page,
@@ -30,9 +30,9 @@ public static class UIUtil
         {(int)UIPageEnum.MainTown_Page,typeof(UIMainTown).ToString()},
         {(int)UIPageEnum.SimPleWindows_Wind,typeof(UISimPleWindows).ToString()},
         {(int)UIPageEnum.SimTips_Tips,typeof(UISimTips).ToString()},
+        {(int)UIPageEnum.Load_Page,typeof(UILoad).ToString()},
         {(int)UIPageEnum.Main_Page,typeof(UIMain).ToString()},
         {(int)UIPageEnum.LevelList_Page,typeof(UILevelList).ToString()},
-        {(int)UIPageEnum.Tips_Page,typeof(UITips).ToString()},
         {(int)UIPageEnum.Effect_Tips,typeof(UIEffect).ToString()},
         {(int)UIPageEnum.Play_Page,typeof(UIPlay).ToString()},
         {(int)UIPageEnum.GM_Page,typeof(UIGM).ToString()},

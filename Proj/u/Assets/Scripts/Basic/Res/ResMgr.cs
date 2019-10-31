@@ -13,18 +13,37 @@ public enum ResourcesType
 
 public class ResMgr
 {
+    private static string Tag = "ResMgr";
+#if UNITY_EDITOR
     private static bool islog = false;
-    public static void Log(string method, string msg)
+#endif
+    public static void Log(string objname,string method, string msg)
     {
+#if UNITY_EDITOR
         if (!islog)
+#else
+        if (!GameConfig.IsDebug)
+#endif
         {
             return;
         }
-        Debuger.Log("ResMgr", method, msg);
+        Debuger.Log(objname, method, msg);
+    }
+    public static void LogError(string objname, string method, string msg)
+    {
+#if UNITY_EDITOR
+        if (!islog)
+#else
+        if (!GameConfig.IsDebug)
+#endif
+        {
+            return;
+        }
+        Debuger.LogError(objname, method, msg);
     }
     public static GameObject LoadGameObject(string path)
     {
-        Log("LoadGameObject", path);
+        Log(Tag,"LoadGameObject", path);
         GameObject temp = Load<GameObject>(path);
         //todo add tag scripts.
         return GameObject.Instantiate(temp);
@@ -35,13 +54,26 @@ public class ResMgr
         //GameObject temp = Load<GameObject>(path);
         LoadAsync<GameObject>(path, (o) =>
         {
-            Log("LoadGobjAsync" , path);
+            Log(Tag, "LoadGobjAsync" , path);
             GameObject obj = GameObject.Instantiate(o);
             callback(obj);
         });
         //todo add tag scripts.
     }
+    public static void LoadGobjAsync(string path, Action callback)
+    {
 
+        //GameObject temp = Load<GameObject>(path);
+        LoadAsync<GameObject>(path, (o) =>
+        {
+            Log(Tag, "LoadGobjAsync", path);
+            if (callback!= null)
+            {
+                callback();
+            }
+        });
+        //todo add tag scripts.
+    }
     public static UIAtlas GetAtlas(string atlasname)
     {
         string path = XGamePath.GetAtlasPath(atlasname);
@@ -54,7 +86,7 @@ public class ResMgr
         string path = XGamePath.GetAtlasPath(atlasname);
         LoadAsync<GameObject>(path, (o) =>
         {
-            Log("GetAtlasAsync" , path);
+            Log(Tag, "GetAtlasAsync" , path);
             UIAtlas ua = o.GetComponent<UIAtlas>();
             callback(ua);
         });
@@ -72,7 +104,7 @@ public class ResMgr
         //Debug.Log(path);
         LoadAsync<GameObject>(path, (o) =>
         {
-            Log("LoadGameObject" , path);
+            Log(Tag, "LoadGameObject" , path);
             GameObject obj = GameObject.Instantiate(o, parent);
             callback(obj);
         });
@@ -100,13 +132,13 @@ public class ResMgr
         }
 #else
         
-        Log("Load", path);
+        Log(Tag, "Load", path);
         
         AssetBundle ab = AbMgr.GetInstance().SyncLoad(path);
         return ab.LoadAsset<T>(ab.GetAllAssetNames()[0]);
 #endif
     }
-    private static void LoadAsync<T>(string path, Action<T> callback) where T : UnityEngine.Object
+    public static void LoadAsync<T>(string path, Action<T> callback) where T : UnityEngine.Object
     {
         int hash = path.GetHashCode();
         object obj ;
@@ -120,35 +152,45 @@ public class ResMgr
             {
                 if (a == null)
                 {
-                    Log("LoadAsync", "ab is emptty " + path);
+                    Log(Tag, "LoadAsync", "ab is emptty " + path);
                 }
                 ab = a;
-                T tobj = ab.LoadAsset<T>(ab.GetAllAssetNames()[0]);
-                if (tobj == null)
+                AssetBundleRequest abr = ab.LoadAssetAsync<T>(ab.GetAllAssetNames()[0]);
+                if (abr == null)
                 {
-                    Log("LoadAsync", "ab is emptty " + path + "|ab name = " + ab.GetAllAssetNames()[0]);
+                    Log(Tag, "LoadAsync", "ab is emptty " + path + "|ab name = " + ab.GetAllAssetNames()[0]);
+                    return;
                 }
-                callback(tobj);
+                AbMgr.GetInstance().StartCoroutine(LoadAssetAsync(abr, callback));
             };
             AbMgr.GetInstance().AsyncLoad(path, de);
-            //return ab.LoadAsset<T>(ab.GetAllAssetNames()[0]);
         }
         else
         {
-            //Debug.Log("max=111=>" + filepath);
             path = "Assets/" + XGamePath.ResRoot + "/" + path;
-            //Debug.Log("max=22=>" + path);
             obj = UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
             callback(obj as T);
         }
 #else
             Action<AssetBundle> de = (ab) =>
             {
-                Debug.Log("max=33=>" + ab.GetAllAssetNames()[0]);
-                T tobj = ab.LoadAsset<T>(ab.GetAllAssetNames()[0]);
-                callback(tobj);
+                Debug.Log("LoadAsset==>" + ab.GetAllAssetNames()[0]);
+                //T tobj = ab.LoadAsset<T>(ab.GetAllAssetNames()[0]);
+                //callback(tobj);
+                AssetBundleRequest abr = ab.LoadAssetAsync<T>(ab.GetAllAssetNames()[0]);
+                AbMgr.GetInstance().StartCoroutine(LoadAssetAsync(abr, callback));
             };
             AbMgr.GetInstance().AsyncLoad(path, de);
 #endif
+    }
+    private static IEnumerator LoadAssetAsync<T>(AssetBundleRequest abr, Action<T> cb) where T : UnityEngine.Object
+    {
+        yield return abr;
+        T t = abr.asset as T;
+        if (cb != null)
+        {
+            cb(t);
+        }
+
     }
 }

@@ -77,6 +77,11 @@ public class LevelMgr : CSSingleton<LevelMgr>
         }
     }
 
+    public void SetFirstLevel()
+    {
+        XPlayerPrefs.SetInt("curLevel", (int)m_config.Items[0].LevelId);
+    }
+
     private LevelMapArray GetMapArrayData(uint id)
     {
         return m_data.GetConfigByID(id);
@@ -138,6 +143,63 @@ public class LevelMgr : CSSingleton<LevelMgr>
             this.Log("data.Map == null");
         }
         return data;
+    }
+    public uint GetNextLevelIDByID(uint id)
+    {
+        for(int i=0;i<m_config.Items.Count;i++)
+        {
+            if(m_config.Items[i].LevelId==id && i<m_config.Items.Count-1)
+            {
+                return m_config.Items[i + 1].LevelId;
+            }
+        }
+        return 0;
+    }
+    public string GetIndexByID(uint id)
+    {
+        string index = "";
+        int T_index=0, L_index=1;
+        string curTheme = "";
+        for(int i = 0;i<m_config.Items.Count;i++)
+        {
+            if(m_config.Items[i].LevelTheme!=curTheme)
+            {
+                T_index++;
+                L_index = 1;
+                curTheme = m_config.Items[i].LevelTheme;
+            }
+            if(m_config.Items[i].LevelId==id)
+            {
+                return T_index.ToString() + "-" + L_index.ToString();
+            }
+            L_index++;
+        }
+
+        return index;
+    }
+    public List<int> GetLevelIndex(uint id)
+    {
+        List<int> index = new List<int>();
+        string theme = "";
+        int curPos = -1;
+        for(int i=0;i<m_config.Items.Count;i++)
+        {
+            if(theme!=m_config.Items[i].LevelTheme)
+            {
+                theme = m_config.Items[i].LevelTheme;
+                index.Add(1);
+                curPos++;
+            }
+            if(id!=m_config.Items[i].LevelId)
+            {
+                index[curPos]++;
+            }
+            else if(id == m_config.Items[i].LevelId)
+            {
+                return index;
+            }
+        }
+        return index;
     }
     public ThemeConfig GetThemeConfig(string id)
     {

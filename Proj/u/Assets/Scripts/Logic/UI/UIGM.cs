@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using X.Res;
 
-public class UIGM : UITips
+public class UIGM : UIWindows
 {
     //private string btnPath = "Prefabs/UI/GMbtn.Prefab";
     public GameObject m_BtnGo;
@@ -153,24 +153,26 @@ public static class GMController
     private static void PassAllStage_Func(object[] objs)
     {
         Debug.Log("pass");
-        string numAllStar = "numAllStar";
+        //string numAllStar = "numAllStar";
         string isUnlock = "isUnlock";
-        string numStar = "numStar";
+        string isCompleted = "isCompleted";
+        //string numStar = "numStar";
         LevelConfig_ARRAY m_config = LevelMgr.GetInstance().GetLevelConfigArray();
         for(int i=0;i<m_config.Items.Count;i++)
         {
             string id = m_config.Items[i].LevelId.ToString();
 
             //设置关卡解锁状态
-            XPlayerPrefs.SetInt(id + isUnlock, 0);
+            XPlayerPrefs.SetInt(id + isUnlock, -1);
+            XPlayerPrefs.SetInt(id + isCompleted, 1);
 
-            //设置当前关卡星星
-            int preStar = XPlayerPrefs.GetInt(id + numStar);
-            XPlayerPrefs.SetInt(id + numStar, 3);
+            ////设置当前关卡星星
+            //int preStar = XPlayerPrefs.GetInt(id + numStar);
+            //XPlayerPrefs.SetInt(id + numStar, 3);
 
-            //设置总星星数量
-            int curNum = XPlayerPrefs.GetInt(numAllStar);
-            XPlayerPrefs.SetInt(numAllStar, curNum + 3 - preStar);
+            ////设置总星星数量
+            //int curNum = XPlayerPrefs.GetInt(numAllStar);
+            //XPlayerPrefs.SetInt(numAllStar, curNum + 3 - preStar);
 
         }
         //保存

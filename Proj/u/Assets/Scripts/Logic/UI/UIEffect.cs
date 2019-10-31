@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIEffect : UITips
+public class UIEffect : UIWindows
 {
     public MeshRenderer mesh;
     Material shadow;

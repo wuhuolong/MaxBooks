@@ -14,8 +14,8 @@ public static class BinCollector
     public static void Collecttions(string path,string outpath)
     {
 
-        Debug.Log("BinCollector--path==>" + path);
-        Debug.Log("BinCollector--outpath==>" + outpath);
+        //Debug.Log("BinCollector--path==>" + path);
+        //Debug.Log("BinCollector--outpath==>" + outpath);
         if (Directory.Exists(outpath))
         {
             Directory.Delete(outpath,true);

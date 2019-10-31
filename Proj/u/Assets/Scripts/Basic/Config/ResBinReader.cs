@@ -42,7 +42,8 @@ public static class ResBinReader
         ThemeConfig ai = new ThemeConfig();
         testname = string.Format(path, testname);
         ai.ThemeId = "theemid";
-        ai.ThemeName = "xsdTheme";
+        //ai.ThemeName = "xsdTheme";
+        ai.ThemeName = 0;
 
         //把类序列化到文件里
         {

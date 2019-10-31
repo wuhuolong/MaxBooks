@@ -55,14 +55,12 @@ public static class ResTools
     [MenuItem(kSimulationMode,false)]
     public static void ToggleSimulationMode()
     {
-        Debug.Log("ToggleSimulationMode");
         AbMgr.IsAbMode = !AbMgr.IsAbMode;
     }
 
     [MenuItem(kSimulationMode, true)]
     public static bool ToggleSimulationModeValidate()
     {
-        Debug.Log("ToggleSimulationModeValidate");
         Menu.SetChecked(kSimulationMode,AbMgr.IsAbMode);
         return true;
     }

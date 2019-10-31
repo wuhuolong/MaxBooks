@@ -61,7 +61,7 @@ public class GeneralPanelData
             pheight = curLevelData.Map.MapHeight + 2;
 
             //保存数据进一个一维int数组
-            playout = rec.layout;
+            playout = MatrixUtil.ArrayCopy(rec.layout);
         }
         else if (curLevelData == null || curLevelData.Map == null || curLevelID == 0)
         {
@@ -115,6 +115,47 @@ public class GeneralPanelData
 
         }
 
+    }
+
+    int[][] gridOffsetArr = new int[][] {
+        new int[] { -1, 1 }, new int[] { 0, 1 }, new int[] { 1, 1 },
+        new int[] { -1, 0 }, new int[] { 0, 0 }, new int[] { 1, 0 },
+        new int[] { -1, -1 }, new int[] { 0, -1 }, new int[] { 1, -1 }};
+
+    public int CheckFixGrid(int gridIndex)
+    {
+        if (gridIndex < playout.Length)
+        {
+            //记录当前grid所在的九宫格的信息，0表示不是fixgrid，1表示是fixgrid
+            int[] gridBesideStateArr = new int[9];
+            int x = gridIndex % pwidth;
+            int y = gridIndex / pwidth;
+            for (int i = 0; i < gridOffsetArr.Length; ++i)
+            {
+                int[] gridOffset = gridOffsetArr[i];
+                int offX = x + gridOffset[0];
+                int offY = y + gridOffset[1];
+                if (offX < 0 || offX >= pwidth || offY < 0 || offY >= pheight)
+                {
+                    gridBesideStateArr[i] = 0;
+                }
+                else
+                {
+                    int offGridIndex = offX + offY * pwidth;
+                    if (playout[offGridIndex] == (int)GridType.Fix)
+                    {
+                        gridBesideStateArr[i] = 1;
+                    }
+                    else
+                    {
+                        gridBesideStateArr[i] = 0;
+                    }
+                }
+            }
+            //至此获得的gridBesideStateArr记录了九宫格中fixgrid的分布信息，对这些信息进行处理，确定返回值
+            
+        }
+        return -1;
     }
 
 
@@ -266,6 +307,9 @@ public class GeneralPanelData
         int gridIndex = puzzleItemData.PanelGridIndex;
         int x = gridIndex % pwidth;
         int y = gridIndex / pwidth;
+
+        // Debug.Log("GridIndex when show pregrid：" + gridIndex);//!Test
+
         int[] puzzleLayout = puzzleItemData.Playout;
         //添加redGridIndices
         for (int i = 0; i < puzzleLayout.Length; ++i)

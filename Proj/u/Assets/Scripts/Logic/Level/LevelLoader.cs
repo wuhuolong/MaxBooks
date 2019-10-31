@@ -17,14 +17,14 @@ public static class LevelLoader
             return data;
         }
         string path = XGamePath.GetLevelDataJsonPath(LevelMap_FileName);
-        Debug.Log("LevelMapData.Load==>" + path);
+        //Debug.Log("LevelMapData.Load==>" + path);
         if (File.Exists(path))
         {
             try
             {
                 StreamReader fs = File.OpenText(path);
                 string json = fs.ReadToEnd();
-                json.Log(json);
+                //ResMgr.Log(json);
                 fs.Close();
                 data = JsonMapper.ToObject<LevelMapData>(json);
                 return data;
@@ -46,7 +46,7 @@ public static class LevelLoader
         //string FilePath = Path.Combine(Application.dataPath, "FakeResources/Data/LevelConfig/" + data.Name + ".json");
         LevelLoader.data = data;
 
-        Debug.Log("LevelMapData.Save==>" + FilePath);
+        //Debug.Log("LevelMapData.Save==>" + FilePath);
         string json = JsonMapper.ToJson(data);
         string path = string.Format(FilePath, data.Name);
         try

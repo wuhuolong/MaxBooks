@@ -32,7 +32,7 @@ public static class XGamePath
         }
         else
         {
-            return string.Format(Application.dataPath + "/" + ResRoot + "/Data/DataConfig/{0}.bin", filename);
+            return string.Format("{0}/Data/DataConfig/{1}.bin", Application.dataPath, filename);
         }
 #elif UNITY_IOS || UNITY_IPHONE
             return string.Format("{0}/{1}/{2}/{3}.bin", Application.streamingAssetsPath, Output, "bin", filename);
@@ -85,7 +85,7 @@ public static class XGamePath
         }
         else
         {
-            return string.Format("{0}/FakeResources/Data/LevelConfig/{1}.json",Application.dataPath, filename);
+            return string.Format("{0}/Data/LevelConfig/{1}.json",Application.dataPath, filename);
         }
 #elif UNITY_IOS || UNITY_IPHONE
             return string.Format("{0}/{1}/bin/{2}.json", Application.streamingAssetsPath, Output, filename);

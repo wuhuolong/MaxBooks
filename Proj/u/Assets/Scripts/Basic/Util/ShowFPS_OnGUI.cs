@@ -20,14 +20,14 @@ public class ShowFPS_OnGUI : MonoBehaviour
     {
         m_FrameCount = m_FrameCount + 1;
         //Debug.Log(string.Format("timePassed={0},deltaTime={1},m_FrameCount={2}",
-        Debug.Log(string.Format("timePassed={0},deltaTime={1},m_FrameCount={2}", timePassed, Time.deltaTime,m_FrameCount));
+        //Debug.Log(string.Format("timePassed={0},deltaTime={1},m_FrameCount={2}", timePassed, Time.deltaTime,m_FrameCount));
         timePassed = timePassed + Time.deltaTime;
 
         if (timePassed > fpsMeasuringDelta)
         {
             m_FPS = m_FrameCount;/// timePassed;
             m_MS = 1.0f / m_FrameCount;
-            Debug.Log("set fps data");
+            //Debug.Log("set fps data");
             timePassed = 0.0f;
             m_FrameCount = 0;
         }
@@ -38,7 +38,11 @@ public class ShowFPS_OnGUI : MonoBehaviour
         GUIStyle bb = new GUIStyle();
         bb.normal.background = null;    //这是设置背景填充的
         bb.normal.textColor = new Color(1.0f, 0.5f, 0.0f);   //设置字体颜色的
+#if UNITY_EDITOR
         bb.fontSize = 20;       //当然，这是字体大小
+#else
+        bb.fontSize = 60;       //当然，这是字体大小
+#endif
 
         //居中显示FPS
         GUILayout.BeginHorizontal();
