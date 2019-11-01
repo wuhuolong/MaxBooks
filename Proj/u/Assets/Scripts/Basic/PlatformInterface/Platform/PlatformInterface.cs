@@ -18,22 +18,25 @@ public class androidInterface : SdkInterface
 {
     public override bool isRewardVideoReady()
     {
+        this.Log("isRewardVideoReady");
         return false;
     }
 
     public override void sendMsg(string json)
     {
-
+        this.Log("sendMsg");
     }
+
+
 
     public override void showRewardVideo()
     {
-
+        this.Log("showRewardVideo");
     }
 
     public override void Test()
     {
-
+        this.Log("Test");
     }
 }
 
@@ -93,4 +96,5 @@ public class iosSdkInterface : SdkInterface
     {
         test();
     }
+
 }

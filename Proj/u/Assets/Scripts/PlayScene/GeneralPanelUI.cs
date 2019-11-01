@@ -535,7 +535,7 @@ public class GeneralPanelUI : MonoBehaviour
                 // "gridLength:" + gridLength + "\n" +
                 // "canvasScaler.scaleFactor:" + canvasScaler.scaleFactor);
 
-                Debug.Log("Insert Puzzle:" + puzzle.name);
+                //Debug.Log("Insert Puzzle:" + puzzle.name);
 
                 GameObject newPuzzle = GameObject.Instantiate(puzzle, puzzleContainPanelTrans);
                 RectTransform newPuzzleRectTrans = newPuzzle.GetComponent<RectTransform>();
@@ -543,7 +543,7 @@ public class GeneralPanelUI : MonoBehaviour
                 newPuzzleRectTrans.anchorMax = new Vector2(0, 1);
                 newPuzzleRectTrans.anchoredPosition = newPos;
 
-                Debug.LogWarning(gridIndex + " " + gridTransCanvasSpacePos + " " + gridTrans.position + " " + newPos);
+                //Debug.LogWarning(gridIndex + " " + gridTransCanvasSpacePos + " " + gridTrans.position + " " + newPos);
 
                 // settlePuzzleList.Add(newPuzzle);
                 newPuzzle.name = "SettlePuzzle";

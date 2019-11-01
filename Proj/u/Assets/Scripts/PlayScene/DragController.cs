@@ -57,7 +57,9 @@ public class DragController : MonoBehaviour
         if (!beginDragFlag)
         {
             beginDragFlag = true;
-            Debug.Log("Drag begin");
+            dragPuzzle = puzzleItemUI;
+
+            //Debug.Log("Drag begin");
 
 
             //TODO：手机震动一下
@@ -137,6 +139,7 @@ public class DragController : MonoBehaviour
     }
 
     private bool dragFlag = false;
+    private PuzzleItemUI dragPuzzle = null;
     public void OnDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
         if (gameOverFlag)
@@ -144,6 +147,10 @@ public class DragController : MonoBehaviour
             return;
         }
         if (puzzleItemUI.puzzleItemData.Plockstate)
+        {
+            return;
+        }
+        if (dragPuzzle != puzzleItemUI)
         {
             return;
         }
@@ -180,6 +187,10 @@ public class DragController : MonoBehaviour
             return;
         }
         if (puzzleItemUI.puzzleItemData.Plockstate)
+        {
+            return;
+        }
+        if (dragPuzzle != puzzleItemUI)
         {
             return;
         }

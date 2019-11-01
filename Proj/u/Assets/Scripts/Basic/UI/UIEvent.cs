@@ -2,22 +2,23 @@
 using UnityEngine;
 using System;
 
+public delegate void xEvent(params object[] values);
+
 public static class UIEvent
 {
-    public delegate void Event(params object[] values);
 
-    private static Dictionary<int, Event> m_EventDic = new Dictionary<int, Event>();
+    private static Dictionary<int, xEvent> m_EventDic = new Dictionary<int, xEvent>();
 
     public static void Broadcast(int eventid ,params object[] argv)
     {
-        Event de = null;
+        xEvent de = null;
         m_EventDic.TryGetValue(eventid,out de);
         if(de != null){
             de(argv);
         }
     }
     
-    public static void RegEvent(int id, Event ac1)
+    public static void RegEvent(int id, xEvent ac1)
     {
         if (m_EventDic.ContainsKey(id))
         {
@@ -28,7 +29,7 @@ public static class UIEvent
             m_EventDic[id] = ac1;
         }
     }
-    public static void UnRegEvent(int id, Event ac1)
+    public static void UnRegEvent(int id, xEvent ac1)
     {
         if (m_EventDic.ContainsKey(id))
         {

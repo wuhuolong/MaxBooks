@@ -9,13 +9,13 @@ public class UIEnd : UIPage
     private uint nextLevelID;
     private LevelData data;
 
-    private string numAllStar = "numAllStar";
-    string isUnlock = "isUnlock";
-    string numStar = "numStar";
-    string tmpNumStar = "tmpNumStar";
-    string isCompleted = "isCompleted";
+    private static string numAllStar = "numAllStar";
+    static string isUnlock = "isUnlock";
+    static string numStar = "numStar";
+    static string tmpNumStar = "tmpNumStar";
+    static string isCompleted = "isCompleted";
 
-    string curLevel = "curLevel";
+    static string curLevel = "curLevel";
 
     public Text menuText;
     public Text starsText;
@@ -41,7 +41,7 @@ public class UIEnd : UIPage
     private Vector3 shadowMax = new Vector3(120.0f, 120.0f, 120.0f);
     private Vector3 shadowMin = Vector3.one;
     private float shadowSpeed = 10.0f;
-    private string shadowType = "shadowType";
+    private static string shadowType = "shadowType";
     private int type;
 
     private void OnEnable()
@@ -54,6 +54,7 @@ public class UIEnd : UIPage
         ShadowInit();
         OnShow();
     }
+
     public void OnShow()
     {
         if (gameObject.name == "UIEnd(Clone)")
@@ -106,7 +107,7 @@ public class UIEnd : UIPage
                 }
             }
         }
-
+        #region xx
         //if(starEffectsCheck[0])
         //{
         //    if(starEffects[0].transform.position.x != allStar.transform.position.x)
@@ -157,6 +158,7 @@ public class UIEnd : UIPage
         //        }
         //    }
         //}
+        #endregion
     }
 
     private void ShadowInit()
@@ -196,7 +198,7 @@ public class UIEnd : UIPage
         //下一关
         if (LevelMgr.GetInstance().GetNextLevelIDByID(levelID) == 0)
         {
-            Debug.Log("没有下一关了");
+            //Debug.Log("没有下一关了");
             return;
         }
         //while (XPlayerPrefs.GetInt(LevelMgr.GetInstance().GetNextLevelIDByID(levelID).ToString() + isUnlock) != -1)
@@ -367,5 +369,10 @@ public class UIEnd : UIPage
         //    starEffects[index - 1].SetActive(true);
         //    starEffectsCheck[index - 1] = true;
         //}
+    }
+
+    public void OnLevelEnd()
+    {
+        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelClear,(int)levelID);
     }
 }

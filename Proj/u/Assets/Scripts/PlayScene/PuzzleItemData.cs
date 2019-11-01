@@ -107,7 +107,7 @@ public class PuzzleItemData
 
     public void RotatePuzzle()
     {
-        Debug.Log("origin pcenter:" + MatrixUtil.PrintIntArray(pcenter));
+        //Debug.Log("origin pcenter:" + MatrixUtil.PrintIntArray(pcenter));
 
         int[] afterRotateLayout = new int[pwidth * pheight];
         for (int i = 0; i < playout.Length; ++i)
@@ -126,7 +126,7 @@ public class PuzzleItemData
         pheight = pwidth;
         pwidth = temp;
 
-        Debug.Log("new pcenter:" + MatrixUtil.PrintIntArray(pcenter));
+        //Debug.Log("new pcenter:" + MatrixUtil.PrintIntArray(pcenter));
     }
 
 }

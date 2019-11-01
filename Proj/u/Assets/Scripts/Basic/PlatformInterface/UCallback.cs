@@ -14,7 +14,7 @@ public class UCallback : MonoSingleton<UCallback>
         this.Log("SdkInterfaceCallback ==> "+json);
         switch (type)
         {
-            case SDKMsgType.OnRewardedVideoBack:
+            case SDKMsgType.OnRewardAdShowOver:
                 OnRewardedVideoBack(data);
                 break;
             default:
