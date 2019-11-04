@@ -31,6 +31,15 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public GameObject cloneForMove;
     public RectTransform screenSpaceRectTransform;//原始的屏幕空间的puzzle的rectTransform，用于做缩放比例计算
 
+    //拖动状态
+    private bool draggedState = false;
+    public bool DraggedState
+    {
+        get { return draggedState; }
+        set { draggedState = value; }
+    }
+
+
     //拼图的一些UI相关的变量：
     private float scaleRatio = 1.0f;
 

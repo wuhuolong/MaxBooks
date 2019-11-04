@@ -13,6 +13,7 @@ public class AdMgr:MonoSingleton<AdMgr>
 
     public void showRewardVideo(Action onReward,Action onFail,Action onClose)
     {
+        SDKMgr.GetInstance().Track(SDKMsgType.OnClickADPuzzle);
         SDKMgr.GetInstance().showRewardVideo(onReward, onFail, onClose);
     }
 }

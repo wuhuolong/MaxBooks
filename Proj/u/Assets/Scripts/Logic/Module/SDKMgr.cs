@@ -43,33 +43,35 @@ public class SDKMgr : CSSingleton<SDKMgr>
     public void Track(SDKMsgType type,params object[] args)
     {
         JsonData data = new JsonData();
+        data["Type"] = (int)type;
         switch (type)
         {
-            case SDKMsgType.OnRewardAdShowOver:
-                break;
-            case SDKMsgType.OnRewardAdShow:
-                break;
+            //case SDKMsgType.OnRewardAdShowOver://
+            //    break;
+            //case SDKMsgType.OnRewardAdShow://TODO
+            //    break;
             case SDKMsgType.OnLevelEnter:
                 break;
             case SDKMsgType.OnLevelClear:
                 int levelid = (int)args[0];
                 data["LevelID"] = levelid;
-                data["Type"] = (int)SDKMsgType.OnLevelClear;
-                SendSdkMsg(data.ToJson());
                 break;
             case SDKMsgType.OnClickADPuzzle:
                 break;
-            case SDKMsgType.OnUnlockAdPuzzle:
-                break;
+            //case SDKMsgType.OnUnlockAdPuzzle:
+            //    break;
             case SDKMsgType.OnPay2RemoveAd:
                 break;
-            case SDKMsgType.OnPay2RemoveAdSucc:
-                break;
+            //case SDKMsgType.OnPay2RemoveAdSucc:
+            //    break;
             case SDKMsgType.OnScreenshots:
+                break;
+            case SDKMsgType.OnCallEvaluation:
                 break;
             default:
                 break;
         }
+        SendSdkMsg(data.ToJson());
     }
 }
 
@@ -112,5 +114,9 @@ public enum SDKMsgType
     /// 结算截图使用次数
     /// </summary>
     OnScreenshots,
+    /// <summary>
+    /// 调起商店评价
+    /// </summary>
+    OnCallEvaluation,
     //*****end track*****
 }

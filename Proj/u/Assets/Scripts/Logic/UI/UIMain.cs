@@ -239,10 +239,10 @@ public class UIMain : UIPage
 
     private void Refresh()
     {
-        texts[0].text = LanguageMgr.GetInstance().GetLangStrByID(3);
-        texts[1].text = LanguageMgr.GetInstance().GetLangStrByID(4);
-        texts[2].text = LanguageMgr.GetInstance().GetLangStrByID(5);
-        texts[3].text = LanguageMgr.GetInstance().GetLangStrByID(6);
-        texts[4].text = LanguageMgr.GetInstance().GetLangStrByID(7);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[0], 3);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[1],4);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[2],5);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[3],6);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[4],7);
     }
 }

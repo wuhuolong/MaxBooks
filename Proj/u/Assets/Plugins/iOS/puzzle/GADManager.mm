@@ -1,8 +1,21 @@
 #import "GADManager.h"
 #import "UnityAppController.h"
 #import "xSdkInterface.h"
+#import "IAPManager.h"
 //#import <GoogleMobileAdsMediationTestSuite/GoogleMobileAdsMediationTestSuite.h>//
 //#import <GoogleMobileAdsMediationTestSuite/GMTSMediationTestSuite.h>
+
+
+static int OnRewardAdShowOver = 1;// 结算广告展示成功
+static int OnRewardAdShow = 2;// 结算广告展示
+static int OnLevelEnter = 3;// 关卡进入
+static int OnLevelClear = 4;// 关卡通过
+static int OnClickADPuzzle = 5;// 广告方块广告展示
+static int OnUnlockAdPuzzle = 6;// 广告方块解锁成功
+static int OnPay2RemoveAd = 7;// 去广告功能触发
+static int OnPay2RemoveAdSucc = 8;// 去广告付费成功
+static int OnScreenshots = 9;// 结算截图使用次数
+static int CallEvaluation = 10;//调起应用商店评价
 
 @interface GADManager()
 
@@ -221,6 +234,24 @@ static GADManager* _instance = nil;
     return dic;
 }
 //*********** tools ******************
+- (void)receivedMsg:(NSString *)str{
+    NSDictionary *dic = [[GADManager sharedInstance] Json2Dic:str];
+    if(dic != nil){
+        int type = [[dic objectForKey:@"Type"]intValue];
+
+        switch (type) {
+                int temp;
+            case 4:
+                temp = [[dic objectForKey:@"LevelID"]intValue];
+                break;
+            case 10:
+                [[IAPManager getInstance] CallEvaluation];
+                break;
+            default:
+                break;
+        }
+    }
+}
 
 @end
 

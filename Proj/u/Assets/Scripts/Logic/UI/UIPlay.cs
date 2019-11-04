@@ -232,6 +232,7 @@ public class UIPlay : UIPage
 
         panelTransformationController.InitPTController();
         miniMapController.InitMiniMap();
+        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelEnter);
     }
 
     private void RecCheck()

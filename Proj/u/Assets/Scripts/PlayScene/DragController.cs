@@ -36,7 +36,6 @@ public class DragController : MonoBehaviour
     private static extern void VibrateFeedback();
 
 
-    private bool beginDragFlag = false;
     public void OnBeginDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
         if (gameOverFlag)
@@ -51,13 +50,11 @@ public class DragController : MonoBehaviour
         {
             return;
         }
-        miniMapController.RefreshFlag = true;
-        generalDragFlag = true;
-
-        if (!beginDragFlag)
+        if (!generalDragFlag)
         {
-            beginDragFlag = true;
-            dragPuzzle = puzzleItemUI;
+            miniMapController.RefreshFlag = true;
+            generalDragFlag = true;
+            puzzleItemUI.DraggedState = true;
 
             //Debug.Log("Drag begin");
 
@@ -108,9 +105,6 @@ public class DragController : MonoBehaviour
             StartCoroutine(UpdatePos(puzzleItemUI.cloneForMove.transform));
 
 
-            beginDragFlag = false;
-
-
 
             // !Test：输出cloneForMove的旋转角度：
             // float angle;
@@ -134,12 +128,10 @@ public class DragController : MonoBehaviour
             //     }
             // }
             // Debug.Log(test);
-        }
 
+        }
     }
 
-    private bool dragFlag = false;
-    private PuzzleItemUI dragPuzzle = null;
     public void OnDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
         if (gameOverFlag)
@@ -150,36 +142,30 @@ public class DragController : MonoBehaviour
         {
             return;
         }
-        if (dragPuzzle != puzzleItemUI)
+        if (!puzzleItemUI.DraggedState)
         {
             return;
         }
         miniMapController.RefreshFlag = true;
 
 
-        if (!dragFlag)
-        {
-            dragFlag = true;
-            PuzzleItemData puzzleItemData = puzzleItemUI.puzzleItemData;
-            //拖动时拼图跟随手指位置移动
-            //FINISH:在此过程中拼图会和面板产生交互
+        PuzzleItemData puzzleItemData = puzzleItemUI.puzzleItemData;
+        //拖动时拼图跟随手指位置移动
+        //FINISH:在此过程中拼图会和面板产生交互
 
-            Vector3 puzzlePosPre = Camera.main.ScreenToWorldPoint(pointerEventData.position) + Vector3.up * upMoveDistance;
-            puzzleItemUI.cloneForMove.transform.position = new Vector3(puzzlePosPre.x, puzzlePosPre.y, puzzleItemUI.cloneForMove.transform.position.z);
-            curPointerEventData.position = pointerEventData.position;
+        Vector3 puzzlePosPre = Camera.main.ScreenToWorldPoint(pointerEventData.position) + Vector3.up * upMoveDistance;
+        puzzleItemUI.cloneForMove.transform.position = new Vector3(puzzlePosPre.x, puzzlePosPre.y, puzzleItemUI.cloneForMove.transform.position.z);
+        curPointerEventData.position = pointerEventData.position;
 
-            int gridIndex = -1;
-            int[] blankLayout = null;
-            int interactRet = generalPanelUI.InteractWithPuzzle(puzzleItemUI.cloneForMove.GetComponent<PuzzleItemUI>(), out gridIndex, out blankLayout);
-            puzzleItemData.PanelGridIndex = gridIndex;
+        int gridIndex = -1;
+        int[] blankLayout = null;
+        int interactRet = generalPanelUI.InteractWithPuzzle(puzzleItemUI.cloneForMove.GetComponent<PuzzleItemUI>(), out gridIndex, out blankLayout);
+        puzzleItemData.PanelGridIndex = gridIndex;
 
-            generalPanelUI.ShowPreCheckResult(interactRet, puzzleItemUI, blankLayout);
-            dragFlag = false;
-        }
+        generalPanelUI.ShowPreCheckResult(interactRet, puzzleItemUI, blankLayout);
 
     }
 
-    private bool endDragFlag = false;
     public void OnEndDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
         if (gameOverFlag)
@@ -190,66 +176,60 @@ public class DragController : MonoBehaviour
         {
             return;
         }
-        if (dragPuzzle != puzzleItemUI)
+        if (!puzzleItemUI.DraggedState)
         {
             return;
         }
         miniMapController.RefreshFlag = true;
 
-        if (!endDragFlag)
+        //拖动结束后，满足一定条件时拼图可以被插进面板，否则移除生成的拼图（隐藏显示）
+        PuzzleItemData puzzleItemData = puzzleItemUI.puzzleItemData;
+        Debug.Log("End Drag At:" + pointerEventData.position);
+        puzzleItemUI.cloneForMove.SetActive(false);
+
+        int gridIndex = -1;
+        int[] blankLayout = null;
+        int interactRet = generalPanelUI.InteractWithPuzzle(puzzleItemUI.cloneForMove.GetComponent<PuzzleItemUI>(), out gridIndex, out blankLayout);
+
+        puzzleItemData.PanelGridIndex = gridIndex;
+
+        generalPanelUI.ShowPreCheckResult(2);
+
+        //FINISH：进行操作记录，interactRet为0时，进行填充记录或位置移动记录；interactRet为3时，进行删除记录(操作历史记录的实现写于GeneralPanelUI中)
+
+        if (interactRet == 0)//如果拼图在满足填充条件的位置
         {
-            endDragFlag = true;
+            //把拼图插入
+            generalPanelUI.InsertPuzzle(puzzleItemUI.gameObject);
 
-            //拖动结束后，满足一定条件时拼图可以被插进面板，否则移除生成的拼图（隐藏显示）
-            PuzzleItemData puzzleItemData = puzzleItemUI.puzzleItemData;
-            Debug.Log("End Drag At:" + pointerEventData.position);
-            puzzleItemUI.cloneForMove.SetActive(false);
-
-            int gridIndex = -1;
-            int[] blankLayout = null;
-            int interactRet = generalPanelUI.InteractWithPuzzle(puzzleItemUI.cloneForMove.GetComponent<PuzzleItemUI>(), out gridIndex, out blankLayout);
-
-            puzzleItemData.PanelGridIndex = gridIndex;
-
-            generalPanelUI.ShowPreCheckResult(2);
-
-            //FINISH：进行操作记录，interactRet为0时，进行填充记录或位置移动记录；interactRet为3时，进行删除记录(操作历史记录的实现写于GeneralPanelUI中)
-
-            if (interactRet == 0)//如果拼图在满足填充条件的位置
+        }
+        else if (interactRet == 1 || interactRet == 2)//如果拼图在不满足填充条件以及不在删除区的其他位置
+        {
+            if (!puzzleItemData.NotSettleFlag)//如果被开始拖的拼图已经放置了
             {
-                //把拼图插入
-                generalPanelUI.InsertPuzzle(puzzleItemUI.gameObject);
-
-            }
-            else if (interactRet == 1 || interactRet == 2)//如果拼图在不满足填充条件以及不在删除区的其他位置
-            {
-                if (!puzzleItemData.NotSettleFlag)//如果被开始拖的拼图已经放置了
-                {
-                    puzzleItemData.PanelGridIndex = puzzleItemData.LastPanelGridIndex;
-                    generalPanelUI.InsertPuzzle(puzzleItemUI.gameObject, false);
-                }
-
-                Debug.Log("not fit " + interactRet);
-            }
-            else if (interactRet == 3)//如果拼图在删除区
-            {
-                //删除
-                if (!puzzleItemData.NotSettleFlag)
-                {
-                    Debug.Log("删除拼图");
-                    puzzleItemData.PanelGridIndex = puzzleItemData.LastPanelGridIndex;
-                    generalPanelUI.RemovePuzzle(puzzleItemUI.gameObject);
-                }
+                puzzleItemData.PanelGridIndex = puzzleItemData.LastPanelGridIndex;
+                generalPanelUI.InsertPuzzle(puzzleItemUI.gameObject, false);
             }
 
-            //TODO:deleteArea缩小为1
-            generalPanelUI.OnDeleteAreaFlag = false;
-            StartCoroutine(generalPanelUI.DeleteAreaLinearScaleDown());
-            // generalPanelUI.deleteArea.transform.localScale = Vector3.one;
-
-            endDragFlag = false;
+            Debug.Log("not fit " + interactRet);
+        }
+        else if (interactRet == 3)//如果拼图在删除区
+        {
+            //删除
+            if (!puzzleItemData.NotSettleFlag)
+            {
+                Debug.Log("删除拼图");
+                puzzleItemData.PanelGridIndex = puzzleItemData.LastPanelGridIndex;
+                generalPanelUI.RemovePuzzle(puzzleItemUI.gameObject);
+            }
         }
 
+        //TODO:deleteArea缩小为1
+        generalPanelUI.OnDeleteAreaFlag = false;
+        StartCoroutine(generalPanelUI.DeleteAreaLinearScaleDown());
+        // generalPanelUI.deleteArea.transform.localScale = Vector3.one;
+
+        puzzleItemUI.DraggedState = false;
         generalDragFlag = false;
 
     }

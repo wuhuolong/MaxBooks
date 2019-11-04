@@ -17,11 +17,6 @@ public class UILoad : UIPage
 
     protected override void InitData()
     {
-
-    }
-
-    private void Start()
-    {
         binProcess = new BinProcess();
         abProcess = new AbProcess();
         //Debug.Log(binProcess.num);
@@ -35,11 +30,11 @@ public class UILoad : UIPage
         //Debug.Log(processList[index].num);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         round.transform.Rotate(rolling);
 
-        if(processList[index].Progress==processList[index].num)
+        if(processList[index].Progress == processList[index].num)
         {
             if(index<processList.Count-1)
             {

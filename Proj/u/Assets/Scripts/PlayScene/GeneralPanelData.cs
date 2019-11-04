@@ -367,6 +367,7 @@ public class GeneralPanelData
         }
         uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
         XPlayerPrefs.DelRec(curLevelID);
+        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelClear,(int)curLevelID);
         return true;
     }
 

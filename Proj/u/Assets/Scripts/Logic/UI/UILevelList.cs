@@ -315,7 +315,8 @@ public class UILevelList : UIPage
         //加载主题名字
         Text name = menu.GetComponentInChildren<Text>();
         //name.text = LevelMgr.GetInstance().GetThemeConfig(n).ThemeName;
-        name.text = LanguageMgr.GetInstance().GetLangStrByID(LevelMgr.GetInstance().GetThemeConfig(n).ThemeName);
+        uint id = LevelMgr.GetInstance().GetThemeConfig(n).ThemeName;
+        LanguageMgr.GetInstance().GetLangStrByID(name,id);
     }
 
     private int UnpackStarNum(int starNum)

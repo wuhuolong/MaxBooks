@@ -80,10 +80,10 @@ public class UIEnd : UIPage
         toList = false;
         toLevel = false;
 
-        texts[0].text = LanguageMgr.GetInstance().GetLangStrByID(8);
-        texts[1].text = LanguageMgr.GetInstance().GetLangStrByID(9);
-        texts[2].text = LanguageMgr.GetInstance().GetLangStrByID(10);
-        texts[3].text = LanguageMgr.GetInstance().GetLangStrByID(11);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[0], 8);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[1], 9);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[2], 10);
+        LanguageMgr.GetInstance().GetLangStrByID(texts[3],11);
     }
 
     private void FixedUpdate()
@@ -100,9 +100,9 @@ public class UIEnd : UIPage
                     //进入下一关
                     isShadow = false;
                     black.alpha = 1.0f;
-                    if(toList)
+                    if (toList)
                         UIMgr.ShowPage(UIPageEnum.LevelList_Page);
-                    if(toLevel)
+                    if (toLevel)
                         UIMgr.ShowPage(UIPageEnum.Play_Page);
                 }
             }
@@ -264,7 +264,7 @@ public class UIEnd : UIPage
 
         //设置之前获取的当前关卡星星
         int preStar = XPlayerPrefs.GetInt(id + numStar);
-        if(UnpackStarNum(tmpPreStar)>=UnpackStarNum(preStar))
+        if (UnpackStarNum(tmpPreStar) >= UnpackStarNum(preStar))
         {
             XPlayerPrefs.SetInt(id + numStar, tmpPreStar);
         }
@@ -274,7 +274,7 @@ public class UIEnd : UIPage
         int curNum = XPlayerPrefs.GetInt(numAllStar);
         XPlayerPrefs.SetInt(numAllStar, curNum + UnpackStarNum(curStar) - UnpackStarNum(preStar));
 
-        
+
     }
 
     private int UnpackStarNum(int starNum)
@@ -305,7 +305,7 @@ public class UIEnd : UIPage
                 break;
             case 2:
                 LoadStarImg(2);
-                if(curStar%10==0)
+                if (curStar % 10 == 0)
                 {
                     LoadRating(data.Config.Rating2, 0);
                     LoadRating(data.Config.Rating3, 1);
@@ -329,10 +329,10 @@ public class UIEnd : UIPage
     private void LoadStarImg(int num)
     {
         UIAtlas ats = ResMgr.GetAtlas("star");
-        for (int i=0;i<3;i++)
+        for (int i = 0; i < 3; i++)
         {
             ats.Sp = starsImg[i];
-            if (i<num)
+            if (i < num)
             {
                 ats.SetSprite("xingxing");
             }
@@ -370,9 +370,24 @@ public class UIEnd : UIPage
         //    starEffectsCheck[index - 1] = true;
         //}
     }
-
+    private static string Evaluation_Tag = "Evaluation_";
     public void OnLevelEnd()
     {
-        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelClear,(int)levelID);
+        X.Res.FuncParamConfig config = FuncMgr.GetInstance().GetConfigByID(1);
+        if (config != null)
+        {
+            int levelid = (int)levelID;
+            int showcount = XPlayerPrefs.GetInt(Evaluation_Tag);
+            for (int i = 0; i < config.Params1.Count; i++)
+            {
+                if (config.Params1[i] == levelid && config.Params2[i] > showcount)
+                {
+                    SDKMgr.GetInstance().Track(SDKMsgType.OnCallEvaluation);
+                    showcount++;
+                    XPlayerPrefs.SetInt(Evaluation_Tag, showcount);
+                    return;
+                }
+            }
+        }
     }
 }

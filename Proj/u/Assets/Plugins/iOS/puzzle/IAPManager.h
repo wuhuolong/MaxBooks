@@ -6,6 +6,7 @@
 -(void)recharge:(NSString*) productID;
 - (void)initIAP:(NSString*) oneProduct;
 - (void)jsFinishTransaction:(NSString*) transactionID;
+- (void)CallEvaluation;
 @end
 
 
