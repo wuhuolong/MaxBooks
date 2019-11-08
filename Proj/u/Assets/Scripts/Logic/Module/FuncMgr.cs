@@ -21,7 +21,7 @@ public class FuncMgr : CSSingleton<FuncMgr>
         FuncParamConfig config;
         if (!m_Func_Dic.TryGetValue(id, out config))
         {
-            this.LogError("funcmgr get config error,id==>"+id);
+            Debuger.LogError(Tag,string.Empty,"funcmgr get config error,id==>"+id);
         }
         return config;
     }

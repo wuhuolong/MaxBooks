@@ -25,13 +25,13 @@ public class PuzzleBar : MonoBehaviour
 
     private int adPuzzleNum = 0;
 
-    private bool adPuzzleUseFlag = false;
+    //private bool adPuzzleUseFlag = false;//没有用于实际判断，暂时注释
 
 
     public void InitPuzzleBar()
     {
         //FINISH:读入数据，获得界面下方的PuzzlePanel中要放的拼图的种类的信息
-        uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
+        uint curLevelID = LevelMgr.GetInstance().CurLevelID;
         LevelData curLevelData = LevelMgr.GetInstance().GetLevelConfig(curLevelID);
 
         Dictionary<string, int[]> FillTypeMap = new Dictionary<string, int[]>();
@@ -72,7 +72,7 @@ public class PuzzleBar : MonoBehaviour
 
 
 
-        Debug.Log("usablePuzzleStrList.Count" + usablePuzzleStrList.Count);
+        //Debug.Log("usablePuzzleStrList.Count" + usablePuzzleStrList.Count);
         //FINISH:读入数据后，根据数据生成相应的若干PuzzleItem
         int i = 0;
         foreach (string usablePuzzleStr in usablePuzzleStrList)
@@ -182,7 +182,7 @@ public class PuzzleBar : MonoBehaviour
 
     public GameObject AddAdPuzzle()
     {
-        Debug.Log("adPuzzleNum:" + adPuzzleNum);
+        //Debug.Log("adPuzzleNum:" + adPuzzleNum);
         // adPuzzleUseFlag = true;
         if (adPuzzleNum == 0)
         {
@@ -220,7 +220,7 @@ public class PuzzleBar : MonoBehaviour
 
     public void ResetAdPuzzleUse()
     {
-        adPuzzleUseFlag = false;
+        //adPuzzleUseFlag = false;//没有用于实际判断，暂时注释
         adPuzzleNum = 0;
     }
 
@@ -246,7 +246,7 @@ public class PuzzleBar : MonoBehaviour
             }
 
             //将useflag设为true
-            adPuzzleUseFlag = true;
+            //adPuzzleUseFlag = true;//没有用于实际判断，暂时注释
         },
         () =>
         {

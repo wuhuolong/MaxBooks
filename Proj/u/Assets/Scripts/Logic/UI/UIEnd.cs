@@ -9,29 +9,31 @@ public class UIEnd : UIPage
     private uint nextLevelID;
     private LevelData data;
 
-    private static string numAllStar = "numAllStar";
+    //private static string numAllStar = "numAllStar";
     static string isUnlock = "isUnlock";
-    static string numStar = "numStar";
-    static string tmpNumStar = "tmpNumStar";
+    //static string numStar = "numStar";
+    //static string tmpNumStar = "tmpNumStar";
     static string isCompleted = "isCompleted";
 
     static string curLevel = "curLevel";
 
     public Text menuText;
-    public Text starsText;
+    //public Text starsText;
     public GameObject returnTips;
     public Text[] texts;
+    public Image screenShot;
 
-    public GameObject[] starEffects;
-    public GameObject allStar;
+    //public GameObject[] starEffects;
+    //public GameObject allStar;
     //private bool[] starEffectsCheck = { false, false, false }; 
 
     X.Res.ValueConfig_ARRAY value;
-    public Text[] starRatingTexts;
+    //public Text[] starRatingTexts;
 
-    public Image[] starsImg;
+    //public Image[] starsImg;
 
     private bool buttonCheck;
+    private bool canClick;
 
     public RectTransform[] shadows;
     public CanvasGroup black;
@@ -48,7 +50,8 @@ public class UIEnd : UIPage
     {
         black.alpha = 0.0f;
         buttonCheck = true;
-        levelID = LevelMgr.GetInstance().GetCurLevelID();
+        canClick = false;
+        levelID = LevelMgr.GetInstance().CurLevelID;
         data = LevelMgr.GetInstance().GetLevelConfig(levelID);
         value = LevelMgr.GetInstance().GetValueConfig();
         ShadowInit();
@@ -58,13 +61,8 @@ public class UIEnd : UIPage
     public void OnShow()
     {
         if (gameObject.name == "UIEnd(Clone)")
-        {
-            //setStar();
-            //CompleteAnim();
-            //StarFlyInAnim();
+        {  
             LoadOriginImg();
-            //LoadNumOfStars();
-            //LoadStarTips();
             SetToNextLevel();
 
             //保存
@@ -73,17 +71,14 @@ public class UIEnd : UIPage
     }
     protected override void InitComp()
     {
-        returnTips.SetActive(false);
+        
     }
     protected override void InitData()
     {
+
+        returnTips.SetActive(false);
         toList = false;
         toLevel = false;
-
-        LanguageMgr.GetInstance().GetLangStrByID(texts[0], 8);
-        LanguageMgr.GetInstance().GetLangStrByID(texts[1], 9);
-        LanguageMgr.GetInstance().GetLangStrByID(texts[2], 10);
-        LanguageMgr.GetInstance().GetLangStrByID(texts[3],11);
     }
 
     private void FixedUpdate()
@@ -100,10 +95,11 @@ public class UIEnd : UIPage
                     //进入下一关
                     isShadow = false;
                     black.alpha = 1.0f;
-                    if (toList)
-                        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
                     if (toLevel)
                         UIMgr.ShowPage(UIPageEnum.Play_Page);
+                    else if (toList)
+                        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
+                    
                 }
             }
         }
@@ -194,6 +190,7 @@ public class UIEnd : UIPage
     {
         //设置本关卡已完成
         XPlayerPrefs.SetInt(levelID + isCompleted, 1);
+        //Debug.Log(XPlayerPrefs.GetInt(levelID + isCompleted));
 
         //下一关
         if (LevelMgr.GetInstance().GetNextLevelIDByID(levelID) == 0)
@@ -201,31 +198,28 @@ public class UIEnd : UIPage
             //Debug.Log("没有下一关了");
             return;
         }
-        //while (XPlayerPrefs.GetInt(LevelMgr.GetInstance().GetNextLevelIDByID(levelID).ToString() + isUnlock) != -1)
-        //{
-        //    levelID = LevelMgr.GetInstance().GetNextLevelIDByID(levelID);
-        //    if (!XPlayerPrefs.HasKey(LevelMgr.GetInstance().GetNextLevelIDByID(levelID).ToString() + isUnlock))
-        //    {
-        //        Debug.Log("没有未解锁的关卡了");
-        //        return;
-        //    }
-        //}
         nextLevelID = LevelMgr.GetInstance().GetNextLevelIDByID(levelID);
         XPlayerPrefs.SetInt(curLevel, (int)nextLevelID);
         XPlayerPrefs.SetInt(nextLevelID + isUnlock, -1);
-        LevelMgr.GetInstance().SetCurLevelID(nextLevelID);
-        //LevelMgr.GetInstance().SetCurThemeID(LevelMgr.GetInstance().GetLevelConfig(nextLevelID).Config.LevelTheme);
+        LevelMgr.GetInstance().CurLevelID = nextLevelID;
     }
     public void ClickNextLevel()
     {
-        if (LevelMgr.GetInstance().GetNextLevelIDByID(levelID) == 0)
+        if(canClick)
         {
-            returnTips.SetActive(true);
-            return;
+            if(buttonCheck)
+            {
+                buttonCheck = false;
+                if (LevelMgr.GetInstance().GetNextLevelIDByID(levelID) == 0)
+                {
+                    returnTips.SetActive(true);
+                    return;
+                }
+                Debug.Log("next");
+                isShadow = true;
+                toLevel = true;
+            }
         }
-        buttonCheck = false;
-        isShadow = true;
-        toLevel = true;
     }
     public void ClickCloseReturnTips()
     {
@@ -236,12 +230,14 @@ public class UIEnd : UIPage
         buttonCheck = false;
         isShadow = true;
         toList = true;
+        toLevel = false;
     }
     private void LoadOriginImg()
     {
         //加载原图
         Image img = gameObject.transform.Find("GameObject").transform.Find("Image").GetComponent<Image>();
-        UIAtlas ats = ResMgr.GetAtlas(data.Config.LevelPicture.ToString());
+        string altasname = AltasMgr.GetInstance().GetConfigByID(levelID).AltasName2;
+        UIAtlas ats = UIAtlasUtil.GetAtlas(altasname);
         ats.Sp = img;
         ats.SetSprite("p_" + data.Config.LevelPicture.ToString());
 
@@ -251,28 +247,28 @@ public class UIEnd : UIPage
     private void LoadNumOfStars()
     {
         //加载星星数量
-        starsText.text = XPlayerPrefs.GetInt(numAllStar).ToString();
+        //starsText.text = XPlayerPrefs.GetInt(numAllStar).ToString();
     }
 
     private void setStar()
     {
-        string id = LevelMgr.GetInstance().GetCurLevelID().ToString();
-        //string nextID = LevelMgr.GetInstance().GetNextLevelID().ToString();
+        //string id = LevelMgr.GetInstance().GetCurLevelID().ToString();
+        ////string nextID = LevelMgr.GetInstance().GetNextLevelID().ToString();
 
-        //获取某次游玩达成的当前关卡星星
-        int tmpPreStar = XPlayerPrefs.GetInt(id + tmpNumStar);//tmpPreStar格式是三位数的int，比如101，分别表示三颗星的有无
+        ////获取某次游玩达成的当前关卡星星
+        //int tmpPreStar = XPlayerPrefs.GetInt(id + tmpNumStar);//tmpPreStar格式是三位数的int，比如101，分别表示三颗星的有无
 
-        //设置之前获取的当前关卡星星
-        int preStar = XPlayerPrefs.GetInt(id + numStar);
-        if (UnpackStarNum(tmpPreStar) >= UnpackStarNum(preStar))
-        {
-            XPlayerPrefs.SetInt(id + numStar, tmpPreStar);
-        }
-        int curStar = XPlayerPrefs.GetInt(id + numStar);
+        ////设置之前获取的当前关卡星星
+        //int preStar = XPlayerPrefs.GetInt(id + numStar);
+        //if (UnpackStarNum(tmpPreStar) >= UnpackStarNum(preStar))
+        //{
+        //    XPlayerPrefs.SetInt(id + numStar, tmpPreStar);
+        //}
+        //int curStar = XPlayerPrefs.GetInt(id + numStar);
 
-        //设置总星星数量
-        int curNum = XPlayerPrefs.GetInt(numAllStar);
-        XPlayerPrefs.SetInt(numAllStar, curNum + UnpackStarNum(curStar) - UnpackStarNum(preStar));
+        ////设置总星星数量
+        //int curNum = XPlayerPrefs.GetInt(numAllStar);
+        //XPlayerPrefs.SetInt(numAllStar, curNum + UnpackStarNum(curStar) - UnpackStarNum(preStar));
 
 
     }
@@ -289,74 +285,74 @@ public class UIEnd : UIPage
 
     private void LoadStarTips()
     {
-        //加载评星提示
-        if (data.Config.Rating1 == 0)
-        {
-            starRatingTexts[0].text = "完成关卡！";
-        }
-        string id = LevelMgr.GetInstance().GetCurLevelID().ToString();
-        int curStar = XPlayerPrefs.GetInt(id + numStar);
-        switch (UnpackStarNum(curStar))
-        {
-            case 1:
-                LoadStarImg(1);
-                LoadRating(data.Config.Rating2, 0);
-                LoadRating(data.Config.Rating3, 1);
-                break;
-            case 2:
-                LoadStarImg(2);
-                if (curStar % 10 == 0)
-                {
-                    LoadRating(data.Config.Rating2, 0);
-                    LoadRating(data.Config.Rating3, 1);
-                }
-                else
-                {
-                    LoadRating(data.Config.Rating3, 0);
-                    LoadRating(data.Config.Rating2, 1);
-                }
-                break;
-            case 3:
-                LoadStarImg(3);
-                LoadRating(data.Config.Rating2, 0);
-                LoadRating(data.Config.Rating3, 1);
-                break;
-        }
+        ////加载评星提示
+        //if (data.Config.Rating1 == 0)
+        //{
+        //    starRatingTexts[0].text = "完成关卡！";
+        //}
+        //string id = LevelMgr.GetInstance().GetCurLevelID().ToString();
+        //int curStar = XPlayerPrefs.GetInt(id + numStar);
+        //switch (UnpackStarNum(curStar))
+        //{
+        //    case 1:
+        //        LoadStarImg(1);
+        //        LoadRating(data.Config.Rating2, 0);
+        //        LoadRating(data.Config.Rating3, 1);
+        //        break;
+        //    case 2:
+        //        LoadStarImg(2);
+        //        if (curStar % 10 == 0)
+        //        {
+        //            LoadRating(data.Config.Rating2, 0);
+        //            LoadRating(data.Config.Rating3, 1);
+        //        }
+        //        else
+        //        {
+        //            LoadRating(data.Config.Rating3, 0);
+        //            LoadRating(data.Config.Rating2, 1);
+        //        }
+        //        break;
+        //    case 3:
+        //        LoadStarImg(3);
+        //        LoadRating(data.Config.Rating2, 0);
+        //        LoadRating(data.Config.Rating3, 1);
+        //        break;
+        //}
 
         //
     }
 
     private void LoadStarImg(int num)
     {
-        UIAtlas ats = ResMgr.GetAtlas("star");
-        for (int i = 0; i < 3; i++)
-        {
-            ats.Sp = starsImg[i];
-            if (i < num)
-            {
-                ats.SetSprite("xingxing");
-            }
-            else
-            {
-                ats.SetSprite("xingxinghui");
-            }
-        }
+        //UIAtlas ats = ResMgr.GetAtlas("star");
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    ats.Sp = starsImg[i];
+        //    if (i < num)
+        //    {
+        //        ats.SetSprite("xingxing");
+        //    }
+        //    else
+        //    {
+        //        ats.SetSprite("xingxinghui");
+        //    }
+        //}
     }
 
     private void LoadRating(Google.Protobuf.Collections.RepeatedField<int> rating, int index)
     {
-        switch (rating[0])
-        {
-            case 1:
+        //switch (rating[0])
+        //{
+        //    case 1:
 
-                string time = rating[1].ToString();
-                string text = string.Format(value.Items[1].RatingName, time);
-                starRatingTexts[index + 1].text = text;
-                break;
-            case 2:
-                starRatingTexts[index + 1].text = value.Items[2].RatingName;
-                break;
-        }
+        //        string time = rating[1].ToString();
+        //        string text = string.Format(value.Items[1].RatingName, time);
+        //        starRatingTexts[index + 1].text = text;
+        //        break;
+        //    case 2:
+        //        starRatingTexts[index + 1].text = value.Items[2].RatingName;
+        //        break;
+        //}
     }
 
     private void starEffectFly(int index)
@@ -370,24 +366,35 @@ public class UIEnd : UIPage
         //    starEffectsCheck[index - 1] = true;
         //}
     }
-    private static string Evaluation_Tag = "Evaluation_";
+    //private static string Evaluation_Tag = "Evaluation_";
     public void OnLevelEnd()
     {
-        X.Res.FuncParamConfig config = FuncMgr.GetInstance().GetConfigByID(1);
-        if (config != null)
-        {
-            int levelid = (int)levelID;
-            int showcount = XPlayerPrefs.GetInt(Evaluation_Tag);
-            for (int i = 0; i < config.Params1.Count; i++)
-            {
-                if (config.Params1[i] == levelid && config.Params2[i] > showcount)
-                {
-                    SDKMgr.GetInstance().Track(SDKMsgType.OnCallEvaluation);
-                    showcount++;
-                    XPlayerPrefs.SetInt(Evaluation_Tag, showcount);
-                    return;
-                }
-            }
-        }
+        BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
+        levelmode.OnExit();
+    }
+    public void ClickScreenShot()
+    {
+        Debug.Log("screenshot");
+        ImgUtil.TakePhoto(screenShot,this.transform.parent.GetComponent<RectTransform>());
+    }
+
+    public void ShowAD()
+    {
+        AdMgr.GetInstance().InterstitialTrigger();
+    }
+
+    public void CanClickNext()
+    {
+        canClick = true;
+    }
+
+    public void ClickQuit()
+    {
+        //從結算界面退出：
+        //1 如果是Normal模式，回到關卡選擇
+        //2 如果是每日挑戰模式，回到每日挑戰界面并且設置好選擇的日期
+        BaseLevel levelmode=LevelMgr.GetInstance().CurLevelMode;
+        levelmode.OnClickQuit_UIEnd();
+
     }
 }

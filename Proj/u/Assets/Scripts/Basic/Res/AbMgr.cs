@@ -37,7 +37,7 @@ public class AbMgr : MonoSingleton<AbMgr>
                 m_delay.Add(hash);
             }
             m_loading_Dic.Remove(hash);
-            this.Log("transfer " + loader.AbName);
+            Debuger.Log(Tag,"transfer ", loader.AbName);
             bool issuc;
             for (int i = m_delay.Count - 1; i>-1; i--)
             {
@@ -50,7 +50,7 @@ public class AbMgr : MonoSingleton<AbMgr>
         }
         else
         {
-            this.Log("this should never happen too !!!!!");
+            Debuger.Log(Tag, "transfer ", "this should never happen too !!!!!");
         }
     }
 #if UNITY_EDITOR
@@ -260,6 +260,10 @@ public abstract class AbAbstractLoader
             return m_Ab_Name;
         }
     }
+    protected void Log(string msg)
+    {
+        Debuger.Log(Tag, string.Empty, msg);
+    }
 }
 public class AbSyncLoader : AbAbstractLoader
 {
@@ -292,7 +296,7 @@ public class AbSyncLoader : AbAbstractLoader
         }
         else
         {
-            this.Log("sync path is not exist" , path);
+            this.Log("sync path is not exist ==>" +path);
             State = AbBundleState.error;
         }
     }

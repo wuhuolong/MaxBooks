@@ -7,6 +7,9 @@ using UnityEngine.UI;
 //FINISH:分离UI逻辑和数据逻辑
 public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public CircleShaderViewer shaderViewer;
+    public bool canRorate;
+
     //场景对象/组件：
     // public Camera playFieldCamera;
     public GeneralPanelUI generalPanelUI;
@@ -73,6 +76,8 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
         puzzleItemData = new PuzzleItemData();
         screenSpaceRectTransform = GetComponent<RectTransform>();
+
+        canRorate = true;
     }
 
     public void InitButtomPuzzleItemUI()
@@ -254,27 +259,51 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
         for (int i = 0; i < revertRotateTimes; ++i)
         {
-            RotatePuzzleOnce();
+            RotatePuzzleOnce(false);
         }
 
         for (int i = 0; i < defineRotateState; ++i)
         {
-            RotatePuzzleOnce();
+            RotatePuzzleOnce(false);
         }
     }
 
 
-    public void RotatePuzzleOnce()
+    public void RotatePuzzleOnce(bool check = true)
     {
-        //FINISH:旋转拼图，需要做的是修改UI（把拼图的rectTransform的rotation进行修改即可）,以及修改拼图的Data（修改pwidth，pheight，playout，pcenter）
-        GetComponent<RectTransform>().Rotate(Vector3.forward, -90);
-        rotateState++;
-        if (rotateState == 4)
+        if(canRorate)
         {
-            rotateState = 0;
-        }
+            //FINISH:旋转拼图，需要做的是修改UI（把拼图的rectTransform的rotation进行修改即可）,以及修改拼图的Data（修改pwidth，pheight，playout，pcenter）
+            GetComponent<RectTransform>().Rotate(Vector3.forward, -90);
+            rotateState++;
+            if (rotateState == 4)
+            {
+                rotateState = 0;
+            }
 
-        puzzleItemData.RotatePuzzle();
+            puzzleItemData.RotatePuzzle();
+
+            if (check && shaderViewer != null)
+            {
+                Debug.Log(shaderViewer.curIndex);
+                if (shaderViewer.CheckRorate(shaderViewer.curIndex))
+                {
+                    if (shaderViewer.curIndex < shaderViewer.maxIndex)
+                    {
+                        shaderViewer.Clear();
+                        Debug.Log("step" + shaderViewer.curIndex);
+                        shaderViewer.Init(shaderViewer.curID, shaderViewer.curIndex + 1);
+                    }
+                    else
+                    {
+                        Debug.Log("complete");
+                        shaderViewer.Clear();
+                        shaderViewer.Delete();
+                    }
+                }
+            }
+        }
+        
     }
 
 
@@ -305,9 +334,13 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
             if (puzzleItemData.NotSettleFlag)
             {
+                if(draggedState)
+                {
+                    return;
+                }
                 //FINISH:在没放置时，点击一下旋转拼图
                 //TODO:旋转动画
-                Debug.Log("just click");
+                //Debug.Log("just click");
                 RotatePuzzleOnce();
             }
         }

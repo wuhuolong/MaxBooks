@@ -72,12 +72,12 @@ public class AssetInfo
 }
 public static class AssetCollector
 {
-    private static object _obj = new object();
     private static bool islog = true;
+    private static string Tag = "AssetCollector";
     private static void Log(string msg)
     {
         if (!islog) return;
-        _obj.Log(msg);
+        Debuger.Log(Tag,string.Empty,msg);
     }
     public static List<string> tags = new List<string>
     {

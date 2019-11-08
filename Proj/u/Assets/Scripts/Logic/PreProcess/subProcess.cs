@@ -7,7 +7,7 @@ public class BinProcess : PreProcess
 {
     public BinProcess()
     {
-        num = 5;
+        num = 6;
     }
     public override void Process()
     {
@@ -16,19 +16,25 @@ public class BinProcess : PreProcess
         System.Action ac3 = () => { ResBinReader.Read<ValueConfig_ARRAY>("ValueConfig"); Progress++; };
         System.Action ac4 = () => { ResBinReader.Read<LanguageConfig_ARRAY>("LanguageConfig"); Progress++; };
         System.Action ac5 = () => { ResBinReader.Read<FuncParamConfig_ARRAY>("FuncParamConfig"); Progress++; };
+        System.Action ac6 = () => { ResBinReader.Read<SignInConfig_ARRAY>("SignInConfig"); Progress++; };
         Loom.QueueOnMainThread(ac1);
         Loom.QueueOnMainThread(ac2);
         Loom.QueueOnMainThread(ac3);
         Loom.QueueOnMainThread(ac4);
         Loom.QueueOnMainThread(ac5);
+        Loom.QueueOnMainThread(ac6);
     }
 }
 
 public class AtlasProcess : PreProcess
 {
+    public AtlasProcess()
+    {
+        num = 1;
+    }
     public override void Process()
     {
-
+        UIAtlasUtil.GetAtlasAsync("level_s", (o)=> { Callback(); });
     }
 }
 

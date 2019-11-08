@@ -27,8 +27,7 @@ public class MonoSingleton<T> :MonoBehaviour  where T : MonoSingleton<T>, new()
             {
                 _ins = obj.AddComponent<T>();
             }
-        }
-        
+        }        
         return _ins;
     }
     public virtual void Awake()

@@ -12,6 +12,7 @@ public class GameConfig
     public class GameConfigData
     {
         public bool IsDebug = true;
+        public int SignInDay = 43775;
     }
     private static GameConfigData _ins;
 
@@ -22,7 +23,13 @@ public class GameConfig
             return _ins.IsDebug;
         }
     }
-
+    public static int SignInDay
+    {
+        get
+        {
+            return _ins.SignInDay;
+        }
+    }
     public static LangType Language
     {
         get
@@ -44,7 +51,6 @@ public class GameConfig
             {
                 StreamReader fs = File.OpenText(path);
                 string json = fs.ReadToEnd();
-                json.Log(json);
                 fs.Close();
                 _ins = JsonMapper.ToObject<GameConfigData>(json);
             }

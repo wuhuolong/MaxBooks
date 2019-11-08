@@ -48,4 +48,5 @@ public static class LogicEvent
     }
     //Event id
     public static int LEVEL_END = 0;
+    public static int CALENDAR_SELECTED = 0;
 }

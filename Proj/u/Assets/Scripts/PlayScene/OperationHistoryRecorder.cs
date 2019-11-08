@@ -71,6 +71,8 @@ public class Recorder
 }
 public class OperationHistoryRecorder : MonoBehaviour
 {
+    public CircleShaderViewer shaderViewer;
+
     public GeneralPanelUI generalPanelUI;
 
     public Transform puzzleContainPanelTrans;
@@ -103,7 +105,7 @@ public class OperationHistoryRecorder : MonoBehaviour
             m_recoder.LevelId = levelId;
         }
     }
-
+    
     private void CheckButton()
     {
         if (m_recoder.undoStack.Count == 0)
@@ -134,7 +136,24 @@ public class OperationHistoryRecorder : MonoBehaviour
         RefreshMiniMap();
         RefreshSettlePuzzleList();
 
-
+        if(shaderViewer.isActiveAndEnabled)
+        {
+            if (shaderViewer.CheckOP(shaderViewer.curIndex,op))
+            {
+                if (shaderViewer.curIndex < shaderViewer.maxIndex)
+                {
+                    shaderViewer.Clear();
+                    Debug.Log("step" + shaderViewer.curIndex);
+                    shaderViewer.Init(shaderViewer.curID, shaderViewer.curIndex + 1);
+                }
+                else
+                {
+                    Debug.Log("complete");
+                    shaderViewer.Clear();
+                    shaderViewer.Delete();
+                }
+            }
+        }
     }
 
     public void Undo()

@@ -146,14 +146,8 @@ MonoBehaviour:
   UIType: 0
   IsNeedMask: 1
   IsClickBgClose: 0
-  levelList: {fileID: 0}
   levelText: {fileID: 3124415810521605717}
-  stars:
-  - {fileID: 4836334394973742202}
-  - {fileID: 2754426748779352109}
-  - {fileID: 7141086927486475924}
   levelImg: {fileID: 2336329809266799460}
-  unlockBtn: {fileID: 152816070818636273}
 --- !u!1 &1870855757531166080
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +236,6 @@ GameObject:
   - component: {fileID: 4110112187591908535}
   - component: {fileID: 3934062994637802416}
   - component: {fileID: 2336329809266799460}
-  - component: {fileID: 6587609542791701253}
   m_Layer: 5
   m_Name: levelImg
   m_TagString: Untagged
@@ -304,21 +297,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
---- !u!114 &6587609542791701253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2307756628918270120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ca75d8163cc846499da9743b5454d3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainText: {fileID: 2800000, guid: a416309ee08030841862ed26a1736d97, type: 3}
-  Sp: {fileID: 2336329809266799460}
-  spriteLists: []
 --- !u!1 &3899215909080183832
 GameObject:
   m_ObjectHideFlags: 0

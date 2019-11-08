@@ -17,10 +17,11 @@ typedef void(^RewardVideoCloseCallback)(bool reward);
 - (void) requestLoadRewardVideo;
 - (bool) isRewardVideoReady;
 - (void) showRewardVideo;
-- (void) showRewardVideoWithCallback: (RewardVideoCloseCallback)callback;
 - (bool) isInterstitialReady;
 - (void) showInterstitial;
 - (void) receivedMsg:(NSString *)json;
+- ( void ) imageSaved: ( UIImage *) image didFinishSavingWithError:( NSError *)error
+          contextInfo: ( void *) contextInfo;
 @end
 
 NS_ASSUME_NONNULL_END

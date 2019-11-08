@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UILevelBtn : UIWindows
 {
-    private string themeID;
+    //private string themeID;
     private uint levelID;
 
     //public UILevelList levelList;
@@ -15,7 +15,7 @@ public class UILevelBtn : UIWindows
     public Text levelText;
     //public Image[] stars;
     public Image levelImg;
-    public Image unlockBtn;
+    //public Image unlockBtn;
 
     string isUnlock = "isUnlock";
     string curLevel = "curLevel";
@@ -27,6 +27,11 @@ public class UILevelBtn : UIWindows
 
     protected override void InitData()
     {
+        
+    }
+
+    private void OnEnable()
+    {
         buttonCheck = true;
     }
 
@@ -36,13 +41,13 @@ public class UILevelBtn : UIWindows
     }
     public void setThemeID(string id)
     {
-        themeID = id;
+        //themeID = id;
     }
 
     private void setState()
     {
         XPlayerPrefs.SetInt(curLevel, (int)levelID);
-        LevelMgr.GetInstance().SetCurLevelID(levelID);
+        LevelMgr.GetInstance().CurLevelID = levelID;
         //LevelMgr.GetInstance().SetCurThemeID(themeID);
     }
 
@@ -50,6 +55,7 @@ public class UILevelBtn : UIWindows
     {
         if (XPlayerPrefs.GetInt(levelID.ToString() + isUnlock) == -1)
         {
+            Debug.Log("enter");
             if (buttonCheck)
             {
                 buttonCheck = false;

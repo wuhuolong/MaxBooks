@@ -64,15 +64,15 @@ public static class XGamePath
     }
     public static string SavePath(string filename)
     {
-#if UNITY_EDITOR
+#if UNITY_EDITOR ||UNITY_EDITOR_OSX ||UNITY_EDITOR_WIN ||UNITY_EDITOR_LINUX
         //Debug.LogError(Application.dataPath + filename);
-        return Application.dataPath + filename;
+        return string.Format("{0}/{1}",Application.streamingAssetsPath , filename);
 #elif UNITY_IOS || UNITY_IPHONE
-        return Application.persistentDataPath + filename;
-#elif UNITY_ANDROID
-        return Application.persistentDataPath + filename;
+        return string.Format("{0}/{1}",Application.persistentDataPath , filename);
+#elif UNITY_ANDROID &&!UNITY_EDITOR
+        return string.Format("{0}/{1}",Application.persistentDataPath , filename);
 #else
-        return Application.persistentDataPath + filename;
+        return string.Format("{0}/{1}",Application.streamingAssetsPath , filename);
 #endif
     }
 

@@ -6,9 +6,22 @@ using UnityEngine.UI;
 
 public enum LangType
 {
-    cn = 0,
-    en = 1,
+    /// <summary>
+    /// 中文简体
+    /// </summary>
+    zh_Hans = 0,
+    /// <summary>
+    /// 中文繁体
+    /// </summary>
+    zh_Hant = 1,
+    /// <summary>
+    /// 英语
+    /// </summary>
+    en = 2,
 }
+/*
+    en,"zh-Hans",fr,de,ja,nl,it,es,pt,"pt-PT",da,fi,nb,sv,ko,"zh-Hant",ru,pl,tr,uk,ar,hr,
+    cs,el,he,ro,sk,th,id,ms,"en-GB",ca,hu,vi*/
 public class LanguageMgr : CSSingleton<LanguageMgr>
 {
     public class TextWrap
@@ -27,12 +40,16 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
         public uint ID;
     }
     private static StringBuilder sb = new StringBuilder(256);
-    public static string Tag = "_Lang";
     LanguageConfig_ARRAY data;
     Dictionary<uint, LanguageConfig> m_LanDic;
 
     Dictionary<int, ImgWrap> m_Img_Dic;
     Dictionary<int, TextWrap> m_Txt_Dic;
+
+    public void SetUp()
+    {
+        GameConfig.Language = SDKMgr.GetInstance().GetSystemLang();
+    }
 
     protected override void Init()
     {
@@ -64,7 +81,7 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
     }
 
 
-    public TextWrap RegisterText(Text txt)
+    private TextWrap RegisterText(Text txt)
     {
         int hash = txt.GetHashCode();
         if (!m_Txt_Dic.ContainsKey(hash))
@@ -74,6 +91,9 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
             txtw.Hashcode = hash;
             m_Txt_Dic.Add(hash, txtw);
             return txtw;
+        }else if (m_Txt_Dic[hash].Txt == null)
+        {
+            m_Txt_Dic[hash].Txt = txt;
         }
         return m_Txt_Dic[hash];
     }
@@ -84,21 +104,19 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
         {
             return;
         }
+        GameConfig.Language = type;
         var ie = m_Txt_Dic.GetEnumerator();
         TextWrap txtitem;
         while (ie.MoveNext())
         {
             txtitem = ie.Current.Value;
-            if (txtitem.Txt == null)
-            {
-                m_Txt_Dic.Remove(txtitem.Hashcode);
-            }
-            else
+            if (txtitem.Txt != null)
             {
                 SetSelectedLang(txtitem);
             }
         }
-        ImgWrap imgitem;
+        //TODO
+        //ImgWrap imgitem;
     }
 
     private void GetLangStrByID(uint id,TextWrap txtw, params object[] args)
@@ -106,7 +124,7 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
         LanguageConfig config;
         if (!m_LanDic.TryGetValue(id, out config))
         {
-            this.LogError("language id not exist " + id);
+            Debuger.LogError(Tag,string.Empty,"language id not exist " + id);
             txtw.Txt.text = string.Empty;
             return;
         }
@@ -115,7 +133,7 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
         sb.Clear();
         switch (GameConfig.Language)
         {
-            case LangType.cn:
+            case LangType.zh_Hans:
                 sb.Append(config.Cn);
                 break;
             case LangType.en:
@@ -148,7 +166,7 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
         LanguageConfig config = txtw.Config;
         switch (GameConfig.Language)
         {
-            case LangType.cn:
+            case LangType.zh_Hans:
                 sb.Append(config.Cn);
                 break;
             case LangType.en:

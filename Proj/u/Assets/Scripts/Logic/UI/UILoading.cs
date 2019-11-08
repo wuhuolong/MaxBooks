@@ -31,7 +31,7 @@ public class UILoading : UIWindows
         black.alpha = 0.0f;
         buttonCheck = true;
         //UIMgr.ShowPage(UIPageEnum.Play_Page);
-        levelID = LevelMgr.GetInstance().GetCurLevelID();
+        levelID = LevelMgr.GetInstance().CurLevelID;
         data = LevelMgr.GetInstance().GetLevelConfig(levelID);
         value = LevelMgr.GetInstance().GetValueConfig();
         ShadowInit();

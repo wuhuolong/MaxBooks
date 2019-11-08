@@ -5,36 +5,14 @@ using UnityEngine;
 public class GameStart : MonoBehaviour
 {
     UIBase m_uiroot;
-
+    GameKernel kernel;
     private void Awake()
     {
-        Debuger.Init();
-        Debuger.EnableLog = true;
+        kernel = GameKernel.GetInstance();
+        kernel.Init();
     }
     void Start()
     {
-        this.Log("GameLogicStart");
-        Application.targetFrameRate = 60;
-        GameConfig.Init();
-        //UIMgr.ShowPage(UIPageEnum.Main_Page);
-        StartCoroutine(Preprocess());
+        kernel.OnStart();
     }
-    IEnumerator Preprocess()
-    {
-        yield return StartCoroutine(NextStep());
-    }
-    IEnumerator NextStep()
-    {
-        yield return StartCoroutine(AbMgr.GetInstance().Init());
-        this.Log("ShowPage ==> Main_Page");
-        UIMgr.Init();
-        //UIMgr.ShowTips(UIPageEnum.Effect_Tips);
-        UIMgr.ShowPage(UIPageEnum.Load_Page);
-    }
-
-    private void OnApplicationQuit()
-    {
-        XPlayerPrefs.Save();
-        Debuger.DeInit();
-    }   
 }

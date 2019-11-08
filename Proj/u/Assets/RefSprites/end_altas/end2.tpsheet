@@ -1,0 +1,18 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:13076c70641e424d856511445c0a355b:9fa1557cfd4d46f85359a8d3ae89df14:b24c89e54fa1a09763d5f2cf7b3fbc0f$
+#
+:format=40300
+:texture=end2.png
+:size=1024x1024
+:pivotpoints=enabled
+:borders=disabled
+
+p_10005;1;515;508;508; 0.5;0.5; 0;0;0;0
+p_10006;1;5;508;508; 0.5;0.5; 0;0;0;0
+p_10007;511;515;508;508; 0.5;0.5; 0;0;0;0
+p_10008;511;5;508;508; 0.5;0.5; 0;0;0;0

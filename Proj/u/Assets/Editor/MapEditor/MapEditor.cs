@@ -32,8 +32,10 @@ public class MapEditor : EditorWindow
 
     //level data
     public uint curLevelId = 0;
+    public string selectedLevel = string.Empty;
+    public uint selectedLevel_Type = 0;
     public LevelMapData Level_Data { get; set; }
-    public  LevelMapArray Level_Config
+    public LevelMapArray Level_Config
     {
         get
         {
@@ -538,10 +540,31 @@ static class DataPage
             GUILayout.Label("关卡ID",GUILayout.Width(50));
             temp = GUILayout.TextField(id.ToString());
             id = uint.Parse(temp);
+            if (GUILayout.Button("取消"))
+            {
+                isaddmode = false;
+            } 
         }
         else
         {
-            isaddmode = GUILayout.Button("添加",GUILayout.Width(50));
+            isaddmode = GUILayout.Button("添加关卡",GUILayout.Width(75));
+            GUILayout.Label("筛选关卡:", GUILayout.Width(50));
+            if(GUILayout.Button("清空", GUILayout.Width(40)))
+            {
+                wind.selectedLevel = string.Empty;
+            }
+            wind.selectedLevel = GUILayout.TextField(wind.selectedLevel, GUILayout.Width(50));
+            GUILayout.Space(10);
+            if (GUILayout.Button("关卡类型", MapEditor.toolbarDropdown, GUILayout.Width(75)))
+            {
+                GenericMenu menu = new UnityEditor.GenericMenu();
+                //menu.AddSeparator("");
+                menu.AddItem(new GUIContent("全部"), false, () => { wind.selectedLevel_Type = 0; });
+                menu.AddItem(new GUIContent("冒险关卡"), false, () => { wind.selectedLevel_Type = 1; });
+                menu.AddItem(new GUIContent("每日签到关卡"), false, () => { wind.selectedLevel_Type = 2; });
+                //menu.DropDown(new Rect(0, 0, 20, 30));
+                menu.ShowAsContext();
+            }
         }
         if (isadd)
         {
@@ -582,6 +605,15 @@ static class DataPage
     {
         public static void OnGui( LevelMapArray config, MapEditor wind)
         {
+            if (!string.IsNullOrEmpty(wind.selectedLevel) &&!EditorTool.IsMatch(config.ConfigID, wind.selectedLevel))
+            {
+                return;
+            }
+            if (wind.selectedLevel_Type != 0 && wind.selectedLevel_Type != LevelMgr.GetInstance().GetLevelConfig(config.ConfigID).Config.LevelType)
+            {
+                return;
+            }
+
             GUILayout.BeginHorizontal();
             GUILayout.Label(config.Id.ToString());
             GUILayout.Label(string.Format("{0}", config.ConfigID));
@@ -925,5 +957,16 @@ public static class EditorTool
             Debug.Log("读不到图啊==>" + filepath);
         }
         return tex;
+    }
+    /// <summary>
+    /// 判断长数字中是否含有短数字
+    /// </summary>
+    /// <param name="src">长数字</param>
+    /// <param name="des">短数字</param>
+    /// <returns></returns>
+    public static bool IsMatch(uint src,string des)
+    {
+        string str_src = src.ToString();
+        return str_src.Contains(des);
     }
 }

@@ -8,7 +8,7 @@ public class ShowFPS_OnGUI : MonoBehaviour
 
     private float timePassed;
     private int m_FrameCount = 0;
-    private float m_FPS = 0.0f;
+    private float m_FPS = 0.0f; 
     private float m_MS = 0.0f;
 
     private void Start()

@@ -16,7 +16,6 @@ public class UIMgr
 {
     private static string Tag = "UIMgr";
 
-
     private static string m_UIPath = "Prefabs/UI/{0}.Prefab";
     private static string m_root_tag = "UIRoot";
     private static string m_mask_tag = "UIMask";
@@ -231,6 +230,9 @@ public class UIMgr
 
     private static void ShowUIAsync(int uiid, Action<UIBase, int> callback = null, params object[] argc)
     {
+        //System.Diagnostics.Stopwatch wa = new System.Diagnostics.Stopwatch();
+        //wa.Reset();
+        //wa.Start();
         ResMgr.Log(Tag, "ShowUIAsync", "==>" + uiid);
         UIBase ub = _Ins.m_uicache[uiid];
         if (ub == null)
@@ -249,8 +251,9 @@ public class UIMgr
                     callback(ub, uiid);
                 }
             };
-            LoadUIAsync(uiid, cb);
 
+            LoadUIAsync(uiid, cb);
+            
         }
         else
         {
@@ -268,6 +271,7 @@ public class UIMgr
             {
                 callback(ub, uiid);
             }
+            //Debug.Log("2:"+wa.ElapsedMilliseconds);
         }
     }
 

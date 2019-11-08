@@ -36,6 +36,14 @@ public class SDKMgr : CSSingleton<SDKMgr>
         UCallback.GetInstance().onFail = onFail;
         m_interface.showRewardVideo();
     }
+
+    public void showIntersitialAD(Action onReward, Action onFail, Action onClose)
+    {
+        UCallback.GetInstance().onReward = onReward;
+        UCallback.GetInstance().onFail = onFail;
+        m_interface.showInterstitialAd();
+    }
+
     public void SendSdkMsg(string json)
     {
         m_interface.sendMsg(json);
@@ -44,6 +52,7 @@ public class SDKMgr : CSSingleton<SDKMgr>
     {
         JsonData data = new JsonData();
         data["Type"] = (int)type;
+        int levelid;
         switch (type)
         {
             //case SDKMsgType.OnRewardAdShowOver://
@@ -51,9 +60,11 @@ public class SDKMgr : CSSingleton<SDKMgr>
             //case SDKMsgType.OnRewardAdShow://TODO
             //    break;
             case SDKMsgType.OnLevelEnter:
+                levelid = (int)args[0];
+                data["LevelID"] = levelid;
                 break;
             case SDKMsgType.OnLevelClear:
-                int levelid = (int)args[0];
+                levelid = (int)args[0];
                 data["LevelID"] = levelid;
                 break;
             case SDKMsgType.OnClickADPuzzle:
@@ -73,50 +84,60 @@ public class SDKMgr : CSSingleton<SDKMgr>
         }
         SendSdkMsg(data.ToJson());
     }
+    public LangType GetSystemLang()
+    {
+        string temp = m_interface.GetCurLang();
+        LangType type;
+        if (Enum.TryParse<LangType>(temp,out type))
+        {
+            return type;
+        }
+        return LangType.zh_Hans;
+    }
 }
 
 public enum SDKMsgType
 {
     //*****start track*****
     /// <summary>
-    /// 结算广告展示成功
-    /// </summary>
-    OnRewardAdShowOver = 1,
-    /// <summary>
     /// 结算广告展示
     /// </summary>
-    OnRewardAdShow,
+    OnRewardAdShow = 1,
+    /// <summary>
+    /// 结算广告展示成功
+    /// </summary>
+    OnRewardAdShowOver = 2,
     /// <summary>
     /// 关卡进入
     /// </summary>
-    OnLevelEnter,
+    OnLevelEnter = 3,
     /// <summary>
     /// 关卡通过
     /// </summary>
-    OnLevelClear,
+    OnLevelClear = 4,
     /// <summary>
     /// 广告方块广告展示
     /// </summary>
-    OnClickADPuzzle,
+    OnClickADPuzzle = 5,
     /// <summary>
     /// 广告方块解锁成功
     /// </summary>
-    OnUnlockAdPuzzle,
+    OnUnlockAdPuzzle = 6,
     /// <summary>
     /// 去广告功能触发
     /// </summary>
-    OnPay2RemoveAd,
+    OnPay2RemoveAd = 7,
     /// <summary>
     /// 去广告付费成功
     /// </summary>
-    OnPay2RemoveAdSucc,
+    OnPay2RemoveAdSucc = 8,
     /// <summary>
     /// 结算截图使用次数
     /// </summary>
-    OnScreenshots,
+    OnScreenshots = 9,
     /// <summary>
     /// 调起商店评价
     /// </summary>
-    OnCallEvaluation,
+    OnCallEvaluation = 10,
     //*****end track*****
 }

@@ -17,7 +17,7 @@ public class NameChanger : EditorWindow
     void OnGUI()
     {
         GUILayout.Label("子对象批量重命名");
-        parentObj = (GameObject)EditorGUILayout.ObjectField("父对象：", parentObj, typeof(GameObject));
+        parentObj = (GameObject)EditorGUILayout.ObjectField("父对象：", parentObj, typeof(GameObject),true);
         prefixName = EditorGUILayout.TextField("前缀：", prefixName);
 
         if (GUILayout.Button("确定"))

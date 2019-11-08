@@ -30,6 +30,9 @@ public class DragController : MonoBehaviour
         set { gameOverFlag = value; }
     }
 
+    int firstDragPointerID=-10;
+
+
 
 
     [DllImport("__Internal")]
@@ -55,6 +58,7 @@ public class DragController : MonoBehaviour
             miniMapController.RefreshFlag = true;
             generalDragFlag = true;
             puzzleItemUI.DraggedState = true;
+            firstDragPointerID=pointerEventData.pointerId;
 
             //Debug.Log("Drag begin");
 
@@ -132,20 +136,29 @@ public class DragController : MonoBehaviour
         }
     }
 
+
     public void OnDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
-        if (gameOverFlag)
+        if (gameOverFlag)//限制游戏结束时不可拖动
         {
             return;
         }
-        if (puzzleItemUI.puzzleItemData.Plockstate)
+        if (puzzleItemUI.puzzleItemData.Plockstate)//限制广告方块上锁时不可拖动
         {
             return;
         }
-        if (!puzzleItemUI.DraggedState)
+        if (!puzzleItemUI.DraggedState)//限制未设置拖动状态的拼图不可拖动，即被拖动拼图之外其他的拼图
         {
             return;
         }
+        if(firstDragPointerID!=pointerEventData.pointerId)//限制手指pointerId不同的不可被拖动，可用于限制只能单指操作
+        {
+            return;
+        }
+        
+        
+
+        
         miniMapController.RefreshFlag = true;
 
 
@@ -164,6 +177,8 @@ public class DragController : MonoBehaviour
 
         generalPanelUI.ShowPreCheckResult(interactRet, puzzleItemUI, blankLayout);
 
+        puzzleItemUI.DraggedState=true;
+
     }
 
     public void OnEndDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
@@ -177,6 +192,10 @@ public class DragController : MonoBehaviour
             return;
         }
         if (!puzzleItemUI.DraggedState)
+        {
+            return;
+        }
+        if(firstDragPointerID!=pointerEventData.pointerId)//限制手指pointerId不同的不可被放置，可用于限制只能单指操作
         {
             return;
         }

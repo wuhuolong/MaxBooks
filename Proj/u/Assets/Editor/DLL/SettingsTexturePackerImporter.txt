@@ -19,10 +19,31 @@ tpsheetFileNames:
 - Assets/img/level/10016.tpsheet
 - Assets/img/level/10017.tpsheet
 - Assets/img/level/10018.tpsheet
+- Assets/img/level/level_s.tpsheet
 - Assets/img/levelStar.tpsheet
 - Assets/img/star.tpsheet
 - Assets/img/unlock.tpsheet
 - Assets/RefSprites/common.tpsheet
+- Assets/RefSprites/end_altas/end1.tpsheet
+- Assets/RefSprites/end_altas/end10.tpsheet
+- Assets/RefSprites/end_altas/end11.tpsheet
+- Assets/RefSprites/end_altas/end12.tpsheet
+- Assets/RefSprites/end_altas/end13.tpsheet
+- Assets/RefSprites/end_altas/end14.tpsheet
+- Assets/RefSprites/end_altas/end15.tpsheet
+- Assets/RefSprites/end_altas/end16.tpsheet
+- Assets/RefSprites/end_altas/end17.tpsheet
+- Assets/RefSprites/end_altas/end2.tpsheet
+- Assets/RefSprites/end_altas/end3.tpsheet
+- Assets/RefSprites/end_altas/end4.tpsheet
+- Assets/RefSprites/end_altas/end5.tpsheet
+- Assets/RefSprites/end_altas/end6.tpsheet
+- Assets/RefSprites/end_altas/end7.tpsheet
+- Assets/RefSprites/end_altas/end8.tpsheet
+- Assets/RefSprites/end_altas/end9.tpsheet
+- Assets/RefSprites/End1.tpsheet
+- Assets/RefSprites/list_altas/list1.tpsheet
+- Assets/RefSprites/list_altas/list2.tpsheet
 textureFileNames:
 - Assets/img/level/10001.png
 - Assets/img/level/10002.png
@@ -42,11 +63,53 @@ textureFileNames:
 - Assets/img/level/10016.png
 - Assets/img/level/10017.png
 - Assets/img/level/10018.png
+- Assets/img/level/level_s.png
 - Assets/img/levelStar.png
 - Assets/img/star.png
 - Assets/img/unlock.png
 - Assets/RefSprites/common.png
+- Assets/RefSprites/end_altas/end1.png
+- Assets/RefSprites/end_altas/end10.png
+- Assets/RefSprites/end_altas/end11.png
+- Assets/RefSprites/end_altas/end12.png
+- Assets/RefSprites/end_altas/end13.png
+- Assets/RefSprites/end_altas/end14.png
+- Assets/RefSprites/end_altas/end15.png
+- Assets/RefSprites/end_altas/end16.png
+- Assets/RefSprites/end_altas/end17.png
+- Assets/RefSprites/end_altas/end2.png
+- Assets/RefSprites/end_altas/end3.png
+- Assets/RefSprites/end_altas/end4.png
+- Assets/RefSprites/end_altas/end5.png
+- Assets/RefSprites/end_altas/end6.png
+- Assets/RefSprites/end_altas/end7.png
+- Assets/RefSprites/end_altas/end8.png
+- Assets/RefSprites/end_altas/end9.png
+- Assets/RefSprites/End1.png
+- Assets/RefSprites/list_altas/list1.png
+- Assets/RefSprites/list_altas/list2.png
 normalmapFileNames:
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
 - 
 - 
 - 

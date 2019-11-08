@@ -1,0 +1,16 @@
+iOS怎样获取设备唯一标识符
+https://www.jianshu.com/p/faa4854ce180
+
+Unity判断网络是否连接 以及 判断是否连接WiFi
+https://blog.csdn.net/woshiwooo/article/details/51782445
+
+Unity3D 使用link.xml来控制strippinglevel减少dll库大小技巧、优化安装包大小
+https://blog.csdn.net/e295166319/article/details/53141433
+
+04、Unity_声音管理器
+https://www.cnblogs.com/zhh19981104/p/9991636.html#_label0
+
+图片尺寸修改（非常难）
+http://wiki.unity3d.com/index.php/TextureScale
+http://wiki.unity3d.com/index.php/TextureScale?_ga=2.103411523.2101347765.1573108719-1800402590.1568810012
+

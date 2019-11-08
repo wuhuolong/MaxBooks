@@ -24,18 +24,18 @@ namespace X.Res {
     static LevelConfigReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Ch9nZW4veGxzMnByb3RvL0xldmVsQ29uZmlnLnByb3RvEgVYLlJlcyLTAQoL",
-            "TGV2ZWxDb25maWcSEAoIbGV2ZWxfaWQYASABKA0SEgoKbGV2ZWxfbmFtZRgC",
-            "IAEoCRITCgtsZXZlbF90aGVtZRgDIAEoCRIVCg1sZXZlbF9waWN0dXJlGAQg",
-            "ASgFEhQKDGxldmVsX3VubG9jaxgFIAEoBRIQCghyYXRpbmdfMRgGIAEoBRIQ",
-            "CghyYXRpbmdfMhgHIAMoBRIQCghyYXRpbmdfMxgIIAMoBRITCgtsZXZlbF9w",
-            "aXhlbBgJIAMoCRIRCglhZF9wdXp6bGUYCiABKAUiNgoRTGV2ZWxDb25maWdf",
-            "QVJSQVkSIQoFaXRlbXMYASADKAsyEi5YLlJlcy5MZXZlbENvbmZpZ2IGcHJv",
-            "dG8z"));
+            "Ch9nZW4veGxzMnByb3RvL0xldmVsQ29uZmlnLnByb3RvEgVYLlJlcyLnAQoL",
+            "TGV2ZWxDb25maWcSEAoIbGV2ZWxfaWQYASABKA0SEgoKbGV2ZWxfdHlwZRgC",
+            "IAEoDRISCgpsZXZlbF9uYW1lGAMgASgJEhMKC2xldmVsX3RoZW1lGAQgASgJ",
+            "EhUKDWxldmVsX3BpY3R1cmUYBSABKAUSFAoMbGV2ZWxfdW5sb2NrGAYgASgF",
+            "EhAKCHJhdGluZ18xGAcgASgFEhAKCHJhdGluZ18yGAggAygFEhAKCHJhdGlu",
+            "Z18zGAkgAygFEhMKC2xldmVsX3BpeGVsGAogAygJEhEKCWFkX3B1enpsZRgL",
+            "IAEoBSI2ChFMZXZlbENvbmZpZ19BUlJBWRIhCgVpdGVtcxgBIAMoCzISLlgu",
+            "UmVzLkxldmVsQ29uZmlnYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LevelConfig), global::X.Res.LevelConfig.Parser, new[]{ "LevelId", "LevelName", "LevelTheme", "LevelPicture", "LevelUnlock", "Rating1", "Rating2", "Rating3", "LevelPixel", "AdPuzzle" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LevelConfig), global::X.Res.LevelConfig.Parser, new[]{ "LevelId", "LevelType", "LevelName", "LevelTheme", "LevelPicture", "LevelUnlock", "Rating1", "Rating2", "Rating3", "LevelPixel", "AdPuzzle" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LevelConfig_ARRAY), global::X.Res.LevelConfig_ARRAY.Parser, new[]{ "Items" }, null, null, null, null)
           }));
     }
@@ -69,6 +69,7 @@ namespace X.Res {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public LevelConfig(LevelConfig other) : this() {
       levelId_ = other.levelId_;
+      levelType_ = other.levelType_;
       levelName_ = other.levelName_;
       levelTheme_ = other.levelTheme_;
       levelPicture_ = other.levelPicture_;
@@ -100,8 +101,22 @@ namespace X.Res {
       }
     }
 
+    /// <summary>Field number for the "level_type" field.</summary>
+    public const int LevelTypeFieldNumber = 2;
+    private uint levelType_;
+    /// <summary>
+    ///* 关卡类型-1：冒险关卡；2：每日签到关卡 
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint LevelType {
+      get { return levelType_; }
+      set {
+        levelType_ = value;
+      }
+    }
+
     /// <summary>Field number for the "level_name" field.</summary>
-    public const int LevelNameFieldNumber = 2;
+    public const int LevelNameFieldNumber = 3;
     private string levelName_ = "";
     /// <summary>
     ///* 关卡名称 
@@ -115,7 +130,7 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "level_theme" field.</summary>
-    public const int LevelThemeFieldNumber = 3;
+    public const int LevelThemeFieldNumber = 4;
     private string levelTheme_ = "";
     /// <summary>
     ///* 关卡对应主题 
@@ -129,7 +144,7 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "level_picture" field.</summary>
-    public const int LevelPictureFieldNumber = 4;
+    public const int LevelPictureFieldNumber = 5;
     private int levelPicture_;
     /// <summary>
     ///* 关卡对应原图 
@@ -143,7 +158,7 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "level_unlock" field.</summary>
-    public const int LevelUnlockFieldNumber = 5;
+    public const int LevelUnlockFieldNumber = 6;
     private int levelUnlock_;
     /// <summary>
     ///* 解锁类型 
@@ -157,7 +172,7 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "rating_1" field.</summary>
-    public const int Rating1FieldNumber = 6;
+    public const int Rating1FieldNumber = 7;
     private int rating1_;
     /// <summary>
     ///* 1星 
@@ -171,9 +186,9 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "rating_2" field.</summary>
-    public const int Rating2FieldNumber = 7;
+    public const int Rating2FieldNumber = 8;
     private static readonly pb::FieldCodec<int> _repeated_rating2_codec
-        = pb::FieldCodec.ForInt32(58);
+        = pb::FieldCodec.ForInt32(66);
     private readonly pbc::RepeatedField<int> rating2_ = new pbc::RepeatedField<int>();
     /// <summary>
     ///* 2星 
@@ -184,9 +199,9 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "rating_3" field.</summary>
-    public const int Rating3FieldNumber = 8;
+    public const int Rating3FieldNumber = 9;
     private static readonly pb::FieldCodec<int> _repeated_rating3_codec
-        = pb::FieldCodec.ForInt32(66);
+        = pb::FieldCodec.ForInt32(74);
     private readonly pbc::RepeatedField<int> rating3_ = new pbc::RepeatedField<int>();
     /// <summary>
     ///* 3星 
@@ -197,9 +212,9 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "level_pixel" field.</summary>
-    public const int LevelPixelFieldNumber = 9;
+    public const int LevelPixelFieldNumber = 10;
     private static readonly pb::FieldCodec<string> _repeated_levelPixel_codec
-        = pb::FieldCodec.ForString(74);
+        = pb::FieldCodec.ForString(82);
     private readonly pbc::RepeatedField<string> levelPixel_ = new pbc::RepeatedField<string>();
     /// <summary>
     ///* 拼图1 
@@ -210,7 +225,7 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "ad_puzzle" field.</summary>
-    public const int AdPuzzleFieldNumber = 10;
+    public const int AdPuzzleFieldNumber = 11;
     private int adPuzzle_;
     /// <summary>
     ///* 广告方块,0表示不使用，1表示使用 
@@ -237,6 +252,7 @@ namespace X.Res {
         return true;
       }
       if (LevelId != other.LevelId) return false;
+      if (LevelType != other.LevelType) return false;
       if (LevelName != other.LevelName) return false;
       if (LevelTheme != other.LevelTheme) return false;
       if (LevelPicture != other.LevelPicture) return false;
@@ -253,6 +269,7 @@ namespace X.Res {
     public override int GetHashCode() {
       int hash = 1;
       if (LevelId != 0) hash ^= LevelId.GetHashCode();
+      if (LevelType != 0) hash ^= LevelType.GetHashCode();
       if (LevelName.Length != 0) hash ^= LevelName.GetHashCode();
       if (LevelTheme.Length != 0) hash ^= LevelTheme.GetHashCode();
       if (LevelPicture != 0) hash ^= LevelPicture.GetHashCode();
@@ -279,31 +296,35 @@ namespace X.Res {
         output.WriteRawTag(8);
         output.WriteUInt32(LevelId);
       }
+      if (LevelType != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(LevelType);
+      }
       if (LevelName.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteString(LevelName);
       }
       if (LevelTheme.Length != 0) {
-        output.WriteRawTag(26);
+        output.WriteRawTag(34);
         output.WriteString(LevelTheme);
       }
       if (LevelPicture != 0) {
-        output.WriteRawTag(32);
+        output.WriteRawTag(40);
         output.WriteInt32(LevelPicture);
       }
       if (LevelUnlock != 0) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteInt32(LevelUnlock);
       }
       if (Rating1 != 0) {
-        output.WriteRawTag(48);
+        output.WriteRawTag(56);
         output.WriteInt32(Rating1);
       }
       rating2_.WriteTo(output, _repeated_rating2_codec);
       rating3_.WriteTo(output, _repeated_rating3_codec);
       levelPixel_.WriteTo(output, _repeated_levelPixel_codec);
       if (AdPuzzle != 0) {
-        output.WriteRawTag(80);
+        output.WriteRawTag(88);
         output.WriteInt32(AdPuzzle);
       }
       if (_unknownFields != null) {
@@ -316,6 +337,9 @@ namespace X.Res {
       int size = 0;
       if (LevelId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(LevelId);
+      }
+      if (LevelType != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(LevelType);
       }
       if (LevelName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(LevelName);
@@ -351,6 +375,9 @@ namespace X.Res {
       }
       if (other.LevelId != 0) {
         LevelId = other.LevelId;
+      }
+      if (other.LevelType != 0) {
+        LevelType = other.LevelType;
       }
       if (other.LevelName.Length != 0) {
         LevelName = other.LevelName;
@@ -388,41 +415,45 @@ namespace X.Res {
             LevelId = input.ReadUInt32();
             break;
           }
-          case 18: {
-            LevelName = input.ReadString();
+          case 16: {
+            LevelType = input.ReadUInt32();
             break;
           }
           case 26: {
+            LevelName = input.ReadString();
+            break;
+          }
+          case 34: {
             LevelTheme = input.ReadString();
             break;
           }
-          case 32: {
+          case 40: {
             LevelPicture = input.ReadInt32();
             break;
           }
-          case 40: {
+          case 48: {
             LevelUnlock = input.ReadInt32();
             break;
           }
-          case 48: {
-            Rating1 = input.ReadInt32();
-            break;
-          }
-          case 58:
           case 56: {
-            rating2_.AddEntriesFrom(input, _repeated_rating2_codec);
+            Rating1 = input.ReadInt32();
             break;
           }
           case 66:
           case 64: {
+            rating2_.AddEntriesFrom(input, _repeated_rating2_codec);
+            break;
+          }
+          case 74:
+          case 72: {
             rating3_.AddEntriesFrom(input, _repeated_rating3_codec);
             break;
           }
-          case 74: {
+          case 82: {
             levelPixel_.AddEntriesFrom(input, _repeated_levelPixel_codec);
             break;
           }
-          case 80: {
+          case 88: {
             AdPuzzle = input.ReadInt32();
             break;
           }

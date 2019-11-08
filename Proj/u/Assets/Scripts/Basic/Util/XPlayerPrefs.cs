@@ -13,6 +13,7 @@ public static class XPlayerPrefs
         public Dictionary<string, float> Dic_Float = new Dictionary<string, float>();
         public Dictionary<string, string> Dic_Str = new Dictionary<string, string>();
         public Dictionary<string, Recorder> Dic_LevelRec = new Dictionary<string, Recorder>();
+        public List<byte> List_Day = new List<byte>();
     }
     private static string tag = "/save.d";
     private static Dictionary<string, int> Dic_Int
@@ -258,5 +259,40 @@ public static class XPlayerPrefs
         {
             data.Dic_LevelRec.Remove(level);
         }
+    }
+    public static void SetSign(int index ,int offset,byte value)
+    {
+        if (data.List_Day.Count<index)
+        {
+            int temp = index - data.List_Day.Count;
+            data.List_Day.AddRange(new List<byte>(temp));
+        }
+        byte tempb = data.List_Day[index];
+        SetByte(ref tempb, value,offset);
+        data.List_Day[index] = tempb;
+    }
+
+    private static void SetByte(ref byte src, byte value, int index)
+    {
+        byte des = (byte)(value << index);
+        int temp = src;
+        temp = temp | des;
+        src = (byte)temp;
+    }
+
+    public static bool GetSign(int index, int offset)
+    {
+        if (offset>7)
+        {
+            Debuger.LogError("Debuger", "GetSign", "每日签到 数据越界了");
+        }
+        if (data.List_Day.Count <= index)
+        {
+            int temp = index - data.List_Day.Count;
+            data.List_Day.AddRange(new List<byte>(temp));
+            return false;
+        }
+        byte tempb = data.List_Day[index];
+        return ((tempb >> offset) & 1) == 1;
     }
 }

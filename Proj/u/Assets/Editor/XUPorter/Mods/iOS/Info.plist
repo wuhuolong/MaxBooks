@@ -61,6 +61,8 @@
 	<string></string>
 	<key>UnityCrashSubmissionURL</key>
 	<string></string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string></string>
 	<key>Unity_LoadingActivityIndicatorStyle</key>
 	<integer>-1</integer>
 </dict>

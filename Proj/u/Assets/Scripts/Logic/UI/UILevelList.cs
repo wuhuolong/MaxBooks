@@ -10,15 +10,15 @@ public class UILevelList : UIPage
     string levelBtnPath = "Prefabs/UI/UILevelBtn.Prefab";
 
     string isUnlock = "isUnlock";
-    string numStar = "numStar";
-    string numAllStar = "numAllStar";
-    string curLevel = "curLevel";
+    //string numStar = "numStar";
+    //string numAllStar = "numAllStar";
+    //string curLevel = "curLevel";
     string isCompleted = "isCompleted";
     public RectTransform LevelContent;
-    public Text starsText;
+    //public Text starsText;
     public Scrollbar scrollbar;
-    public float scrollValue;
-    public float len;
+    private float scrollValue;
+    //private float len;
 
     private bool buttonCheck;
 
@@ -46,7 +46,7 @@ public class UILevelList : UIPage
 
     float curHeight = 0.0f;
 
-    public float totalLen = 100.0f;
+    private float totalLen = 100.0f;
 
     string curTheme = "";
     int themeCnt = 0;
@@ -65,7 +65,6 @@ public class UILevelList : UIPage
         StartCoroutine(ShadowInit());
 
         rectWidth = LevelContent.rect.width;
-        OnShow();
     }
     private void FixedUpdate()
     {
@@ -116,11 +115,12 @@ public class UILevelList : UIPage
             }
         }
     }
-    public void OnShow()
+
+    protected override void InitComp()
     {
-        if(gameObject.name=="UILevelList(Clone)")
+        if (gameObject.name == "UILevelList(Clone)")
         {
-            for(int i=0;i< LevelContent.childCount;i++)
+            for (int i = 0; i < LevelContent.childCount; i++)
             {
                 Destroy(LevelContent.GetChild(i).gameObject);
             }
@@ -129,10 +129,6 @@ public class UILevelList : UIPage
             LoadLevelList();
         }
     }
-    protected override void InitComp()
-    {
-
-    }
     protected override void InitData()
     {
 
@@ -140,14 +136,14 @@ public class UILevelList : UIPage
 
     private void SetScrollValue()
     {
-        int curLevelID = XPlayerPrefs.GetInt(curLevel);
+        uint curLevelID = LevelMgr.GetInstance().GetNewLevel().LevelId;
         if(curLevelID == 0)
         {
             scrollValue = 1.0f;
         }
         else
         {
-            List<int> index = LevelMgr.GetInstance().GetLevelIndex((uint)curLevelID);
+            List<int> index = LevelMgr.GetInstance().GetLevelIndex(curLevelID);
             float curLen = 0.0f;
             if(index.Count==1 && index[0]<=9)
             {
@@ -160,7 +156,7 @@ public class UILevelList : UIPage
                 curLen += Mathf.CeilToInt(index[i] / 3.0f) * offsetY;
             }
             scrollValue = 1 - curLen / totalLen;
-            len = curLen;
+            //len = curLen;
         }
     }
 
@@ -249,11 +245,13 @@ public class UILevelList : UIPage
 
     private void LoadLevelListContent(LevelConfig config,LevelConfig nextConfig,int i,int count)
     {
+        
         ////设置星星数量
         //if(!XPlayerPrefs.HasKey(config.LevelId.ToString()+numStar))
         //{
         //    XPlayerPrefs.SetInt(config.LevelId.ToString() + numStar, 0);
         //}
+        
 
         //新的主题
         if (curTheme != config.LevelTheme)
@@ -300,11 +298,11 @@ public class UILevelList : UIPage
     private void LoadNumOfStars()
     {
 
-        if(!XPlayerPrefs.HasKey(numAllStar))
-        {
-            XPlayerPrefs.SetInt(numAllStar, 0);
-        }
-        starsText.text = XPlayerPrefs.GetInt(numAllStar).ToString();
+        //if(!XPlayerPrefs.HasKey(numAllStar))
+        //{
+        //    XPlayerPrefs.SetInt(numAllStar, 0);
+        //}
+        //starsText.text = XPlayerPrefs.GetInt(numAllStar).ToString();
     }
 
     /// <summary>
@@ -333,14 +331,16 @@ public class UILevelList : UIPage
     {
         //加载关卡名字，缩略图;
         uiLevelBtn.levelText.text = themeCnt.ToString() + "-" + (levelCnt + 1).ToString();
-        UIAtlas ats = ResMgr.GetAtlas(picture);
+        //string picname = "level_s";//string.Format("s_{0}", picture);
+        string altasname = AltasMgr.GetInstance().GetConfigByID(id).AltasName;
+        UIAtlas ats = UIAtlasUtil.GetAtlas(altasname);
         ats.Sp = uiLevelBtn.levelImg;
 
         if(ats!=null)
         {
             if (XPlayerPrefs.GetInt(id.ToString()+isCompleted)==1)
             {
-                ats.SetSprite("p_"+picture);
+                ats.SetSprite("s_" + picture);//ats.SetSprite("p_"+picture);
                 //uiLevelBtn.levelText.text = LevelMgr.GetInstance().GetLevelConfig(id).Config.LevelName;
                 //uiLevelBtn.levelText.text = themeCnt.ToString() + "-" + (levelCnt + 1).ToString();
             }
@@ -356,7 +356,8 @@ public class UILevelList : UIPage
                 ats.SetSprite("s_" + picture);
             }
         }
-        
+
+        #region starandlock
         ////加载星星
         //if (UnpackStarNum(XPlayerPrefs.GetInt(id.ToString() + numStar)) >= 1)
         //{
@@ -414,5 +415,6 @@ public class UILevelList : UIPage
         //        unlockAts.SetSprite("zuanshi");
         //        break;
         //}
+        #endregion
     }
 }

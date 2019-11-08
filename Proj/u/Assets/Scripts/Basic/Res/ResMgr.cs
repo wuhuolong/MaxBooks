@@ -50,14 +50,18 @@ public class ResMgr
     }
     public static void LoadGobjAsync(string path, Action<GameObject> callback)
     {
-
+        //System.Diagnostics.Stopwatch wa = new System.Diagnostics.Stopwatch();
         //GameObject temp = Load<GameObject>(path);
         LoadAsync<GameObject>(path, (o) =>
         {
             Log(Tag, "LoadGobjAsync" , path);
+            //wa.Reset();
+            //wa.Start();
             GameObject obj = GameObject.Instantiate(o);
+            //Debug.Log(wa.ElapsedMilliseconds);
             callback(obj);
         });
+        
         //todo add tag scripts.
     }
     public static void LoadGobjAsync(string path, Action callback)
@@ -81,6 +85,15 @@ public class ResMgr
         UIAtlas ua = go.GetComponent<UIAtlas>();
         return ua;
     }
+
+    public static UIAtlas GetLevelAtlas(string atlasname)
+    {
+        string path = XGamePath.GetAtlasPath(atlasname);
+        GameObject go = Load<GameObject>(path);
+        UIAtlas ua = go.GetComponent<UIAtlas>();
+        return ua;
+    }
+
     public static void GetAtlasAsync(string atlasname, Action<UIAtlas> callback)
     {
         string path = XGamePath.GetAtlasPath(atlasname);

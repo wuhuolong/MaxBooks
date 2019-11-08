@@ -6,6 +6,15 @@ using UnityEngine.UI;
 
 public class UIPlay : UIPage
 {
+    /// <summary>
+    /// 新手引导
+    /// </summary>
+    public GameObject mask;
+    public CircleShaderViewer shaderViewer;
+    private int needMask;
+    private bool inGuiding;
+
+
     //暂停界面读取评星提示用-hzy
     uint levelID;
     // LevelData data;
@@ -22,13 +31,13 @@ public class UIPlay : UIPage
     private float shadowSpeedToList = 10.0f;
     private bool isShadow = false;
     private bool isShadowToList = false;
-    private bool isShadowSelf = false;
+    //private bool isShadowSelf = false;
     private string shadowType = "shadowType";
     private int type;
 
     private bool buttonCheck;
 
-    string tmpNumStar = "tmpNumStar";
+    //string tmpNumStar = "tmpNumStar";
 
 
 
@@ -61,20 +70,35 @@ public class UIPlay : UIPage
 
     private void OnEnable()
     {
+        mask.SetActive(false);
+        needMask = 0;
+        if (LevelMgr.GetInstance().GetIndexByID(LevelMgr.GetInstance().CurLevelID) == "1-1")
+        {
+            Debug.Log("1-1");
+            needMask = 1;
+        }
+        if(LevelMgr.GetInstance().GetIndexByID(LevelMgr.GetInstance().CurLevelID) == "1-2")
+        {
+            needMask = 2;   
+        }
+
         buttonCheck = true;
         animator = GetComponent<Animator>();
         UIEvent.RegEvent(UIEvent.UI_LEVELSTART, LevelStart);
         //UIEvent.RegEvent(UIEvent.UI_LEVEL_USEREC, LevelUseRec);
 
         //暂停界面读取评星提示用-hzy （现在单纯是为了把关卡序号显示在上方 -sjh）
-        levelID = LevelMgr.GetInstance().GetCurLevelID();
+        levelID = LevelMgr.GetInstance().CurLevelID;
 
         operationHistoryRecorder.SetLevelId(levelID);
         // data = LevelMgr.GetInstance().GetLevelConfig(levelID);
         // value = LevelMgr.GetInstance().GetValueConfig();
 
         //显示关卡序号
-        levelText.text="LEVEL "+LevelMgr.GetInstance().GetIndexByID(levelID);
+        BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
+        levelmode.OnEnter(levelText);
+        //levelText.text="LEVEL "+LevelMgr.GetInstance().GetIndexByID(levelID);//modify at 20191108 wuhuolong
+
         // Debug.LogError(LevelMgr.GetInstance().GetIndexByID(levelID));
 
         black.alpha = 1.0f;
@@ -96,6 +120,27 @@ public class UIPlay : UIPage
                     shadows[type].localScale = Vector3.zero;
                     XPlayerPrefs.SetInt(shadowType, -1);
                     isShadow = false;
+                    if (needMask==1)
+                    {
+                        Debug.Log("init");
+                        mask.SetActive(true);
+                        shaderViewer.Init(1,0);
+                    }
+                    if(needMask==2)
+                    {
+                        var rec = XPlayerPrefs.GetRec(levelID);
+                        if(rec==null)
+                        {
+                            SettlePuzzle newSettlePuzzle = new SettlePuzzle();
+                            newSettlePuzzle.puzzleID = 0;
+                            newSettlePuzzle.puzzleRotateState = 0;
+                            newSettlePuzzle.puzzleGridIndex = 162;
+                            generalPanelUI.SettlePuzzleFunc(newSettlePuzzle);
+                            Debug.Log("init");
+                            mask.SetActive(true);
+                            shaderViewer.Init(2, 0);
+                        }
+                    }
                 }
             }
         }
@@ -150,7 +195,7 @@ public class UIPlay : UIPage
         type = XPlayerPrefs.GetInt(shadowType);
         int waittime = (type == -1) ? 0 : 1;
         //Debug.Log("after" + shadowType + type);
-        Debug.Log("play" + waittime);
+        //Debug.Log("play" + waittime);
         yield return new WaitForSeconds(0.2f * waittime);
         black.alpha = 0.0f;
         if (type != -1)
@@ -215,7 +260,7 @@ public class UIPlay : UIPage
         {
             yield return null;
         }
-        Debug.Log("animator set false");
+        //Debug.Log("animator set false");
 
         animator.enabled = false;
         RecCheck();
@@ -232,7 +277,7 @@ public class UIPlay : UIPage
 
         panelTransformationController.InitPTController();
         miniMapController.InitMiniMap();
-        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelEnter);
+        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelEnter,(int)levelID);
     }
 
     private void RecCheck()
@@ -240,7 +285,7 @@ public class UIPlay : UIPage
         var rec = XPlayerPrefs.GetRec(levelID);
         if (rec != null)
         {
-            Debug.Log("RecCheck == true");
+            //Debug.Log("RecCheck == true");
             Action ac_ok = () =>
             {
                 operationHistoryRecorder.SetLevelId(levelID, true);
@@ -285,7 +330,7 @@ public class UIPlay : UIPage
 
     public void LevelReturn()
     {
-        Debug.Log("return");
+        //Debug.Log("return");
         // Resume();
         RandomType();
         ShadowInit2();
@@ -296,18 +341,18 @@ public class UIPlay : UIPage
         CloseUIPlay();
     }
 
-    public void LevelRestart()
+    private void LevelRestart()
     {
-        if (buttonCheck)
-        {
-            buttonCheck = false;
-            isShadowSelf = true;
-            RandomType();
-            // Resume();
-            shadows[type].localScale = shadowMax;
-            Debug.Log("restart" + isShadowSelf);
-            Debug.Log("restart" + type);
-        }
+        //if (buttonCheck)
+        //{
+        //    buttonCheck = false;
+        //    isShadowSelf = true;
+        //    RandomType();
+        //    // Resume();
+        //    shadows[type].localScale = shadowMax;
+        //    Debug.Log("restart" + isShadowSelf);
+        //    Debug.Log("restart" + type);
+        //}
     }
 
     public void LevelRestartCorou()
@@ -315,9 +360,9 @@ public class UIPlay : UIPage
         if (buttonCheck)
         {
             buttonCheck = false;
-            Debug.Log("restart");
+            //Debug.Log("restart");
             // Resume();
-            uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
+            uint curLevelID = LevelMgr.GetInstance().CurLevelID;
             XPlayerPrefs.DelRec(curLevelID);
             // pausePage.SetActive(false);
             CloseUIPlay();
@@ -387,6 +432,8 @@ public class UIPlay : UIPage
 
     private void SaveOperation()
     {
+        
+
         Recorder rec = operationHistoryRecorder.Recoder;
         rec.LevelId = levelID;
         rec.layout = MatrixUtil.ArrayCopy(generalPanelUI.generalPanelData.Playout);

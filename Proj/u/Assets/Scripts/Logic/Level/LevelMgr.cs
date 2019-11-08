@@ -8,6 +8,13 @@ public enum Level_UnlockType
     AD,
     Subscription,
 }
+
+public enum GamePlayModule
+{
+    Normal,
+    SignIn,
+}
+
 public class LevelData
 {
     public LevelMapArray Map;
@@ -21,17 +28,27 @@ public class LevelMgr : CSSingleton<LevelMgr>
     private LevelMapData m_data;
     private ValueConfig_ARRAY m_value;
 
+    public GamePlayModule CurPlayMode;
+    private static Dictionary<int, BaseLevel> m_Modes = new Dictionary<int, BaseLevel>()
+        {
+            { (int) GamePlayModule.Normal,new NormalLevel()},
+            { (int) GamePlayModule.SignIn,new SignLevel()},
+        };
+    public BaseLevel CurLevelMode
+    {
+        get
+        {
+            return m_Modes[(int)CurPlayMode];
+        }
+    }
+
     private uint curLevelID;
     private uint nextLevelID;
 
     private string curThemeID;
     private string nextThemeID;
 
-    public LevelMgr()
-    {
-        InitData();
-    }
-    private void InitData()
+    protected override void Init()
     {
         m_config = ResBinReader.Read<LevelConfig_ARRAY>("LevelConfig");
         SortConfig();
@@ -40,8 +57,9 @@ public class LevelMgr : CSSingleton<LevelMgr>
         m_data = LevelLoader.Load();
         if (m_data == null)
         {
-            this.Log("m_data == null");
+            Debuger.Log(Tag, string.Empty, "m_data == null");
         }
+        CurPlayMode = GamePlayModule.Normal;
     }
 
     /// <summary>
@@ -111,6 +129,18 @@ public class LevelMgr : CSSingleton<LevelMgr>
         return m_value;
     }
 
+    public LevelConfig GetNewLevel()
+    {
+        for(int i=0;i<m_config.Items.Count;i++)
+        {
+            if (XPlayerPrefs.GetInt(m_config.Items[i].LevelId.ToString()+ "isCompleted") ==0)
+            {
+                return m_config.Items[i];
+            }
+        }
+        return m_config.Items[m_config.Items.Count - 1];
+    }
+
     public void DoLoadLevelListLen(System.Action<LevelConfig> ac)
     {
         for (int i = 0; i < m_config.Items.Count; i++)
@@ -136,11 +166,11 @@ public class LevelMgr : CSSingleton<LevelMgr>
         data.Map = GetMapArrayData(id);
         if (data.Config == null)
         {
-            this.Log("data.Config == null)");
+            Debuger.Log(Tag,string.Empty,"data.Config == null)");
         }
         if (data.Map == null)
         {
-            this.Log("data.Map == null");
+            Debuger.Log(Tag, string.Empty,"data.Map == null");
         }
         return data;
     }
@@ -222,37 +252,15 @@ public class LevelMgr : CSSingleton<LevelMgr>
     {
         return m_themeConfig;
     }
+    
+    public void GotoLevel(uint levelid)
+    {
+        CurLevelID = levelid;
+        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+    }
 
-    public uint GetCurLevelID()
-    {
-        return curLevelID;
-    }
-    public void SetCurLevelID(uint id)
-    {
-        curLevelID = id;
-    }
-    public uint GetNextLevelID()
-    {
-        return nextLevelID;
-    }
-    public void SetNextLevelID(uint id)
-    {
-        nextLevelID = id;
-    }
-    public string GetCurThemeID()
-    {
-        return curThemeID;
-    }
-    public void SetCurThemeID(string id)
-    {
-        curThemeID = id;
-    }
-    public string GetNextThemeID()
-    {
-        return nextThemeID;
-    }
-    public void SetNextThemeID(string id)
-    {
-        nextThemeID = id;
-    }
+    public uint CurLevelID { get; set; }
+    public uint NextLevelID { get; set; }
+    public string CurThemeID { get; set; }
+    public string NextThemeID { get; set; }
 }

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UIMain : UIPage
 {
-    bool languageCheck = true;
 
     public CanvasGroup black;
     public CanvasGroup flash;
@@ -23,6 +22,7 @@ public class UIMain : UIPage
 
     private bool buttonCheck;
 
+    public Dropdown languageList;
     public RectTransform[] shadows;
     private bool isShadow = false;
     private bool isShadowFromList = false;
@@ -31,7 +31,6 @@ public class UIMain : UIPage
     private float shadowSpeed = 10.0f;
     private float shadowSpeedFromList = 3.5f;
     private string shadowType = "shadowType";
-    private string curLevel = "curLevel";
     private string isUnlock = "isUnlock";
     private int type;
 
@@ -52,13 +51,8 @@ public class UIMain : UIPage
 
     private void OnEnable()
     {
-        
-        if(XPlayerPrefs.GetInt(curLevel)==0)
-        {
-            LevelMgr.GetInstance().SetFirstLevel();
-        }
-        levelID = (uint)XPlayerPrefs.GetInt(curLevel);
-        LevelMgr.GetInstance().SetCurLevelID(levelID);
+        levelID = LevelMgr.GetInstance().GetNewLevel().LevelId;
+        LevelMgr.GetInstance().CurLevelID = levelID;
         XPlayerPrefs.SetInt(levelID + isUnlock, -1);
         //XPlayerPrefs.Save();
 
@@ -187,6 +181,7 @@ public class UIMain : UIPage
             RandomType();
             ShadowInit();
             isShadow = true;
+            LevelMgr.GetInstance().CurPlayMode = GamePlayModule.Normal;
         }
     }
 
@@ -215,7 +210,18 @@ public class UIMain : UIPage
     public void ClickOpenSetting()
     {
         setting.SetActive(true);
-        Refresh();
+        switch(GameConfig.Language)
+        {
+            case LangType.zh_Hans:
+                LanguageMgr.GetInstance().SwitchLanguage(LangType.zh_Hans);
+                break;
+            case LangType.zh_Hant:
+                LanguageMgr.GetInstance().SwitchLanguage(LangType.zh_Hant);
+                break;
+            case LangType.en:
+                LanguageMgr.GetInstance().SwitchLanguage(LangType.en);
+                break;
+        }
     }
 
     public void ClickCloseSetting()
@@ -232,17 +238,32 @@ public class UIMain : UIPage
 
     public void ClickChangeLanguage()
     {
-        languageCheck = !languageCheck;
-        GameConfig.Language = languageCheck ? LangType.cn : LangType.en;
-        Refresh();
+        if(languageList.options[languageList.value].text=="简体中文")
+        {
+            LanguageMgr.GetInstance().SwitchLanguage(LangType.zh_Hans);
+            //GameConfig.Language = LangType.zh_Hans;
+        }
+        else if(languageList.options[languageList.value].text == "繁體中文")
+        {
+            LanguageMgr.GetInstance().SwitchLanguage(LangType.zh_Hant);
+        }
+        else if(languageList.options[languageList.value].text == "English")
+        {
+            LanguageMgr.GetInstance().SwitchLanguage(LangType.en);
+            //GameConfig.Language = LangType.en;
+        }
+        //GameConfig.Language = languageCheck ? LangType.zh_Hans : LangType.en;//多个语言下呢？要用toggle
+        //Refresh();//languagemgr的逻辑已经改了，要调用LanguageMgr.SwitchLanguage
     }
 
-    private void Refresh()
+    public void ShowAD()
     {
-        LanguageMgr.GetInstance().GetLangStrByID(texts[0], 3);
-        LanguageMgr.GetInstance().GetLangStrByID(texts[1],4);
-        LanguageMgr.GetInstance().GetLangStrByID(texts[2],5);
-        LanguageMgr.GetInstance().GetLangStrByID(texts[3],6);
-        LanguageMgr.GetInstance().GetLangStrByID(texts[4],7);
+        AdMgr.GetInstance().InterstitialTrigger(null,null,null);
+    }
+
+    public void ClickRanking()
+    {
+        UIMgr.ShowWindows(UIPageEnum.Calendar_Page);
+        LevelMgr.GetInstance().CurPlayMode = GamePlayModule.SignIn;
     }
 }

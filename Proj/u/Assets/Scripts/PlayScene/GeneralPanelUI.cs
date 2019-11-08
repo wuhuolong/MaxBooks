@@ -112,6 +112,7 @@ public class GeneralPanelUI : MonoBehaviour
         //FINISH:利用上面的数组搭建面板
         //TODO:利用对象池优化
         //!此处逻辑应该改为显示面板，在游戏打开时就要搭建面板了
+        int ie = 0;
         foreach (GeneralPanelData.GridType i in Playout)
         {
             switch (i)
@@ -145,12 +146,25 @@ public class GeneralPanelUI : MonoBehaviour
                     }
                 case GeneralPanelData.GridType.Fix:
                     {
-                        //TODO:为了达到无缝的效果，检查邻接的格子，判断使用哪种prefab
-                        GameObject finalFixGridPrefab = null;
-                        generalPanelData.CheckFixGrid((int)i);
+                        //!暂时不考虑无缝效果
+                        // //TODO:为了达到无缝的效果，检查邻接的格子，判断使用哪种prefab
+                        // // GameObject finalFixGridPrefab = null;
+                        // int fixGridTR = generalPanelData.CheckFixGrid(ie);
+                        // int fixGridType = fixGridTR / 10;
+                        // int fixGridRotate = fixGridTR % 10;
 
+                        // // Debug.Log("fixGrid Index & TR:" + (ie % generalPanelData.Pwidth).ToString() + " " + (ie / generalPanelData.Pwidth).ToString() + " " + fixGridTR.ToString());
+                        // if (fixGridTR == -1)
+                        // {
+                        //     Debug.Log("wrong");
+                        // }
+
+                        // GameObject specFixGridPrefab = fixGridPrefabList[fixGridType];
+
+                        //TODO:Instantiate
 
                         GameObject grid = GameObject.Instantiate(fixGridPrefab, this.transform);
+                        // grid.transform.Rotate(Vector3.forward, 90 * fixGridRotate);
                         GameObject preCheckGrid = new GameObject("PreCheckGrid");
                         preCheckGrid.AddComponent<RectTransform>();
                         preCheckGrid.transform.SetParent(preCheckPanelTrans, false);
@@ -177,6 +191,7 @@ public class GeneralPanelUI : MonoBehaviour
                 default:
                     break;
             }
+            ie++;
         }
     }
 
@@ -188,7 +203,7 @@ public class GeneralPanelUI : MonoBehaviour
         //TODO:如果有存档，就根据存档把拼图加进去
         if (isregen)
         {
-            uint curLevelID = LevelMgr.GetInstance().GetCurLevelID();
+            uint curLevelID = LevelMgr.GetInstance().CurLevelID;
             Recorder rec = XPlayerPrefs.GetRec(curLevelID);
 
             List<SettlePuzzle> settlePuzzleList = rec.settlePuzzleList;
@@ -196,41 +211,46 @@ public class GeneralPanelUI : MonoBehaviour
             Debug.Log("settlePuzzleList length:" + settlePuzzleList.Count);
             foreach (SettlePuzzle settlePuzzle in settlePuzzleList)
             {
-                int pid = settlePuzzle.puzzleID;
-                int prs = settlePuzzle.puzzleRotateState;
-                int pgi = settlePuzzle.puzzleGridIndex;
-
-                Debug.Log("pid:" + pid);
-                Debug.Log("puzzleBarTrans.childCount:" + puzzleBarTrans.childCount);
-
-                GameObject settlePuzzleOrigin = puzzleBarTrans.GetChild(pid).gameObject;
-                GameObject settlePuzzleTemp = GameObject.Instantiate(settlePuzzleOrigin);
-
-                PuzzleItemUI settlePuzzleOriginUI = settlePuzzleOrigin.GetComponent<PuzzleItemUI>();
-                PuzzleItemData settlePuzzleOriginData = settlePuzzleOriginUI.puzzleItemData;
-
-                PuzzleItemUI settlePuzzleTempUI = settlePuzzleTemp.GetComponent<PuzzleItemUI>();
-                PuzzleItemData settlePuzzleTempData = settlePuzzleTempUI.puzzleItemData;
-
-                settlePuzzleTempData.InitButtomPuzzleItemData(
-                settlePuzzleOriginData.PID,
-                settlePuzzleOriginData.Pwidth,
-                settlePuzzleOriginData.Pheight,
-                settlePuzzleOriginData.Playout,
-                settlePuzzleOriginData.Pcenter);
-
-                settlePuzzleTempUI.cloneForMove = settlePuzzleOriginUI.cloneForMove;
-                settlePuzzleTempUI.screenSpaceRectTransform = settlePuzzleOriginUI.screenSpaceRectTransform;
-
-                settlePuzzleTempData.PanelGridIndex = pgi;
-
-                settlePuzzleTempUI.RotatePuzzleToState(prs);
-
-                InsertPuzzle(settlePuzzleTemp, false);
-
-                Destroy(settlePuzzleTemp);
+                SettlePuzzleFunc(settlePuzzle);
             }
         }
+    }
+
+    public void SettlePuzzleFunc(SettlePuzzle settlePuzzle)
+    {
+        int pid = settlePuzzle.puzzleID;
+        int prs = settlePuzzle.puzzleRotateState;
+        int pgi = settlePuzzle.puzzleGridIndex;
+
+        Debug.Log("pid:" + pid);
+        Debug.Log("puzzleBarTrans.childCount:" + puzzleBarTrans.childCount);
+
+        GameObject settlePuzzleOrigin = puzzleBarTrans.GetChild(pid).gameObject;
+        GameObject settlePuzzleTemp = GameObject.Instantiate(settlePuzzleOrigin);
+
+        PuzzleItemUI settlePuzzleOriginUI = settlePuzzleOrigin.GetComponent<PuzzleItemUI>();
+        PuzzleItemData settlePuzzleOriginData = settlePuzzleOriginUI.puzzleItemData;
+
+        PuzzleItemUI settlePuzzleTempUI = settlePuzzleTemp.GetComponent<PuzzleItemUI>();
+        PuzzleItemData settlePuzzleTempData = settlePuzzleTempUI.puzzleItemData;
+
+        settlePuzzleTempData.InitButtomPuzzleItemData(
+        settlePuzzleOriginData.PID,
+        settlePuzzleOriginData.Pwidth,
+        settlePuzzleOriginData.Pheight,
+        settlePuzzleOriginData.Playout,
+        settlePuzzleOriginData.Pcenter);
+
+        settlePuzzleTempUI.cloneForMove = settlePuzzleOriginUI.cloneForMove;
+        settlePuzzleTempUI.screenSpaceRectTransform = settlePuzzleOriginUI.screenSpaceRectTransform;
+
+        settlePuzzleTempData.PanelGridIndex = pgi;
+
+        settlePuzzleTempUI.RotatePuzzleToState(prs);
+
+        InsertPuzzle(settlePuzzleTemp, false);
+
+        Destroy(settlePuzzleTemp);
     }
 
 
@@ -292,6 +312,9 @@ public class GeneralPanelUI : MonoBehaviour
                 panelGridIndex = gridIndex;
                 outputBlankLayout = MatrixUtil.ArrayCopy(blankLayout);
 
+                onDeleteAreaFlag = false;
+                //TODO:deleteArea缩小为1
+                StartCoroutine(DeleteAreaLinearScaleDown());
 
                 if (isFit)
                 {
@@ -496,7 +519,7 @@ public class GeneralPanelUI : MonoBehaviour
 
                 if (settlePuzzleItemUI.RotateState == puzzleItemUI.RotateState
                 && settlePuzzleItemData.PanelGridIndex == puzzleItemData.PanelGridIndex
-                && settlePuzzleItemData.PID==puzzleItemData.PID)
+                && settlePuzzleItemData.PID == puzzleItemData.PID)
                 {
                     existFlag = true;
                     opPuzzle = settlePuzzle;
