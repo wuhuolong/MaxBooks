@@ -55,7 +55,6 @@ public class PanelTransformationController : MonoBehaviour
     {
         miniMapController.RelRatio = relRatio;
         gameOverFlag = false;
-        dragController.GameOverFlag = false;
 
         scaleRatio = 1;
         curPos = Vector3.zero;
@@ -77,6 +76,11 @@ public class PanelTransformationController : MonoBehaviour
 
     public void Update()
     {
+        UpdateCheck();
+    }
+
+    private void UpdateCheck()
+    {
         if (!gameOverFlag)
         {
             //?PC上无法模拟Input.Touch
@@ -93,7 +97,7 @@ public class PanelTransformationController : MonoBehaviour
                 return;
                 //如果正在drag puzzle，以下的单指双指输入全部屏蔽
             }
-            if(elasticBackFlag)
+            if (elasticBackFlag)
             {
                 return;
             }
@@ -349,11 +353,9 @@ public class PanelTransformationController : MonoBehaviour
             // }
         }
 
-
-
     }
 
-    bool elasticBackFlag=false;
+    bool elasticBackFlag = false;
     public void DetectCurrentPos()
     {
         bool outFlag = false;
@@ -396,7 +398,7 @@ public class PanelTransformationController : MonoBehaviour
 
         if (outFlag)
         {
-            elasticBackFlag=true;
+            elasticBackFlag = true;
             StartCoroutine(ElasticBack(finalPos, 0.5f));
         }
 
@@ -405,7 +407,6 @@ public class PanelTransformationController : MonoBehaviour
     public IEnumerator ReturnToOrigin(float time, Action afterMoveAction)
     {
         gameOverFlag = true;
-        dragController.GameOverFlag = true;
         StopCoroutine("ElasticBack");
 
         Vector3 playFieldCurPos = playFieldTrans.position;
@@ -446,7 +447,7 @@ public class PanelTransformationController : MonoBehaviour
             yield return null;
         }
         playFieldTrans.position = finalPos;
-        elasticBackFlag=false;
+        elasticBackFlag = false;
     }
 
 

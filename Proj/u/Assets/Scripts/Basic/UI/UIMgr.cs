@@ -119,10 +119,14 @@ public class UIMgr
         //ShowUI_Play((int)uiid);
         ShowUIAsync_Play((int)uiid, LoadWindCallback);
     }
-    public static void ShowTips(UIPageEnum uiid, params object[] argc)
+    public static void ShowSimpleTips(string msg)
+    {
+        ShowTips(UIPageEnum.TipsLabel_Page, msg);
+    }
+    public static void ShowTips(UIPageEnum uiid, params object[] argv)
     {
         //ShowUI((int)uiid);
-        ShowUIAsync_Tips((int)uiid, LoadTipsCallback, argc);
+        ShowUIAsync_Tips((int)uiid, LoadTipsCallback, argv);
     }
     public static void ShowWindows(UIPageEnum uiid)
     {
@@ -253,7 +257,7 @@ public class UIMgr
             };
 
             LoadUIAsync(uiid, cb);
-            
+
         }
         else
         {
@@ -317,7 +321,7 @@ public class UIMgr
 
     }
 
-    private static void ShowUIAsync_Tips(int uiid, Action<UIBase, int> callback = null, params object[] argc)
+    private static void ShowUIAsync_Tips(int uiid, Action<UIBase, int> callback = null, params object[] argv)
     {
         ResMgr.Log(Tag, "ShowUIAsync", "==>" + uiid);
         UITips ub = (UITips)_Ins.m_uicache[uiid];
@@ -331,7 +335,7 @@ public class UIMgr
                 go.transform.localPosition = Vector3.zero;
                 go.transform.localScale = Vector3.one;
                 ub = go.GetComponent<UITips>();
-                ub.argc = argc;
+                ub.argv = argv;
                 ub.OnShowTips();
                 _Ins.m_uicache[uiid] = ub;
                 if (callback != null)
@@ -344,9 +348,9 @@ public class UIMgr
         }
         else
         {
-            ub.argc = argc;
-            ub.OnShowTips();
+            ub.argv = argv;
             ub.gameObject.SetActive(true);
+            ub.OnShowTips();
             if (ub.IsNeedMask)
             {
                 if (!m_bgMask.gameObject.activeInHierarchy)

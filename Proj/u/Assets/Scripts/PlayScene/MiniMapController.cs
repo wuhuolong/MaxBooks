@@ -35,28 +35,26 @@ public class MiniMapController : MonoBehaviour
     {
         //!以下是鼠标移动到小地图上的处理
 
-        // PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-        // pointerEventData.position = Input.mousePosition;
-        // List<RaycastResult> raycastResultsList = new List<RaycastResult>();
-        // EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
-        // if (raycastResultsList.Count > 0)
-        // {
-        //     string rayhitObjName = raycastResultsList[0].gameObject.name;
-        //     if (rayhitObjName.Contains("MiniMap"))
-        //     {
-        //         MoveToTheOtherSide();
-        //     }
-        // }
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = Input.mousePosition;
+        List<RaycastResult> raycastResultsList = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
+        if (raycastResultsList.Count > 0)
+        {
+            string rayhitObjName = raycastResultsList[0].gameObject.name;
+            if (rayhitObjName.Contains("MiniMap"))
+            {
+                MoveToTheOtherSide();
+            }
+        }
     }
 
     public void InitMiniMap()
     {
         orangeOutlineRectTrans = orangeOutline.GetComponent<RectTransform>();
-
         InitRatio();
         RefreshMiniMap();
         RefreshOrangeOutline(Vector3.zero, 1);
-
     }
 
     private void InitRatio()

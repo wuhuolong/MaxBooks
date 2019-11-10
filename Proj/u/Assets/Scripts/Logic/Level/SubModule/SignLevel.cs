@@ -14,11 +14,13 @@ public class SignLevel : BaseLevel
 
     public override void OnExit(params object[] argv)
     {
-
+        int selectedDateTimeInt = XPlayerPrefs.GetInt(ChallengeController.selectedDateTimeStr);
+        Debug.Log("sign:" + (selectedDateTimeInt - GameConfig.SignInDay).ToString());
+        SignInMgr.GetInstance().Sign(selectedDateTimeInt - GameConfig.SignInDay);
     }
 
     public override void OnClickQuit_UIEnd(params object[] argv)
     {
-        UIMgr.ShowPage(UIPageEnum.Calendar_Page);        
+        UIMgr.ShowPage(UIPageEnum.Calendar_Page);
     }
 }

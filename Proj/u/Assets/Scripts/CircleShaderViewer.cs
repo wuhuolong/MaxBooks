@@ -6,6 +6,16 @@ using X.Res;
 
 public class CircleShaderViewer : MonoBehaviour
 {
+    enum AnimationState
+    {
+        Drag1,
+        Drag2,
+        Rotate,
+        Delete,
+        Great
+    }
+
+
     public uint curID;
     public int curIndex;
     public int maxIndex;
@@ -17,6 +27,7 @@ public class CircleShaderViewer : MonoBehaviour
     public GameObject generalPanel;
     public GameObject puzzlePanel;
     public Image deleteArea;
+    public Animator anim;
     private List<Image> targets;
     // Start is called before the first frame update
     void Start()
@@ -121,11 +132,17 @@ public class CircleShaderViewer : MonoBehaviour
         {
             case 1:
                 if (op.opType == 0)
+                {
+                    //转换动画状态
                     return true;
+                }
                 break;
             case 2:
                 if (op.opType == 2)
+                {
+                    //转换动画状态
                     return true;
+                }
                 break;
             
         }
@@ -143,6 +160,7 @@ public class CircleShaderViewer : MonoBehaviour
             case 3:
                 if (targets[0].gameObject.GetComponent<PuzzleItemUI>().RotateState == opSup)
                 {
+                    //转换动画状态
                     return true;
                 }
                 break;
@@ -150,5 +168,10 @@ public class CircleShaderViewer : MonoBehaviour
                 break;
         }
         return false;
+    }
+
+    private void SetAnimation(uint id,int index)
+    {
+
     }
 }

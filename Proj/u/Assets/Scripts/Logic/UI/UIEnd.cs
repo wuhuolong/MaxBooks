@@ -54,7 +54,7 @@ public class UIEnd : UIPage
         levelID = LevelMgr.GetInstance().CurLevelID;
         data = LevelMgr.GetInstance().GetLevelConfig(levelID);
         value = LevelMgr.GetInstance().GetValueConfig();
-        ShadowInit();
+        //ShadowInit();
         OnShow();
     }
 
@@ -75,7 +75,7 @@ public class UIEnd : UIPage
     }
     protected override void InitData()
     {
-
+        OnLevelEnd();
         returnTips.SetActive(false);
         toList = false;
         toLevel = false;
@@ -91,15 +91,24 @@ public class UIEnd : UIPage
 
                 if (Mathf.Abs(shadows[type].localScale.x - shadowMin.x) <= 0.1f)
                 {
-                    shadows[type].localScale = shadowMin;
+                    shadows[type].localScale = Vector3.zero;
                     //进入下一关
                     isShadow = false;
                     black.alpha = 1.0f;
-                    if (toLevel)
-                        UIMgr.ShowPage(UIPageEnum.Play_Page);
-                    else if (toList)
-                        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
-                    
+                    //從結算界面退出：
+                    //1 如果是Normal模式，回到關卡選擇
+                    //2 如果是每日挑戰模式，回到每日挑戰界面并且設置好選擇的日期
+                    if(toLevel)
+                    {
+                        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+                        return;
+                    }
+                    if(toList)
+                    {
+                        BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
+                        levelmode.OnClickQuit_UIEnd();
+                        return;
+                    }
                 }
             }
         }
@@ -173,13 +182,7 @@ public class UIEnd : UIPage
     }
     private void ClickReturnLevelList()
     {
-        if (buttonCheck)
-        {
-            buttonCheck = false;
-            //返回关卡列表
-            isShadow = true;
-            toList = true;
-        }
+        
     }
     private void ClickRestart()
     {
@@ -215,9 +218,11 @@ public class UIEnd : UIPage
                     returnTips.SetActive(true);
                     return;
                 }
-                Debug.Log("next");
-                isShadow = true;
-                toLevel = true;
+                //heimu-test
+                //Debug.Log("next");
+                //isShadow = true;
+                //toLevel = true;
+                UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
             }
         }
     }
@@ -236,13 +241,15 @@ public class UIEnd : UIPage
     {
         //加载原图
         Image img = gameObject.transform.Find("GameObject").transform.Find("Image").GetComponent<Image>();
-        string altasname = AltasMgr.GetInstance().GetConfigByID(levelID).AltasName2;
+        int pitcureId = LevelMgr.GetInstance().GetLevelConfig(levelID).Config.LevelPicture;
+        string altasname = AltasMgr.GetInstance().GetConfigByID((uint)pitcureId).AltasName2;
+        Debug.Log(altasname);
         UIAtlas ats = UIAtlasUtil.GetAtlas(altasname);
         ats.Sp = img;
         ats.SetSprite("p_" + data.Config.LevelPicture.ToString());
 
         //加载关卡名字
-        menuText.text = LevelMgr.GetInstance().GetIndexByID(levelID);
+        //menuText.text = LevelMgr.GetInstance().GetIndexByID(levelID);
     }
     private void LoadNumOfStars()
     {
@@ -385,16 +392,23 @@ public class UIEnd : UIPage
 
     public void CanClickNext()
     {
+        Debug.Log("animation end");
         canClick = true;
     }
 
     public void ClickQuit()
     {
-        //從結算界面退出：
-        //1 如果是Normal模式，回到關卡選擇
-        //2 如果是每日挑戰模式，回到每日挑戰界面并且設置好選擇的日期
-        BaseLevel levelmode=LevelMgr.GetInstance().CurLevelMode;
-        levelmode.OnClickQuit_UIEnd();
-
+        if(canClick)
+        {
+            if (buttonCheck)
+            {
+                buttonCheck = false;
+                BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
+                levelmode.OnClickQuit_UIEnd();
+                //返回关卡列表
+                //toList = true;
+                //isShadow = true;
+            }
+        }
     }
 }

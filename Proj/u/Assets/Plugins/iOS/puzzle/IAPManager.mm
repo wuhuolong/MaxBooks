@@ -10,6 +10,7 @@
     static IAPManager* iap = nil;
     if (iap == nil){
         iap = [IAPManager alloc];
+        //[iap initIAP:nil];
     }
     return iap;
 }

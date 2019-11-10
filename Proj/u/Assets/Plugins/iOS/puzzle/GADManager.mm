@@ -1,8 +1,9 @@
 #import "GADManager.h"
-#import "UnityAppController.h"
+#import "UnityInterface.h"
 #import "xSdkInterface.h"
 #import "IAPManager.h"
 #import "UMMgr.h"
+#import "STRIAPManager.h"
 //#import <GoogleMobileAdsMediationTestSuite/GoogleMobileAdsMediationTestSuite.h>//
 //#import <GoogleMobileAdsMediationTestSuite/GMTSMediationTestSuite.h>
 
@@ -331,4 +332,8 @@ extern "C"{
         [[UMMgr sharedInstance] Track:@"9"];
         UIImageWriteToSavedPhotosAlbum(img, ins, @selector(imageSaved:didFinishSavingWithError:contextInfo:), nil);
     }
+	void _pay4RemoveAD(){
+        printf("==> _pay4RemoveAD \n");
+        [[STRIAPManager shareSIAPManager] startPurchWithID:@"ly_puzzle_1" completeHandle:nil];
+	}
 }

@@ -24,14 +24,15 @@ namespace X.Res {
     static SignInConfigReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CiBnZW4veGxzMnByb3RvL1NpZ25JbkNvbmZpZy5wcm90bxIFWC5SZXMiMAoM",
-            "U2lnbkluQ29uZmlnEg4KBmRheV9pZBgBIAEoDRIQCghsZXZlbF9pZBgCIAEo",
-            "DSI4ChJTaWduSW5Db25maWdfQVJSQVkSIgoFaXRlbXMYASADKAsyEy5YLlJl",
+            "CiBnZW4veGxzMnByb3RvL1NpZ25JbkNvbmZpZy5wcm90bxIFWC5SZXMiXQoM",
+            "U2lnbkluQ29uZmlnEhIKCmxldmVsX3R5cGUYASABKA0SDgoGZGF5X2lkGAIg",
+            "ASgNEhAKCGxldmVsX2lkGAMgASgNEhcKD2RhaWx5bGV2ZWxfbmFtZRgEIAEo",
+            "CSI4ChJTaWduSW5Db25maWdfQVJSQVkSIgoFaXRlbXMYASADKAsyEy5YLlJl",
             "cy5TaWduSW5Db25maWdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.SignInConfig), global::X.Res.SignInConfig.Parser, new[]{ "DayId", "LevelId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.SignInConfig), global::X.Res.SignInConfig.Parser, new[]{ "LevelType", "DayId", "LevelId", "DailylevelName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.SignInConfig_ARRAY), global::X.Res.SignInConfig_ARRAY.Parser, new[]{ "Items" }, null, null, null, null)
           }));
     }
@@ -64,8 +65,10 @@ namespace X.Res {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public SignInConfig(SignInConfig other) : this() {
+      levelType_ = other.levelType_;
       dayId_ = other.dayId_;
       levelId_ = other.levelId_;
+      dailylevelName_ = other.dailylevelName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -74,8 +77,22 @@ namespace X.Res {
       return new SignInConfig(this);
     }
 
+    /// <summary>Field number for the "level_type" field.</summary>
+    public const int LevelTypeFieldNumber = 1;
+    private uint levelType_;
+    /// <summary>
+    ///* 关卡类型-1：冒险关卡；2：每日签到关卡 
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public uint LevelType {
+      get { return levelType_; }
+      set {
+        levelType_ = value;
+      }
+    }
+
     /// <summary>Field number for the "day_id" field.</summary>
-    public const int DayIdFieldNumber = 1;
+    public const int DayIdFieldNumber = 2;
     private uint dayId_;
     /// <summary>
     ///* 日期 
@@ -89,7 +106,7 @@ namespace X.Res {
     }
 
     /// <summary>Field number for the "level_id" field.</summary>
-    public const int LevelIdFieldNumber = 2;
+    public const int LevelIdFieldNumber = 3;
     private uint levelId_;
     /// <summary>
     ///* 挑战关卡id 
@@ -99,6 +116,20 @@ namespace X.Res {
       get { return levelId_; }
       set {
         levelId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "dailylevel_name" field.</summary>
+    public const int DailylevelNameFieldNumber = 4;
+    private string dailylevelName_ = "";
+    /// <summary>
+    ///* 关卡描述 
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DailylevelName {
+      get { return dailylevelName_; }
+      set {
+        dailylevelName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -115,16 +146,20 @@ namespace X.Res {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (LevelType != other.LevelType) return false;
       if (DayId != other.DayId) return false;
       if (LevelId != other.LevelId) return false;
+      if (DailylevelName != other.DailylevelName) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (LevelType != 0) hash ^= LevelType.GetHashCode();
       if (DayId != 0) hash ^= DayId.GetHashCode();
       if (LevelId != 0) hash ^= LevelId.GetHashCode();
+      if (DailylevelName.Length != 0) hash ^= DailylevelName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -138,13 +173,21 @@ namespace X.Res {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (DayId != 0) {
+      if (LevelType != 0) {
         output.WriteRawTag(8);
+        output.WriteUInt32(LevelType);
+      }
+      if (DayId != 0) {
+        output.WriteRawTag(16);
         output.WriteUInt32(DayId);
       }
       if (LevelId != 0) {
-        output.WriteRawTag(16);
+        output.WriteRawTag(24);
         output.WriteUInt32(LevelId);
+      }
+      if (DailylevelName.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(DailylevelName);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -154,11 +197,17 @@ namespace X.Res {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (LevelType != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(LevelType);
+      }
       if (DayId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DayId);
       }
       if (LevelId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(LevelId);
+      }
+      if (DailylevelName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DailylevelName);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -171,11 +220,17 @@ namespace X.Res {
       if (other == null) {
         return;
       }
+      if (other.LevelType != 0) {
+        LevelType = other.LevelType;
+      }
       if (other.DayId != 0) {
         DayId = other.DayId;
       }
       if (other.LevelId != 0) {
         LevelId = other.LevelId;
+      }
+      if (other.DailylevelName.Length != 0) {
+        DailylevelName = other.DailylevelName;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -189,11 +244,19 @@ namespace X.Res {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            DayId = input.ReadUInt32();
+            LevelType = input.ReadUInt32();
             break;
           }
           case 16: {
+            DayId = input.ReadUInt32();
+            break;
+          }
+          case 24: {
             LevelId = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            DailylevelName = input.ReadString();
             break;
           }
         }

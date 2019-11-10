@@ -20,7 +20,19 @@ public class SignInMgr : CSSingleton<SignInMgr>
     {
         get
         {
-            return m_day_list[m_day_list.Count - 1];
+            if (m_day_list.Count > 0)
+                return m_day_list[m_day_list.Count - 1];
+            return 0;
+        }
+    }
+
+    public uint MinDay
+    {
+        get
+        {
+            if (m_day_list.Count > 0)
+                return m_day_list[0];
+            return 0;
         }
     }
 

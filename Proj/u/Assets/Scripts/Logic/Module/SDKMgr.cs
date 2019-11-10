@@ -37,6 +37,11 @@ public class SDKMgr : CSSingleton<SDKMgr>
         m_interface.showRewardVideo();
     }
 
+    public void pay4RemoveAd()
+    {
+        m_interface.pay4RemoveAd();
+    }
+
     public void showIntersitialAD(Action onReward, Action onFail, Action onClose)
     {
         UCallback.GetInstance().onReward = onReward;

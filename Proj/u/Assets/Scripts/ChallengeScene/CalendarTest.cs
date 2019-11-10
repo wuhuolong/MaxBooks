@@ -37,6 +37,7 @@ public class CalendarTest : MonoBehaviour
         // }
         int d = 1;
         int lastDayCount = lastDayOfTheMonthInt + firstDayWeekInt;
+        Debug.Log("lastDayCount" + lastDayCount);
         for (int i = firstDayWeekInt; i < lastDayCount; i++)
         {
             dateTimeArr[i] = new DateTime(year, month, d);
@@ -62,11 +63,17 @@ public class CalendarTest : MonoBehaviour
             }
         }
 
-        int row = lastDayCount / 7 + 1;
+        int row = lastDayCount / 7;
+        if (lastDayCount % 7 != 0)
+        {
+            row++;
+        }
+
+
         float cellWidth = generalDayPanelRectTrans.rect.width / 7;
         float cellHeight = generalDayPanelRectTrans.rect.height / row;
 
-        dayPanelGridLayoutGroup.cellSize = new Vector2(cellWidth - 10, cellHeight - 10);
+        dayPanelGridLayoutGroup.cellSize = new Vector2(cellWidth - 15, cellHeight - 15);
     }
 
 }

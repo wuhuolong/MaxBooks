@@ -20,11 +20,11 @@ public class CalendarPanelTest : MonoBehaviour
     List<CalendarTest> calendarList;
 
 
-    void Start()
-    {
-        // InitPanelSize();
-        // InitAllCalendars();
-    }
+    // void Start()
+    // {
+    //     // InitPanelSize();
+    //     // InitAllCalendars();
+    // }
 
     public void InitPanelSize()
     {
@@ -33,7 +33,7 @@ public class CalendarPanelTest : MonoBehaviour
         Vector2 v2 = rectTrans.sizeDelta;
         panelWidth = rect.width;
         // float height = rect.height;
-        float height = UIChallengeRectTrans.rect.height / 2;
+        float height = UIChallengeRectTrans.rect.height * transform.parent.GetComponent<RectTransform>().anchorMax.y;
 
 
         int childCount = rectTrans.childCount;
@@ -52,23 +52,29 @@ public class CalendarPanelTest : MonoBehaviour
 
     public void InitAllCalendars()
     {
-        calendarList=new List<CalendarTest>();
+        calendarList = new List<CalendarTest>();
 
         int selectedDateTimeInt = XPlayerPrefs.GetInt(ChallengeController.selectedDateTimeStr);
         if (selectedDateTimeInt != 0)
         {
             currentCalendarDateTime = TimeUtil.getDateTimeByInt(selectedDateTimeInt);
         }
+        else
+        {
+            currentCalendarDateTime = DateTime.Today;
+            XPlayerPrefs.SetInt(ChallengeController.selectedDateTimeStr, TimeUtil.getIntByDateTime(currentCalendarDateTime));
+        }
 
         int calendarCount = transform.childCount;
         int centerCalendar = calendarCount / 2;
         int offsetMonth = 0;
-        //TODO:加一个对今天的判断，如果今天没有配置，就跳到最新(MaxDay)的配置界面
+
+
         for (int i = centerCalendar; i >= 0; i--)
         {
             Transform calendarTrans = transform.GetChild(i);
             CalendarTest calendar = calendarTrans.GetComponent<CalendarTest>();
-            
+
             calendarList.Add(calendar);
 
             DateTime calendarDateTime = currentCalendarDateTime.AddMonths(offsetMonth);
@@ -100,10 +106,19 @@ public class CalendarPanelTest : MonoBehaviour
         if (nextOrLast)
         {
             //跳至下一个月
+            DateTime nextCalendarDateTime = currentCalendarDateTime.AddMonths(1);
+            DateTime firstDateOfNext = new DateTime(nextCalendarDateTime.Year, nextCalendarDateTime.Month, 1);
+
+            if (firstDateOfNext > TimeUtil.getDateTimeByInt((int)(SignInMgr.GetInstance().MaxDay)))
+            {
+                //如果下一個月的第一天沒有配置
+                return;
+            }
 
             //设置currentCalendarDateTime
             currentCalendarDateTime = currentCalendarDateTime.AddMonths(1);
             Debug.Log(currentCalendarDateTime.Year + " " + currentCalendarDateTime.Month + " " + currentCalendarDateTime.Day);
+
 
             //TODO:加入动画而非直接变换位置
             StartCoroutine(moveRectTrans(rectTrans, rectTrans.anchoredPosition + Vector2.left * panelWidth, 0.2f, () =>
@@ -117,7 +132,7 @@ public class CalendarPanelTest : MonoBehaviour
                 firstCalendarTrans.SetAsLastSibling();
 
                 CalendarTest firstCalendar = firstCalendarTrans.GetComponent<CalendarTest>();
-                DateTime nextCalendarDateTime = currentCalendarDateTime.AddMonths(1);
+
                 firstCalendar.InitCalendar(nextCalendarDateTime.Month, nextCalendarDateTime.Year);
 
                 Debug.Log("move back");
@@ -129,6 +144,13 @@ public class CalendarPanelTest : MonoBehaviour
         else
         {
             //跳至上一个月
+            DateTime lastCalendarDateTime = currentCalendarDateTime.AddMonths(-1);
+            DateTime lastDateOfLast = new DateTime(currentCalendarDateTime.Year, currentCalendarDateTime.Month, 1).AddDays(-1);
+            if (lastDateOfLast < TimeUtil.getDateTimeByInt((int)(SignInMgr.GetInstance().MinDay)))
+            {
+                //如果上一個月的最後一天也沒有配置
+                return;
+            }
 
             //设置currentCalendarDateTime
             currentCalendarDateTime = currentCalendarDateTime.AddMonths(-1);
@@ -144,7 +166,6 @@ public class CalendarPanelTest : MonoBehaviour
                 lastCalendarTrans.SetAsFirstSibling();
 
                 CalendarTest lastCalendar = lastCalendarTrans.GetComponent<CalendarTest>();
-                DateTime lastCalendarDateTime = currentCalendarDateTime.AddMonths(-1);
                 lastCalendar.InitCalendar(lastCalendarDateTime.Month, lastCalendarDateTime.Year);
 
                 rectTrans.anchoredPosition = rectTrans.anchoredPosition + Vector2.left * panelWidth;
@@ -180,10 +201,10 @@ public class CalendarPanelTest : MonoBehaviour
     //     int childCount = rectTrans.childCount;
     //     foreach(CalendarTest calendar in calendarList)
     //     {
-            
+
     //     }
     //     return null;
     // }
 
-    
+
 }

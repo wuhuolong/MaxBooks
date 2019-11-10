@@ -41,7 +41,7 @@ tpsheetFileNames:
 - Assets/RefSprites/end_altas/end7.tpsheet
 - Assets/RefSprites/end_altas/end8.tpsheet
 - Assets/RefSprites/end_altas/end9.tpsheet
-- Assets/RefSprites/End1.tpsheet
+- Assets/RefSprites/end_altas/uncomplete.tpsheet
 - Assets/RefSprites/list_altas/list1.tpsheet
 - Assets/RefSprites/list_altas/list2.tpsheet
 textureFileNames:
@@ -85,7 +85,7 @@ textureFileNames:
 - Assets/RefSprites/end_altas/end7.png
 - Assets/RefSprites/end_altas/end8.png
 - Assets/RefSprites/end_altas/end9.png
-- Assets/RefSprites/End1.png
+- Assets/RefSprites/end_altas/uncomplete.png
 - Assets/RefSprites/list_altas/list1.png
 - Assets/RefSprites/list_altas/list2.png
 normalmapFileNames:

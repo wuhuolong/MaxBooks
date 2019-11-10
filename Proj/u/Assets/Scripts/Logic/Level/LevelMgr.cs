@@ -141,6 +141,23 @@ public class LevelMgr : CSSingleton<LevelMgr>
         return m_config.Items[m_config.Items.Count - 1];
     }
 
+    public int GetNumOfLevel()
+    {
+        return m_config.Items.Count;
+    }
+
+    public int GetNumOfComplete()
+    {
+        for (int i = 0; i < m_config.Items.Count; i++)
+        {
+            if (XPlayerPrefs.GetInt(m_config.Items[i].LevelId.ToString() + "isCompleted") == 0)
+            {
+                return i;
+            }
+        }
+        return m_config.Items.Count;
+    }
+
     public void DoLoadLevelListLen(System.Action<LevelConfig> ac)
     {
         for (int i = 0; i < m_config.Items.Count; i++)

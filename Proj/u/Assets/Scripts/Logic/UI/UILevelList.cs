@@ -20,7 +20,11 @@ public class UILevelList : UIPage
     private float scrollValue;
     //private float len;
 
+    private bool isFirst;
+
     private bool buttonCheck;
+
+    public Text topText;
 
     //转场动画用-hzy
     public CanvasGroup black;
@@ -38,7 +42,7 @@ public class UILevelList : UIPage
     GameObject menu;
     GameObject levelBtn;
 
-    float offsetY = 400.0f;
+    float offsetY = 480.0f;
     float offsetX = 320.0f;
     float offsetMenu = 260.0f;
 
@@ -59,12 +63,19 @@ public class UILevelList : UIPage
     private void OnEnable()
     {
         buttonCheck = true;
-        black.alpha = 1.0f;
+        //black.alpha = 1.0f;
         themeCnt = 0;
         isShadow = false;
-        StartCoroutine(ShadowInit());
+        //StartCoroutine(ShadowInit());
 
         rectWidth = LevelContent.rect.width;
+
+        if(!isFirst)
+        {
+            RefreshLevelList();
+        }
+        isFirst = false;
+
     }
     private void FixedUpdate()
     {
@@ -118,6 +129,7 @@ public class UILevelList : UIPage
 
     protected override void InitComp()
     {
+        isFirst = true;
         if (gameObject.name == "UILevelList(Clone)")
         {
             for (int i = 0; i < LevelContent.childCount; i++)
@@ -132,6 +144,13 @@ public class UILevelList : UIPage
     protected override void InitData()
     {
 
+    }
+
+    private void SetTopText()
+    {
+        int AllNum = LevelMgr.GetInstance().GetNumOfLevel();
+        int CompleteNum = LevelMgr.GetInstance().GetNumOfComplete();
+        topText.text = CompleteNum.ToString() + "/" + AllNum.ToString();
     }
 
     private void SetScrollValue()
@@ -197,9 +216,11 @@ public class UILevelList : UIPage
         {
             buttonCheck = false;
             //返回
-            isShadowToLevel = true;
-            RandomType();
-            ShadowInit2();
+            //heimu-test
+            //isShadowToLevel = true;
+            //RandomType();
+            //ShadowInit2();
+            UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
         }
     }
 
@@ -209,18 +230,49 @@ public class UILevelList : UIPage
         {
             buttonCheck = false;
             //返回
-            isShadowToMain = true;
-            RandomType();
-            ShadowInit2();
+            //heimu-test
+            //isShadowToMain = true;
+            //RandomType();
+            //ShadowInit2();
+            UIMgr.ShowPage(UIPageEnum.Main_Page);
         }
     }
+
+    private void RefreshLevelList()
+    {
+        SetScrollValue();
+        SetTopText();
+        int levelCnt = 0;
+        int themeCnt = 0;
+        for(int i=0;i<LevelContent.gameObject.transform.childCount;i++)
+        {
+            if(LevelContent.gameObject.transform.GetChild(i).name == "menu(Clone)")
+            {
+                themeCnt++;
+                levelCnt = 0;
+            }
+            if(LevelContent.gameObject.transform.GetChild(i).name=="UILevelBtn(Clone)")
+            {
+                
+                UILevelBtn uibtn = LevelContent.gameObject.transform.GetChild(i).GetComponent<UILevelBtn>();
+                if (levelCnt == 1)
+                {
+                    uibtn.line.SetActive(true);
+                }
+                LevelConfig config = LevelMgr.GetInstance().GetLevelConfig(uibtn.levelID).Config;
+                LoadLevelBtn(uibtn, config.LevelId, config.LevelPicture.ToString(), levelCnt, themeCnt);
+            }
+        }
+    }
+
     private void LoadLevelList()
     {
         //LoadNumOfStars();
         LevelMgr.GetInstance().DoLoadLevelListLen(LoadLevelListLen);
         LevelContent.sizeDelta = new Vector2(rectWidth, totalLen);
         SetScrollValue();
-        
+        SetTopText();
+
         curTheme = "";
         levelCnt = 0;
         LevelMgr.GetInstance().DoLoadLevelListContent(LoadLevelListContent);
@@ -252,7 +304,6 @@ public class UILevelList : UIPage
         //    XPlayerPrefs.SetInt(config.LevelId.ToString() + numStar, 0);
         //}
         
-
         //新的主题
         if (curTheme != config.LevelTheme)
         {
@@ -275,7 +326,12 @@ public class UILevelList : UIPage
         levelBtn.transform.SetParent(LevelContent.transform);
         levelBtn.transform.localPosition = Vector3.zero - new Vector3((cnt - 1) * offsetX * -1, curHeight, 0);
         levelBtn.transform.localScale = LevelContent.localScale;
+        
         UILevelBtn UIBtn = levelBtn.GetComponent<UILevelBtn>();
+        if (cnt == 1)
+        {
+            UIBtn.line.SetActive(true);
+        }
         LoadLevelBtn(UIBtn, config.LevelId, config.LevelPicture.ToString(), levelCnt,themeCnt);
         UIBtn.setLevelID(config.LevelId);
         UIBtn.setThemeID(config.LevelTheme);
@@ -330,30 +386,44 @@ public class UILevelList : UIPage
     private void LoadLevelBtn(UILevelBtn uiLevelBtn, uint id,string picture,int levelCnt,int themeCnt)
     {
         //加载关卡名字，缩略图;
-        uiLevelBtn.levelText.text = themeCnt.ToString() + "-" + (levelCnt + 1).ToString();
+        //uiLevelBtn.levelText.text = themeCnt.ToString() + "-" + (levelCnt + 1).ToString();
         //string picname = "level_s";//string.Format("s_{0}", picture);
         string altasname = AltasMgr.GetInstance().GetConfigByID(id).AltasName;
         UIAtlas ats = UIAtlasUtil.GetAtlas(altasname);
+        UIAtlas ats2 = UIAtlasUtil.GetAtlas("uncomplete");
         ats.Sp = uiLevelBtn.levelImg;
+        ats2.Sp = uiLevelBtn.levelImg;
 
         if(ats!=null)
         {
             if (XPlayerPrefs.GetInt(id.ToString()+isCompleted)==1)
             {
                 ats.SetSprite("s_" + picture);//ats.SetSprite("p_"+picture);
+                ats.Sp.rectTransform.localScale = Vector3.one;
+                uiLevelBtn.star.SetActive(true);
+                uiLevelBtn._new.SetActive(false);
                 //uiLevelBtn.levelText.text = LevelMgr.GetInstance().GetLevelConfig(id).Config.LevelName;
                 //uiLevelBtn.levelText.text = themeCnt.ToString() + "-" + (levelCnt + 1).ToString();
             }
             else if(XPlayerPrefs.GetInt(id.ToString()+isUnlock)==-1)
             {
-                ats.SetSprite("s_"+picture);
+                Debug.Log("isunlock");
+                ats2.SetSprite("unknown");
+                ats.Sp.rectTransform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+                uiLevelBtn._new.SetActive(true);
+                uiLevelBtn.star.SetActive(false);
                 //uiLevelBtn.levelText.text = (levelCnt+1).ToString();
                 //uiLevelBtn.levelText.text = "? ? ?";
             }
             else
             {
+                uiLevelBtn.star.SetActive(false);
+                uiLevelBtn._new.SetActive(false);
+                uiLevelBtn.SetGray();
+                Debug.Log("islock");
                 //未解锁
-                ats.SetSprite("s_" + picture);
+                ats2.SetSprite("lock");
+                ats.Sp.rectTransform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
             }
         }
 

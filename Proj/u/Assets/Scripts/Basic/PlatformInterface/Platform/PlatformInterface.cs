@@ -9,6 +9,7 @@ public abstract class SdkInterface
     public abstract bool isRewardVideoReady();
     public abstract void showRewardVideo();
     public abstract void showInterstitialAd();
+    public abstract void pay4RemoveAd();
     public abstract void sendMsg(string json);
     public virtual string GetCurLang()
     {
@@ -25,6 +26,11 @@ public class androidInterface : SdkInterface
     {
         this.Log("isRewardVideoReady");
         return false;
+    }
+
+    public override void pay4RemoveAd()
+    {
+        this.Log("pay4RemoveAd");
     }
 
     public override void sendMsg(string json)
@@ -54,6 +60,11 @@ public class pcSdkInterface : SdkInterface
     {
         this.Log("isRewardVideoReady");
         return false;
+    }
+
+    public override void pay4RemoveAd()
+    {
+        this.Log("pay4RemoveAd");
     }
 
     public override void sendMsg(string json)
@@ -91,6 +102,8 @@ public class iosSdkInterface : SdkInterface
     [DllImport("__Internal")]
     private static extern void _showInterstitialAD();
     [DllImport("__Internal")]
+    private static extern void _pay4RemoveAD();
+    [DllImport("__Internal")]
     private static extern void _SendMsg(string json);
     [DllImport("__Internal")]
     private static extern string _GetCurLang();
@@ -126,5 +139,10 @@ public class iosSdkInterface : SdkInterface
     public override void showInterstitialAd()
     {
         _showInterstitialAD();
+    }
+
+    public override void pay4RemoveAd()
+    {
+        _pay4RemoveAD();
     }
 }

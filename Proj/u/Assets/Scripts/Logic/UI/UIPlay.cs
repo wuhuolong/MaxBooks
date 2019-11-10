@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UIPlay : UIPage
 {
+    public bool debugFlag = false;
     /// <summary>
     /// 新手引导
     /// </summary>
@@ -15,7 +16,7 @@ public class UIPlay : UIPage
     private bool inGuiding;
 
 
-    //暂停界面读取评星提示用-hzy
+    //暂停界面读取评星提示用-hzy （现在单纯是为了把关卡序号显示在上方 -sjh）（最新版仅仅用于显示拼图面板的原始图片 - sjh）
     uint levelID;
     // LevelData data;
     // X.Res.ValueConfig_ARRAY value;
@@ -61,12 +62,15 @@ public class UIPlay : UIPage
     public PuzzleBar puzzleBar;
     // public LevelTimer levelTimer;
     public OperationHistoryRecorder operationHistoryRecorder;
+    public DragController dragController;
     public PanelTransformationController panelTransformationController;
     public MiniMapController miniMapController;
     public Text levelText;
+    public Image originImg;
 
     //提示框：
     public UIUseRecTips m_isUseRecPanel;
+
 
     private void OnEnable()
     {
@@ -77,18 +81,22 @@ public class UIPlay : UIPage
             Debug.Log("1-1");
             needMask = 1;
         }
-        if(LevelMgr.GetInstance().GetIndexByID(LevelMgr.GetInstance().CurLevelID) == "1-2")
+        if (LevelMgr.GetInstance().GetIndexByID(LevelMgr.GetInstance().CurLevelID) == "1-2")
         {
-            needMask = 2;   
+            needMask = 2;
         }
+
+        
 
         buttonCheck = true;
         animator = GetComponent<Animator>();
         UIEvent.RegEvent(UIEvent.UI_LEVELSTART, LevelStart);
         //UIEvent.RegEvent(UIEvent.UI_LEVEL_USEREC, LevelUseRec);
 
-        //暂停界面读取评星提示用-hzy （现在单纯是为了把关卡序号显示在上方 -sjh）
+        //显示关卡拼图面板原图
         levelID = LevelMgr.GetInstance().CurLevelID;
+        if (!debugFlag)
+            LoadOriginImg();
 
         operationHistoryRecorder.SetLevelId(levelID);
         // data = LevelMgr.GetInstance().GetLevelConfig(levelID);
@@ -101,11 +109,54 @@ public class UIPlay : UIPage
 
         // Debug.LogError(LevelMgr.GetInstance().GetIndexByID(levelID));
 
-        black.alpha = 1.0f;
-        isShadow = false;
-        // levelTimer.SetTime(0);
-        StartCoroutine(ShadowInit());
+        //heimu-test
+        //black.alpha = 1.0f;
+        //isShadow = false;
+        //// levelTimer.SetTime(0);
+        //StartCoroutine(ShadowInit());
         UIEvent.Broadcast(UIEvent.UI_LEVELSTART);
+
+        //heimu-test
+        StartCoroutine(Guiding());
+        
+    }
+
+    IEnumerator Guiding()
+    {
+        yield return new WaitForSeconds(1.0f);
+        if (needMask == 1)
+        {
+            Debug.Log("init");
+            mask.SetActive(true);
+            shaderViewer.Init(1, 0);
+        }
+        if (needMask == 2)
+        {
+            var rec = XPlayerPrefs.GetRec(levelID);
+            if (rec == null)
+            {
+                SettlePuzzle newSettlePuzzle = new SettlePuzzle();
+                newSettlePuzzle.puzzleID = 0;
+                newSettlePuzzle.puzzleRotateState = 1;
+                newSettlePuzzle.puzzleGridIndex = 128;
+                generalPanelUI.SettlePuzzleFunc(newSettlePuzzle);
+                Debug.Log("init");
+                mask.SetActive(true);
+                shaderViewer.Init(2, 0);
+            }
+        }
+    }
+
+    private void LoadOriginImg()
+    {
+        //加载原图
+        X.Res.LevelConfig levelConfig = LevelMgr.GetInstance().GetLevelConfig(levelID).Config;
+        int pitcureId = levelConfig.LevelPicture;
+        string altasname = AltasMgr.GetInstance().GetConfigByID((uint)pitcureId).AltasName2;
+        Debug.Log(altasname);
+        UIAtlas ats = UIAtlasUtil.GetAtlas(altasname);
+        ats.Sp = originImg;
+        ats.SetSprite("p_" + levelConfig.LevelPicture.ToString());
     }
 
     private void FixedUpdate()
@@ -120,16 +171,16 @@ public class UIPlay : UIPage
                     shadows[type].localScale = Vector3.zero;
                     XPlayerPrefs.SetInt(shadowType, -1);
                     isShadow = false;
-                    if (needMask==1)
+                    if (needMask == 1)
                     {
                         Debug.Log("init");
                         mask.SetActive(true);
-                        shaderViewer.Init(1,0);
+                        shaderViewer.Init(1, 0);
                     }
-                    if(needMask==2)
+                    if (needMask == 2)
                     {
                         var rec = XPlayerPrefs.GetRec(levelID);
-                        if(rec==null)
+                        if (rec == null)
                         {
                             SettlePuzzle newSettlePuzzle = new SettlePuzzle();
                             newSettlePuzzle.puzzleID = 0;
@@ -277,36 +328,38 @@ public class UIPlay : UIPage
 
         panelTransformationController.InitPTController();
         miniMapController.InitMiniMap();
-        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelEnter,(int)levelID);
+        dragController.GameOverFlag = false;
+        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelEnter, (int)levelID);
     }
 
     private void RecCheck()
     {
-        var rec = XPlayerPrefs.GetRec(levelID);
-        if (rec != null)
-        {
-            //Debug.Log("RecCheck == true");
-            Action ac_ok = () =>
-            {
-                operationHistoryRecorder.SetLevelId(levelID, true);
-                GenMap(true);
-                // levelTimer.SetTime(rec.TimeCount);
-                // StartCoroutine(levelTimer.RestartTimer());
-            };
-            Action ac_cancel = () =>
-            {
-                // levelTimer.SetTime(0);
-                // StartCoroutine(levelTimer.RestartTimer());
-                GenMap();
-                XPlayerPrefs.DelRec(levelID);
-            };
-            m_isUseRecPanel.Show(ac_cancel, ac_ok);
-        }
-        else
-        {
-            GenMap();
-            // StartCoroutine(levelTimer.RestartTimer());
-        }
+        // var rec = XPlayerPrefs.GetRec(levelID);
+        // if (rec != null)
+        // {
+        //     //Debug.Log("RecCheck == true");
+        //     Action ac_ok = () =>
+        //     {
+        //         operationHistoryRecorder.SetLevelId(levelID, true);
+        //         GenMap(true);
+        //         // levelTimer.SetTime(rec.TimeCount);
+        //         // StartCoroutine(levelTimer.RestartTimer());
+        //     };
+        //     Action ac_cancel = () =>
+        //     {
+        //         // levelTimer.SetTime(0);
+        //         // StartCoroutine(levelTimer.RestartTimer());
+        //         GenMap();
+        //         XPlayerPrefs.DelRec(levelID);
+        //     };
+        //     m_isUseRecPanel.Show(ac_cancel, ac_ok);
+        // }
+        // else
+        // {
+        //     GenMap();
+        //     // StartCoroutine(levelTimer.RestartTimer());
+        // }
+        GenMap();
     }
 
 
@@ -314,6 +367,7 @@ public class UIPlay : UIPage
     {
         // CheckRating();//检查评星
         StartCoroutine(panelTransformationController.ReturnToOrigin(0.2f, LevelOverStep2));
+        dragController.GameOverFlag = false;
     }
 
     public void LevelOverStep2()
@@ -332,13 +386,17 @@ public class UIPlay : UIPage
     {
         //Debug.Log("return");
         // Resume();
-        RandomType();
-        ShadowInit2();
-        isShadowToList = true;
-        //UIMgr.ShowPage(UIPageEnum.LevelList_Page);
+
+        //heimu-test
+        //RandomType();
+        //ShadowInit2();
+        //isShadowToList = true;
+        
 
         SaveOperation();
         CloseUIPlay();
+
+        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
     }
 
     private void LevelRestart()
@@ -413,7 +471,7 @@ public class UIPlay : UIPage
             Destroy(puzzleBarTrans.GetChild(i).gameObject);
         }
 
-        if(puzzleBarForFreeLayoutTrans.childCount>0)
+        if (puzzleBarForFreeLayoutTrans.childCount > 0)
         {
             puzzleBarForFreeLayoutTrans.GetChild(0).gameObject.SetActive(false);
         }
@@ -432,8 +490,6 @@ public class UIPlay : UIPage
 
     private void SaveOperation()
     {
-        
-
         Recorder rec = operationHistoryRecorder.Recoder;
         rec.LevelId = levelID;
         rec.layout = MatrixUtil.ArrayCopy(generalPanelUI.generalPanelData.Playout);

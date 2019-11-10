@@ -183,9 +183,9 @@ public class MapEditor : EditorWindow
                 menu.ShowAsContext();
             }
             string state = GetToolName();//new GUIContent(state, "当前编辑状态")
-            GUILayout.Label("当前编辑状态:" + state,GUILayout.Width(200));
+            GUILayout.Label("当前编辑状态:" + state, GUILayout.Width(200));
         }
-        if ((Pagetype == PageType.Editor|| Pagetype == PageType.EditorSub) && EditorType == ToolType.Brush)
+        if ((Pagetype == PageType.Editor || Pagetype == PageType.EditorSub) && EditorType == ToolType.Brush)
         {
             if (GUILayout.Button("选择格子类型", MapEditor.toolbarDropdown, GUILayout.Width(100)))
             {
@@ -267,12 +267,12 @@ public class MapEditor : EditorWindow
     {
         EditorType = (ToolType)type;
     }
-    public  LevelMapArray.CellType CellType { get; private set; }
+    public LevelMapArray.CellType CellType { get; private set; }
 
     //设置笔刷格子类型
     private void SetCellType(int type)
     {
-        CellType = ( LevelMapArray.CellType)type;
+        CellType = (LevelMapArray.CellType)type;
     }
     private string GetToolName()
     {
@@ -292,11 +292,11 @@ public class MapEditor : EditorWindow
     {
         switch (CellType)
         {
-            case  LevelMapArray.CellType.Invisible:
+            case LevelMapArray.CellType.Invisible:
                 return "不可见";
-            case  LevelMapArray.CellType.Block:
+            case LevelMapArray.CellType.Block:
                 return "阻挡";
-            case  LevelMapArray.CellType.Normal:
+            case LevelMapArray.CellType.Normal:
                 return "可编辑";
             default:
                 return "???";
@@ -337,7 +337,7 @@ static class EditorPage
     {
         Init(wind);
         isDo = false;
-         LevelMapArray config = wind.Level_Config;
+        LevelMapArray config = wind.Level_Config;
         GUILayout.BeginHorizontal();
         if (isEdit)
         {
@@ -358,7 +358,15 @@ static class EditorPage
             GUILayout.Label("高度:", GUILayout.Width(50));
             tempx = GUILayout.TextField(config.MapHeight.ToString(), GUILayout.Width(50));
             config.MapHeight = int.Parse(tempx);
-            config.FitArray(owidth,oheight);
+            config.FitArray(owidth, oheight);
+
+            //string tempxx = config.ConfigID.ToString();
+            GUILayout.Label("地图ID:", GUILayout.Width(100));
+            tempx = GUILayout.TextField(config.Id.ToString(), GUILayout.Width(50));
+            //if (GUILayout.Button("确认", GUILayout.Width(50)))
+            uint temp = uint.Parse(tempx);
+            wind.curLevelId = temp;
+            config.Id = temp;
 
             tempx = config.ConfigID.ToString();
             GUILayout.Label("对应配置表ID:", GUILayout.Width(100));
@@ -405,7 +413,8 @@ static class EditorPage
             wind.Pagetype = MapEditor.PageType.Total;
             return;
         }
-        if (!isShowbg && GUILayout.Button("显示底图")){
+        if (!isShowbg && GUILayout.Button("显示底图"))
+        {
             isShowbg = true;
         }
         if (isShowbg && GUILayout.Button("显示网格"))
@@ -414,7 +423,7 @@ static class EditorPage
         }
         GUILayout.EndHorizontal();
         ShowBg(wind);
-        if (!isEdit&&!isShowbg)
+        if (!isEdit && !isShowbg)
         {
             ShowGrid(wind);
         }
@@ -430,7 +439,7 @@ static class EditorPage
     private static Vector2 m_OriginPos;
     private static Vector2 offset = Vector2.zero;
 
-    private static void GenGrid( LevelMapArray config)
+    private static void GenGrid(LevelMapArray config)
     {
         int total = config.MapWidth * config.MapHeight;
         list.Clear();
@@ -467,7 +476,7 @@ static class EditorPage
 
     }
     private static void ShowGrid(MapEditor wind)
-    {        
+    {
         if (wind.EditorType == MapEditor.ToolType.Move && Event.current.type == EventType.MouseDown && temprect.Contains(Event.current.mousePosition))
         {
             m_OriginPos = Event.current.mousePosition;
@@ -492,15 +501,15 @@ static class EditorPage
                 isDo = true;
             }
             Texture tex = null;
-            switch (( LevelMapArray.CellType)wind.Level_Config.MapArray[i])
+            switch ((LevelMapArray.CellType)wind.Level_Config.MapArray[i])
             {
-                case  LevelMapArray.CellType.Invisible:
+                case LevelMapArray.CellType.Invisible:
                     tex = MapEditor.InvisibleTex;
                     break;
-                case  LevelMapArray.CellType.Block:
+                case LevelMapArray.CellType.Block:
                     tex = MapEditor.BlockTex;
                     break;
-                case  LevelMapArray.CellType.Normal:
+                case LevelMapArray.CellType.Normal:
                     tex = MapEditor.NormalTex;
                     break;
                 default:
@@ -508,13 +517,13 @@ static class EditorPage
             }
 
             GUI.Box(new Rect(list[i].position + offset, list[i].size), MapEditor.InvisibleTex);
-            GUI.DrawTexture(new Rect(list[i].position + offset,list[i].size), tex, ScaleMode.StretchToFill, true);
+            GUI.DrawTexture(new Rect(list[i].position + offset, list[i].size), tex, ScaleMode.StretchToFill, true);
         }
     }
 }
 static class DataPage
 {
-    private static List<LevelMapArray> m_deletegroup = new List< LevelMapArray>();
+    private static List<LevelMapArray> m_deletegroup = new List<LevelMapArray>();
     private static Vector2 m_scroll = Vector2.zero;
     private static bool isaddmode = false;
     private static uint id = 0;
@@ -526,8 +535,8 @@ static class DataPage
         GUILayout.BeginVertical();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label(data.Name);
-        GUILayout.Label("关卡数：" + data.Configs.Count);
+        GUILayout.Label(data.Name, GUILayout.Width(200));
+        GUILayout.Label("关卡数：" + data.Configs.Count, GUILayout.Width(300));
         GUILayout.EndHorizontal();
 
 
@@ -537,19 +546,19 @@ static class DataPage
         {
             string temp = "0";
             isadd = GUILayout.Button("确认");
-            GUILayout.Label("关卡ID",GUILayout.Width(50));
+            GUILayout.Label("关卡ID", GUILayout.Width(50));
             temp = GUILayout.TextField(id.ToString());
             id = uint.Parse(temp);
             if (GUILayout.Button("取消"))
             {
                 isaddmode = false;
-            } 
+            }
         }
         else
         {
-            isaddmode = GUILayout.Button("添加关卡",GUILayout.Width(75));
+            isaddmode = GUILayout.Button("添加关卡", GUILayout.Width(75));
             GUILayout.Label("筛选关卡:", GUILayout.Width(50));
-            if(GUILayout.Button("清空", GUILayout.Width(40)))
+            if (GUILayout.Button("清空", GUILayout.Width(40)))
             {
                 wind.selectedLevel = string.Empty;
             }
@@ -561,7 +570,7 @@ static class DataPage
                 //menu.AddSeparator("");
                 menu.AddItem(new GUIContent("全部"), false, () => { wind.selectedLevel_Type = 0; });
                 menu.AddItem(new GUIContent("冒险关卡"), false, () => { wind.selectedLevel_Type = 1; });
-                menu.AddItem(new GUIContent("每日签到关卡"), false, () => { wind.selectedLevel_Type = 2; });
+                menu.AddItem(new GUIContent("签到关卡"), false, () => { wind.selectedLevel_Type = 2; });
                 //menu.DropDown(new Rect(0, 0, 20, 30));
                 menu.ShowAsContext();
             }
@@ -573,7 +582,7 @@ static class DataPage
         }
         if (GUILayout.Button("编辑工具格子", GUILayout.Width(150)))
         {
-            wind.Pagetype = MapEditor.PageType.EditorSub;            
+            wind.Pagetype = MapEditor.PageType.EditorSub;
         }
         GUILayout.EndHorizontal();
 
@@ -589,23 +598,23 @@ static class DataPage
         }
         GUILayout.EndVertical();
         GUILayout.EndScrollView();
-        if (m_deletegroup.Count>0)
+        if (m_deletegroup.Count > 0)
         {
             wind.Level_Data.DeleteConfig(m_deletegroup);
         }
     }
-    static void AddConfig(MapEditor wind,uint id)
+    static void AddConfig(MapEditor wind, uint id)
     {
-         LevelMapArray config = new  LevelMapArray();
+        LevelMapArray config = new LevelMapArray();
         config.Id = id;
         wind.Level_Data.Configs.Add(config);
         wind.SaveEdit();
     }
     static class ConfigItem
     {
-        public static void OnGui( LevelMapArray config, MapEditor wind)
+        public static void OnGui(LevelMapArray config, MapEditor wind)
         {
-            if (!string.IsNullOrEmpty(wind.selectedLevel) &&!EditorTool.IsMatch(config.ConfigID, wind.selectedLevel))
+            if (!string.IsNullOrEmpty(wind.selectedLevel) && !EditorTool.IsMatch(config.ConfigID, wind.selectedLevel))
             {
                 return;
             }
@@ -615,9 +624,10 @@ static class DataPage
             }
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label(config.Id.ToString());
-            GUILayout.Label(string.Format("{0}", config.ConfigID));
-            GUILayout.Label(string.Format("{0} X {1}", config.MapWidth, config.MapHeight));
+
+            GUILayout.Label(config.Id.ToString(), GUILayout.Width(200));
+            GUILayout.Label(string.Format("{0}", config.ConfigID), GUILayout.Width(250));
+            GUILayout.Label(string.Format("{0} X {1}", config.MapWidth, config.MapHeight), GUILayout.Width(200));
             bool isEdit = GUILayout.Button("修改", GUILayout.Width(50));
             if (isEdit)
             {
@@ -808,7 +818,7 @@ static class SubMapEditorPage
                 }
             }
         }
-            GUILayout.EndHorizontal();
+        GUILayout.EndHorizontal();
     }
     public static void OnGui(MapEditor wind)
     {
@@ -964,7 +974,7 @@ public static class EditorTool
     /// <param name="src">长数字</param>
     /// <param name="des">短数字</param>
     /// <returns></returns>
-    public static bool IsMatch(uint src,string des)
+    public static bool IsMatch(uint src, string des)
     {
         string str_src = src.ToString();
         return str_src.Contains(des);

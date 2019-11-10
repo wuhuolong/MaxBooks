@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4372334675183123696}
   - component: {fileID: 5688439794884401788}
   - component: {fileID: 7170973546859176072}
-  m_Layer: 11
+  m_Layer: 5
   m_Name: PuzzleItemEmpty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_ChildAlignment: 3
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 70, y: 70}
+  m_CellSize: {x: 90, y: 90}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -111,6 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c87522021cc9464caff49f8e793bb8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shaderViewer: {fileID: 0}
+  canRorate: 0
   generalPanelUI: {fileID: 0}
   puzzleMoveTrans: {fileID: 0}
   dragController: {fileID: 0}

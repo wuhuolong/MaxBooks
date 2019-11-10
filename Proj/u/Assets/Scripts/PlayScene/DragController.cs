@@ -13,6 +13,9 @@ public class DragController : MonoBehaviour
     public float finalUpMoveDistance = 0.6f;
     public float finalUpMoveTime = 0.06f;
 
+    public float finalUpMoveDistance_SettlePuzzle = 0.3f;
+    public float finalUpMoveTime_SettlePuzzle = 0.03f;
+
     private float upMoveDistance = 0.0f;//实时上移距离，发生上移时，该值变大，OnBeginDrag和OnDrag的位置确定需要参考该值
     private bool upFlag;
     private PointerEventData curPointerEventData = new PointerEventData(EventSystem.current);
@@ -30,7 +33,7 @@ public class DragController : MonoBehaviour
         set { gameOverFlag = value; }
     }
 
-    int firstDragPointerID=-10;
+    int firstDragPointerID = -10;
 
 
 
@@ -38,15 +41,28 @@ public class DragController : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void VibrateFeedback();
 
+    public static void VibrateFeedbackIntern()
+    {
+#if UNITY_EDITOR
+        Debug.Log("Play vibration");
+#else
+        VibrateFeedback();
+    //    Handheld.Vibrate();
+#endif
+    }
+
 
     public void OnBeginDrag(PointerEventData pointerEventData, PuzzleItemUI puzzleItemUI, GeneralPanelUI generalPanelUI)
     {
+        Debug.Log("OnBeginDrag");
         if (gameOverFlag)
         {
+            Debug.Log("gameover");
             return;
         }
         if (puzzleItemUI.puzzleItemData.Plockstate)
         {
+            Debug.Log("lock");
             return;
         }
         if (Input.touchCount > 1)
@@ -58,18 +74,16 @@ public class DragController : MonoBehaviour
             miniMapController.RefreshFlag = true;
             generalDragFlag = true;
             puzzleItemUI.DraggedState = true;
-            firstDragPointerID=pointerEventData.pointerId;
+            firstDragPointerID = pointerEventData.pointerId;
+            Debug.Log("OnBeginDrag2");
+
 
             //Debug.Log("Drag begin");
 
 
             //TODO：手机震动一下
-#if UNITY_EDITOR
-            Debug.Log("Play vibration");
-#else
-       VibrateFeedback();
-    //    Handheld.Vibrate();
-#endif
+            VibrateFeedbackIntern();
+
 
             PuzzleItemData puzzleItemData = puzzleItemUI.puzzleItemData;
             //FINISH:开始拖动拼图时，生成（或显示）一块可以跟随手指的拼图，生成（显示）时规定好位置和大小（修改scale缩放即可）
@@ -104,9 +118,23 @@ public class DragController : MonoBehaviour
             puzzleItemUI.cloneForMove.transform.position = new Vector3(puzzleBeginPosPre.x, puzzleBeginPosPre.y, puzzleItemUI.cloneForMove.transform.position.z);
             puzzleItemUI.cloneForMove.SetActive(true);
 
-            StartCoroutine(UpMove(Vector3.up * finalUpMoveDistance, finalUpMoveTime));//!可以调整上移的距离和下落时间
+            if (!puzzleItemData.NotSettleFlag)
+            {
+                //如果是已放置的拼圖
+                StartCoroutine(UpMove(Vector3.up * finalUpMoveDistance_SettlePuzzle, finalUpMoveTime_SettlePuzzle));//!可以调整上移的距离和下落时间
+            }
+            else
+            {
+                //如果是從下方拉起的拼圖
+                StartCoroutine(UpMove(Vector3.up * finalUpMoveDistance, finalUpMoveTime));//!可以调整上移的距离和下落时间
+            }
+
+
             curPointerEventData.position = pointerEventData.position;
             StartCoroutine(UpdatePos(puzzleItemUI.cloneForMove.transform));
+
+            //TODO：deleteArea置為不透明
+            generalPanelUI.SetDeleteAreaTransparent(false);
 
 
 
@@ -151,14 +179,14 @@ public class DragController : MonoBehaviour
         {
             return;
         }
-        if(firstDragPointerID!=pointerEventData.pointerId)//限制手指pointerId不同的不可被拖动，可用于限制只能单指操作
+        if (firstDragPointerID != pointerEventData.pointerId)//限制手指pointerId不同的不可被拖动，可用于限制只能单指操作
         {
             return;
         }
-        
-        
 
-        
+
+
+
         miniMapController.RefreshFlag = true;
 
 
@@ -177,7 +205,7 @@ public class DragController : MonoBehaviour
 
         generalPanelUI.ShowPreCheckResult(interactRet, puzzleItemUI, blankLayout);
 
-        puzzleItemUI.DraggedState=true;
+        puzzleItemUI.DraggedState = true;
 
     }
 
@@ -195,7 +223,7 @@ public class DragController : MonoBehaviour
         {
             return;
         }
-        if(firstDragPointerID!=pointerEventData.pointerId)//限制手指pointerId不同的不可被放置，可用于限制只能单指操作
+        if (firstDragPointerID != pointerEventData.pointerId)//限制手指pointerId不同的不可被放置，可用于限制只能单指操作
         {
             return;
         }
@@ -241,15 +269,21 @@ public class DragController : MonoBehaviour
                 puzzleItemData.PanelGridIndex = puzzleItemData.LastPanelGridIndex;
                 generalPanelUI.RemovePuzzle(puzzleItemUI.gameObject);
             }
+            generalPanelUI.deleteParticleEffect.Play();
+            DragController.VibrateFeedbackIntern();
+
         }
 
-        //TODO:deleteArea缩小为1
+        //FINISH:deleteArea缩小为1
         generalPanelUI.OnDeleteAreaFlag = false;
         StartCoroutine(generalPanelUI.DeleteAreaLinearScaleDown());
         // generalPanelUI.deleteArea.transform.localScale = Vector3.one;
 
         puzzleItemUI.DraggedState = false;
         generalDragFlag = false;
+
+        //TODO：deleteArea置為透明
+        generalPanelUI.SetDeleteAreaTransparent(true);
 
     }
 

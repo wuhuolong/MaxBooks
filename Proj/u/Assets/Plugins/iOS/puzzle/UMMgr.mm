@@ -28,7 +28,7 @@ static UMMgr *_ins = nil;
 
 - (void) SetUp{
     [UMCommonLogManager setUpUMCommonLogManager];
-    [UMConfigure setLogEnabled:YES];//使用日志
+    [UMConfigure setLogEnabled:NO];//使用日志
     [MobClick setScenarioType:E_UM_NORMAL];//设置场景
     [UMConfigure initWithAppkey:appid channel:channelid];//初始化
 }

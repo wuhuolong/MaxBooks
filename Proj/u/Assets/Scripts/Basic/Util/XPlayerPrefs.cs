@@ -85,13 +85,14 @@ public static class XPlayerPrefs
         {
             if (issaving)
                 return;
-            Loom.QueueOnMainThread(() => {
+            Loom.QueueOnMainThread(() =>
+            {
                 try
                 {
                     issaving = true;
                     string json = JsonMapper.ToJson(data);
                     string path = XGamePath.SavePath(tag);
-                    FileStream fs = File.Open(path, FileMode.Open,FileAccess.Write);
+                    FileStream fs = File.Open(path, FileMode.Open, FileAccess.Write);
                     byte[] bytes = System.Text.Encoding.UTF8.GetBytes(json);
                     fs.SetLength(0);
                     fs.Write(bytes, 0, bytes.Length);
@@ -105,7 +106,7 @@ public static class XPlayerPrefs
                     Debug.LogError("==>" + e.Message + "\n" + e.StackTrace);
                 }
             });
-        }              
+        }
     }
     public static void DeleteAll()
     {
@@ -232,7 +233,7 @@ public static class XPlayerPrefs
     public static void SetRec(Recorder rec)
     {
         string levelid = rec.LevelId.ToString();
-        Debug.Log("记录关卡保存==>"+levelid);
+        Debug.Log("记录关卡保存==>" + levelid);
         if (data.Dic_LevelRec.ContainsKey(levelid))
         {
             data.Dic_LevelRec[levelid] = rec;
@@ -260,15 +261,16 @@ public static class XPlayerPrefs
             data.Dic_LevelRec.Remove(level);
         }
     }
-    public static void SetSign(int index ,int offset,byte value)
+    public static void SetSign(int index, int offset, byte value)
     {
-        if (data.List_Day.Count<index)
+        if (data.List_Day.Count <= index)
         {
-            int temp = index - data.List_Day.Count;
-            data.List_Day.AddRange(new List<byte>(temp));
+            Debug.Log(data.List_Day.Count + "///" + index);
+            int temp = index - data.List_Day.Count+1;
+            data.List_Day.AddRange(new List<byte>(temp){new byte()});
         }
         byte tempb = data.List_Day[index];
-        SetByte(ref tempb, value,offset);
+        SetByte(ref tempb, value, offset);
         data.List_Day[index] = tempb;
     }
 
@@ -282,7 +284,7 @@ public static class XPlayerPrefs
 
     public static bool GetSign(int index, int offset)
     {
-        if (offset>7)
+        if (offset > 7)
         {
             Debuger.LogError("Debuger", "GetSign", "每日签到 数据越界了");
         }

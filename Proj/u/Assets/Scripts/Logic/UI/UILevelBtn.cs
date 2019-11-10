@@ -6,13 +6,16 @@ using UnityEngine.UI;
 public class UILevelBtn : UIWindows
 {
     //private string themeID;
-    private uint levelID;
+    public uint levelID;
 
     //public UILevelList levelList;
 
     private bool buttonCheck;
 
-    public Text levelText;
+    public Image bg;
+    public GameObject line;
+    public GameObject star;
+    public GameObject _new;
     //public Image[] stars;
     public Image levelImg;
     //public Image unlockBtn;
@@ -69,6 +72,11 @@ public class UILevelBtn : UIWindows
         {
             Debug.Log("未解锁");
         }
+    }
+
+    public void SetGray()
+    {
+        UIGray.SetUIGray(bg);
     }
 
     public void ClickUnlock()

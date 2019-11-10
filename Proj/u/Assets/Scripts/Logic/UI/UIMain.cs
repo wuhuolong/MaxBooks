@@ -42,12 +42,11 @@ public class UIMain : UIPage
     protected override void InitData()
     {
         this.Log("InitData");
+        Debug.Log("开始-支付去广告");
+        AdMgr.GetInstance().Pay4RemoveAD();
     }
 
-    private void Start()
-    {
-        
-    }
+
 
     private void OnEnable()
     {
@@ -58,11 +57,11 @@ public class UIMain : UIPage
 
         buttonCheck = true;
         type = XPlayerPrefs.GetInt(shadowType);
-        if(isFlashOver==true && type!=-1)
-        {
-            black.alpha = 1.0f;
-            StartCoroutine(ShadowInit2());
-        }
+        //if(isFlashOver==true && type!=-1)
+        //{
+        //    black.alpha = 1.0f;
+        //    StartCoroutine(ShadowInit2());
+        //}
         //ShadowInit();
     }
 
@@ -178,10 +177,12 @@ public class UIMain : UIPage
         if(buttonCheck)
         {
             buttonCheck = false;
-            RandomType();
-            ShadowInit();
-            isShadow = true;
+            
+            //RandomType();
+            //ShadowInit();
+            //isShadow = true;
             LevelMgr.GetInstance().CurPlayMode = GamePlayModule.Normal;
+            UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
         }
     }
 
@@ -258,7 +259,8 @@ public class UIMain : UIPage
 
     public void ShowAD()
     {
-        AdMgr.GetInstance().InterstitialTrigger(null,null,null);
+        Debug.Log("支付去广告");
+        AdMgr.GetInstance().Pay4RemoveAD();
     }
 
     public void ClickRanking()

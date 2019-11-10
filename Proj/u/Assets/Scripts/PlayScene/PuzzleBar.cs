@@ -174,7 +174,7 @@ public class PuzzleBar : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         RectTransform adPuzzleRectTrans = adPuzzle.GetComponent<RectTransform>();
-        adButtonTrans.GetComponent<RectTransform>().anchoredPosition = adPuzzleRectTrans.anchoredPosition + new Vector2(adPuzzleRectTrans.rect.xMax, adPuzzleRectTrans.rect.yMax);
+        adButtonTrans.GetComponent<RectTransform>().anchoredPosition = adPuzzleRectTrans.anchoredPosition + new Vector2(adPuzzleRectTrans.rect.width / 2, adPuzzleRectTrans.rect.height / 2);
 
         adButtonTrans.gameObject.SetActive(true);
     }

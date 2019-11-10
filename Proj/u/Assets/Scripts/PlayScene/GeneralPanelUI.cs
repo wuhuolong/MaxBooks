@@ -48,6 +48,10 @@ public class GeneralPanelUI : MonoBehaviour
     public GeneralPanelData generalPanelData;
     private GridLayoutGroup gridLayoutGroup;
 
+    //刪除區兩張圖片:
+    public Sprite deleteAreaSolidSprite;
+    public Sprite deleteAreaTransparentSprite;
+
     //面板中的拼图：
     // private List<GameObject> settlePuzzleList = new List<GameObject>();
 
@@ -95,6 +99,9 @@ public class GeneralPanelUI : MonoBehaviour
             PX = spaceX;
             PY = PX / GPratio;
         }
+
+        // PX -= 5;
+        // PY -= 5;
 
         //FINISH：修改面板（当前面板、puzzleContainPanel）的真实长宽、以及一个格子的真实边长
         this.GetComponent<RectTransform>().sizeDelta = new Vector2(PX, PY);
@@ -259,7 +266,7 @@ public class GeneralPanelUI : MonoBehaviour
     {
         if (!isInitHeight)
         {
-            if (Screen.height / Screen.width - 2.16f < 0.1f)//判断是否是刘海屏iphone
+            if (Mathf.Abs(((float)Screen.height / (float)Screen.width) - 2.16f) < 0.1f)//判断是否是刘海屏iphone
             {
                 Vector2 originTopBarSizeDelta = topBarRectTrans.sizeDelta;
                 topBarRectTrans.sizeDelta = new Vector2(originTopBarSizeDelta.x, 300);
@@ -713,7 +720,7 @@ public class GeneralPanelUI : MonoBehaviour
 
         if (opRecordFlag)
         {
-            deleteParticleEffect.Play();
+            // deleteParticleEffect.Play();
 
             //FINISH：操作历史记录
             Operation op = new Operation(2, oldLayout, newLayout, puzzle);
@@ -742,6 +749,7 @@ public class GeneralPanelUI : MonoBehaviour
         puzzle.GetComponent<PuzzleItemUI>().PlaySettleAnim();
         sparkParticleEffect.transform.position = puzzle.transform.position;
         sparkParticleEffect.Play();
+        DragController.VibrateFeedbackIntern();
         afterAnimAction();
     }
 
@@ -798,6 +806,18 @@ public class GeneralPanelUI : MonoBehaviour
             }
         }
 
+    }
+
+    public void SetDeleteAreaTransparent(bool setFlag)
+    {
+        if (setFlag)
+        {
+            deleteArea.GetComponent<Image>().sprite = deleteAreaTransparentSprite;
+        }
+        else
+        {
+            deleteArea.GetComponent<Image>().sprite = deleteAreaSolidSprite;
+        }
     }
 
 

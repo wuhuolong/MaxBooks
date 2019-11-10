@@ -53,4 +53,9 @@ public class AdMgr:MonoSingleton<AdMgr>
             Debug.Log("广告");
         }
     }
+
+    public void Pay4RemoveAD()
+    {
+        SDKMgr.GetInstance().pay4RemoveAd();
+    }
 }

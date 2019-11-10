@@ -24,7 +24,7 @@ public abstract class UIBase : MonoBehaviour
     }
     public void Close()
     {
-         gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
     //用来初始化UI组件
     protected abstract void InitComp();
@@ -37,10 +37,10 @@ public abstract class UIWindows : UIBase
 }
 public abstract class UITips : UIBase
 {
-    public object[] argc;
+    public object[] argv;
     public abstract void OnShowTips();
 }
 public abstract class UIPage : UIBase
 {
-    
+
 }
