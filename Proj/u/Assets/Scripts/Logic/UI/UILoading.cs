@@ -69,7 +69,7 @@ public class UILoading : UIWindows
                     shadows[type].localScale = Vector3.zero;
                     isShadow = false;
                     black.alpha = 1.0f;
-                    UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+                    UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
                 }
             }
         }

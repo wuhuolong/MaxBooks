@@ -146,7 +146,7 @@ static GADManager* _instance = nil;
     NSDictionary *dic= [NSDictionary dictionaryWithObjectsAndKeys:
                         @6,@"Type",
                         @1,@"Ret",nil];
-    NSString *json = [self Dic2Json:dic];
+    NSString *json = [xSdkInterface Dic2Json:dic];
     if (json.length != 0) {
         [xSdkInterface SendMsg2Unity:json];
     }else{
@@ -165,7 +165,7 @@ static GADManager* _instance = nil;
     NSDictionary *dic= [NSDictionary dictionaryWithObjectsAndKeys:
                           @6,@"Type",
                           @0,@"Ret",nil];
-    NSString *json = [self Dic2Json:dic];
+    NSString *json = [xSdkInterface Dic2Json:dic];
     [xSdkInterface SendMsg2Unity:json];
 
 
@@ -216,32 +216,10 @@ static GADManager* _instance = nil;
     NSLog(@"interstitialWillLeaveApplication");
     
 }
-//*********** tools ******************
--(NSString *)Dic2Json:(NSDictionary *)dic{
-    NSError *err;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:kNilOptions error:&err];
-    if (err) {
-        NSLog(@"dic parse to json error code ==>%ld",(long)err.code);
-        return @"";
-    }
-    NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-    NSLog(@"dic parse to json ==> %@",str);
-    return str;
-}
--(NSDictionary *)Json2Dic:(NSString *)json{
-    NSLog(@"json parse to dic");
-    NSData *data = [json dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&err];
-    if (err) {
-        NSLog(@"json parse to dic error code ==>%ld",(long)err.code);
-        return nil;
-    }
-    return dic;
-}
-//*********** tools ******************
+
+
 - (void)receivedMsg:(NSString *)str{
-    NSDictionary *dic = [[GADManager sharedInstance] Json2Dic:str];
+    NSDictionary *dic = [xSdkInterface Json2Dic:str];
     if(dic != nil){
         int type = [[dic objectForKey:@"Type"]intValue];
         NSString *strTemp;
@@ -334,6 +312,7 @@ extern "C"{
     }
 	void _pay4RemoveAD(){
         printf("==> _pay4RemoveAD \n");
+        [[UMMgr sharedInstance] Track:@"7"];
         [[STRIAPManager shareSIAPManager] startPurchWithID:@"ly_puzzle_1" completeHandle:nil];
 	}
 }

@@ -263,13 +263,18 @@ public static class XPlayerPrefs
     }
     public static void SetSign(int index, int offset, byte value)
     {
-        if (data.List_Day.Count <= index)
+        if (data.List_Day.Count < index + 1)
         {
             Debug.Log(data.List_Day.Count + "///" + index);
-            int temp = index - data.List_Day.Count+1;
-            data.List_Day.AddRange(new List<byte>(temp){new byte()});
+            int temp = index - data.List_Day.Count + 1;
+            for (int i = 0; i < temp; ++i)
+            {
+                data.List_Day.Add(new byte());
+            }
+
         }
         byte tempb = data.List_Day[index];
+        offset = 7 - offset;
         SetByte(ref tempb, value, offset);
         data.List_Day[index] = tempb;
     }
@@ -288,13 +293,17 @@ public static class XPlayerPrefs
         {
             Debuger.LogError("Debuger", "GetSign", "每日签到 数据越界了");
         }
-        if (data.List_Day.Count <= index)
+        if (data.List_Day.Count < index + 1)
         {
-            int temp = index - data.List_Day.Count;
-            data.List_Day.AddRange(new List<byte>(temp));
+            int temp = index - data.List_Day.Count + 1;
+            for (int i = 0; i < temp; ++i)
+            {
+                data.List_Day.Add(new byte());
+            }
             return false;
         }
         byte tempb = data.List_Day[index];
+        offset = 7 - offset;
         return ((tempb >> offset) & 1) == 1;
     }
 }

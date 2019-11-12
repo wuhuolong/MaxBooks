@@ -4,7 +4,24 @@ using UnityEngine;
 
 public class UIRoot : UIBase
 {
+    public Transform m_Left;
+    public Transform m_Right;
     public Transform Parent;
+
+    public Vector3 LeftPoint
+    {
+        get
+        {
+            return m_Left.transform.position;
+        }
+    }
+    public Vector3 RightPoint
+    {
+        get
+        {
+            return m_Right.transform.position;
+        }
+    }
     public Camera Cam;
     protected override void InitComp()
     {

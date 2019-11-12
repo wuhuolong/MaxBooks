@@ -55,6 +55,8 @@ public class CalendarPanelTest : MonoBehaviour
         calendarList = new List<CalendarTest>();
 
         int selectedDateTimeInt = XPlayerPrefs.GetInt(ChallengeController.selectedDateTimeStr);
+        Debug.Log("selectedDay:" + selectedDateTimeInt);
+
         if (selectedDateTimeInt != 0)
         {
             currentCalendarDateTime = TimeUtil.getDateTimeByInt(selectedDateTimeInt);
@@ -62,8 +64,22 @@ public class CalendarPanelTest : MonoBehaviour
         else
         {
             currentCalendarDateTime = DateTime.Today;
-            XPlayerPrefs.SetInt(ChallengeController.selectedDateTimeStr, TimeUtil.getIntByDateTime(currentCalendarDateTime));
+
+            X.Res.SignInConfig todaySignInConfig = SignInMgr.GetInstance().GetConfigByID((uint)TimeUtil.getIntByDateTime(currentCalendarDateTime));
+            if (todaySignInConfig != null && LevelMgr.GetInstance().GetLevelConfig(todaySignInConfig.LevelId).Config != null)
+            {
+                XPlayerPrefs.SetInt(ChallengeController.selectedDateTimeStr, TimeUtil.getIntByDateTime(currentCalendarDateTime));
+            }
+            else
+            {
+                XPlayerPrefs.SetInt(ChallengeController.selectedDateTimeStr, (int)SignInMgr.GetInstance().MaxValidDay);
+            }
         }
+
+        selectedDateTimeInt = XPlayerPrefs.GetInt(ChallengeController.selectedDateTimeStr);
+        Debug.Log("selectedDay:" + selectedDateTimeInt);
+
+
 
         int calendarCount = transform.childCount;
         int centerCalendar = calendarCount / 2;
@@ -118,6 +134,7 @@ public class CalendarPanelTest : MonoBehaviour
             //设置currentCalendarDateTime
             currentCalendarDateTime = currentCalendarDateTime.AddMonths(1);
             Debug.Log(currentCalendarDateTime.Year + " " + currentCalendarDateTime.Month + " " + currentCalendarDateTime.Day);
+            nextCalendarDateTime = currentCalendarDateTime.AddMonths(1);
 
 
             //TODO:加入动画而非直接变换位置
@@ -155,6 +172,7 @@ public class CalendarPanelTest : MonoBehaviour
             //设置currentCalendarDateTime
             currentCalendarDateTime = currentCalendarDateTime.AddMonths(-1);
             Debug.Log(currentCalendarDateTime.Year + " " + currentCalendarDateTime.Month + " " + currentCalendarDateTime.Day);
+            lastCalendarDateTime = currentCalendarDateTime.AddMonths(-1);
 
             //TODO:加入动画而非直接变换位置
             StartCoroutine(moveRectTrans(rectTrans, rectTrans.anchoredPosition + Vector2.right * panelWidth, 0.2f, () =>

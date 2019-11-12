@@ -141,8 +141,9 @@ public class PuzzleBar : MonoBehaviour
         }
         else//adPuzzleAvailFlagInt==1
         {
+            
             //可用广告方块
-            //TODO:添加广告方块 
+             //TODO:添加广告方块 
             GameObject adPuzzle = AddAdPuzzle();
             //TODO:添加看广告按钮
             Transform adButtonTrans;
@@ -155,17 +156,31 @@ public class PuzzleBar : MonoBehaviour
                 GameObject adButton = GameObject.Instantiate(adButtonPrefab, puzzleBarForFreeLayoutTrans);
                 adButtonTrans = adButton.transform;
             }
-            //TODO:设置按钮的方法
-            Button adButtonComp = adButtonTrans.GetComponent<Button>();
-            adButtonComp.onClick.RemoveAllListeners();
-            adButtonComp.onClick.AddListener(() =>
+            //添加判断是否已经付费去广告
+            if (XPlayerPrefs.GetInt(AdMgr.Pay2RemoveAD_Tag) == 1)
             {
-                UnlockAdPuzzle();
-            });
-            //TODO:设置按钮位置，在协程中等待到当前帧的fixedupdate时进行，原因是adPuzzle的位置受horizontalLayout的影响会在fixedupdate时才生效
-            StartCoroutine(SetAdButtonPos(adButtonTrans, adPuzzle));
+                adButtonTrans.gameObject.SetActive(false);
+                if (adPuzzleNum == 1)
+                {
+                    Transform adPuzzleTrans = this.transform.GetChild(this.transform.childCount - 1);
+                    PuzzleItemUI adPuzzleUI = adPuzzleTrans.GetComponent<PuzzleItemUI>();
+                    PuzzleItemData adPuzzleData = adPuzzleUI.puzzleItemData;
+                    adPuzzleData.Plockstate = false;
+                }
+            }
+            else
+            {
+                //TODO:设置按钮的方法
+                Button adButtonComp = adButtonTrans.GetComponent<Button>();
+                adButtonComp.onClick.RemoveAllListeners();
+                adButtonComp.onClick.AddListener(() =>
+                {
+                    UnlockAdPuzzle();
+                });
 
-
+                //TODO:设置按钮位置，在协程中等待到当前帧的fixedupdate时进行，原因是adPuzzle的位置受horizontalLayout的影响会在fixedupdate时才生效
+                StartCoroutine(SetAdButtonPos(adButtonTrans, adPuzzle));
+            }
         }
     }
 

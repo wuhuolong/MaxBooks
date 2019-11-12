@@ -72,16 +72,16 @@ public class AssetInfo
 }
 public static class AssetCollector
 {
-    private static bool islog = true;
+    private static bool islog = false;
     private static string Tag = "AssetCollector";
     private static void Log(string msg)
     {
         if (!islog) return;
-        Debuger.Log(Tag,string.Empty,msg);
+        Debug.Log(msg);//Tag,string.Empty,
     }
     public static List<string> tags = new List<string>
     {
-        "*.prefab"/*,"*.png","*.controller","*.anim","*.TTF","*.mat"*/
+        "*.prefab"/*,"*.png","*.controller","*.anim","*.TTF","*.mat"*/,"*.TTF"
     };
     public static string Variant = "XXX";
     private static Dictionary<string, AssetInfo> AllAssets = new Dictionary<string, AssetInfo>();
@@ -101,6 +101,7 @@ public static class AssetCollector
             for (int ii = 0; ii < tags.Count; ii++)
             {
                 FileInfo[] fi = di.GetFiles(tags[ii], SearchOption.AllDirectories);
+                Log(string.Format("Tag:{0},count {1}", tags[ii], fi.Length) );
                 filelist.AddRange(fi);
             }
             length = Application.dataPath.Length - "Assets".Length;
@@ -129,7 +130,10 @@ public static class AssetCollector
                     };
                     AllAssets.Add(ai.Path, ai);
                 }
-
+                else
+                {
+                    AllAssets[assetpath].isAssetBundle = true;
+                }
                 string[] depends = AssetDatabase.GetDependencies(assetpath);
                 List<string> list = new List<string>(depends);
                 list.Remove(assetpath);
@@ -157,6 +161,7 @@ public static class AssetCollector
         {
             Log("文件夹不存在");
         }
+        AllSetTag();
     }
 
     private static void Print()

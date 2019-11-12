@@ -132,7 +132,7 @@ public class AbMgr : MonoSingleton<AbMgr>
             abname = XGamePath.Path2ResName(path);
         }
         string fullpath = XGamePath.GetStreamingAbPath(abname);
-        int hash = path.GetHashCode();
+        int hash = abname.GetHashCode();//path.GetHashCode();
 
         string[] depends = AbMgr.GetInstance().GetDepends(abname);
         for (int i = 0; i < depends.Length; i++)
@@ -169,6 +169,7 @@ public class AbMgr : MonoSingleton<AbMgr>
                 default:
                     break;
             }
+            return loader.Bundle;
         }
         loader = new AbSyncLoader(fullpath, abname);
         loader.LoadAsset(fullpath);
@@ -344,8 +345,18 @@ public class AbAsyncLoader : AbAbstractLoader
                 this.Log("depends is load over self callback");
                 return true;
             }
+            return false;
         }
-        return false;
+        else
+        {
+            if (m_callback != null)
+            {
+                m_callback(Bundle);
+                m_callback = null;
+            }
+            this.Log("depends count == 0");
+            return true;
+        }
     }
     public override void LoadAsset(string path)
     {

@@ -19,6 +19,7 @@ public enum UIPageEnum
     Calendar_Page,
     End_Page,
     TipsLabel_Page,
+    Test_Wnd,
     Max,
 }
 public static class UIUtil
@@ -33,6 +34,7 @@ public static class UIUtil
         {(int)UIPageEnum.GM_Page,typeof(UIGM).ToString()},
         {(int)UIPageEnum.Calendar_Page,typeof(UIChallenge).ToString()},
         {(int)UIPageEnum.UseRec_Tips,typeof(UIUseRecTips).ToString()},
+        //{(int)UIPageEnum.Test_Wnd,typeof(testImg).ToString()},
         {(int)UIPageEnum.TipsLabel_Page,typeof(UITipsLabel).ToString()},
         // {(int)UIPageEnum.Pause_Page,typeof(UIPause).ToString()},
 

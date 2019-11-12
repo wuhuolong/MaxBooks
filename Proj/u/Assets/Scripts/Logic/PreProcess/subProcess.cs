@@ -47,9 +47,12 @@ public class AbProcess : PreProcess
     public override void Process()
     {
         //UI部分
-        UIMgr.LoadUIAsync((int)UIPageEnum.LevelList_Page,()=> { Callback(); });
-        UIMgr.LoadUIAsync((int)UIPageEnum.Main_Page, () => { Callback(); });
-        UIMgr.LoadUIAsync((int)UIPageEnum.Play_Page, () => { Callback(); });
+        UIMgr.GetInstance().LoadUIAsync((int)UIPageEnum.LevelList_Page,()=> { Callback(); });
+        UIMgr.GetInstance().LoadUIAsync((int)UIPageEnum.Main_Page, () => { Callback(); });
+        UIMgr.GetInstance().LoadUIAsync((int)UIPageEnum.Play_Page, () => { Callback(); });
+
+        //shader
+        AbMgr.GetInstance().AsyncLoad("shaders",null);
     }
 }
 

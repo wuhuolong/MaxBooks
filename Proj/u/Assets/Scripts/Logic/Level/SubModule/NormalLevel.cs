@@ -14,6 +14,8 @@ public class NormalLevel : BaseLevel
 
     public override void OnExit(params object[] argv)
     {
+        GameObject nextLevelButton=argv[0] as GameObject;
+        nextLevelButton.SetActive(true);
         X.Res.FuncParamConfig config = FuncMgr.GetInstance().GetConfigByID(1);
         if (config != null)
         {
@@ -32,8 +34,8 @@ public class NormalLevel : BaseLevel
         }
     }
 
-    public override void OnClickQuit_UIEnd(params object[] argv)
+    public override void OnClickQuit(params object[] argv)
     {
-        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
+        UIMgr.GetInstance().ShowPage(UIPageEnum.LevelList_Page);
     }
 }

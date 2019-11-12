@@ -75,9 +75,8 @@ public class CircleShaderController : MonoBehaviour
     }
 
     private void Awake()
-
     {
-
+        
     }
 
     public void Init()

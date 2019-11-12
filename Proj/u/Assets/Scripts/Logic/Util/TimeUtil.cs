@@ -27,6 +27,6 @@ public static class TimeUtil
 
     public static bool isNetworkOn()
     {
-        return (Application.internetReachability == NetworkReachability.NotReachable);
+        return (Application.internetReachability != NetworkReachability.NotReachable);
     }
 }

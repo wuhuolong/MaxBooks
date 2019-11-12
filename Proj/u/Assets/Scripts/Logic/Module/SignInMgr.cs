@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
@@ -36,6 +37,31 @@ public class SignInMgr : CSSingleton<SignInMgr>
         }
     }
 
+    public uint MaxValidDay
+    {
+        get
+        {
+            if (m_day_list.Count > 0)
+            {
+                int todayIndex = GetIndexByID((uint)TimeUtil.getIntByDateTime(DateTime.Today));
+                for (int i = todayIndex; i >= 0; --i)
+                {
+                    uint dayInt = m_day_list[i];
+                    SignInConfig signInConfig = GetConfigByID(dayInt);
+                    if (signInConfig != null)
+                    {
+                        uint levelID = signInConfig.LevelId;
+                        if (LevelMgr.GetInstance().GetLevelConfig(levelID).Config != null)
+                        {
+                            return dayInt;
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
+    }
+
     Dictionary<uint, SignInConfig> m_Configs;
     protected override void Init()
     {
@@ -69,8 +95,16 @@ public class SignInMgr : CSSingleton<SignInMgr>
 
     public void Sign(int DayInt)
     {
+        Debug.Log("DayInt:" + DayInt);
+
+
+
         int index = DayInt / 8;
         int offset = DayInt % 8;
+
+        Debug.Log("index:" + index);
+        Debug.Log("offset:" + offset);
+
         XPlayerPrefs.SetSign(index, offset, 1);
     }
 

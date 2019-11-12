@@ -12,7 +12,7 @@ public class GameConfig
     public class GameConfigData
     {
         public bool IsDebug = true;
-        public int SignInDay = 43775;
+        public int SignInDay = 43770;
     }
     private static GameConfigData _ins;
 
@@ -20,6 +20,10 @@ public class GameConfig
     {
         get
         {
+            if (_ins == null)
+            {
+                Init();
+            }
             return _ins.IsDebug;
         }
     }
@@ -27,6 +31,10 @@ public class GameConfig
     {
         get
         {
+            if (_ins == null)
+            {
+                Init();
+            }
             return _ins.SignInDay;
         }
     }
@@ -42,7 +50,7 @@ public class GameConfig
         }
     }
 
-    public static void Init()
+    private static void Init()
     {
         string path = XGamePath.GetLevelDataJsonPath(FileName);
         if (File.Exists(path))

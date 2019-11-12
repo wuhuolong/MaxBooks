@@ -37,6 +37,31 @@
     NSLog(@"==> oc json back");
     UnitySendMessage("MonoSingleton", "SdkInterfaceCallback", json_str);
 }
+
+//*********** tools ******************
++(NSString *)Dic2Json:(NSDictionary *)dic{
+    NSError *err;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:kNilOptions error:&err];
+    if (err) {
+        NSLog(@"dic parse to json error code ==>%ld",(long)err.code);
+        return @"";
+    }
+    NSString *str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"dic parse to json ==> %@",str);
+    return str;
+}
++(NSDictionary *)Json2Dic:(NSString *)json{
+    NSLog(@"json parse to dic");
+    NSData *data = [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&err];
+    if (err) {
+        NSLog(@"json parse to dic error code ==>%ld",(long)err.code);
+        return nil;
+    }
+    return dic;
+}
+//*********** tools ******************
 @end
 
 

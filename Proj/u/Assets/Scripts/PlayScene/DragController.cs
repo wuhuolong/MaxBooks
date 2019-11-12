@@ -23,6 +23,7 @@ public class DragController : MonoBehaviour
     private bool generalDragFlag = false;
     public bool GeneralDragFlag
     {
+        set { generalDragFlag = value; }
         get { return generalDragFlag; }
     }
 
@@ -102,7 +103,7 @@ public class DragController : MonoBehaviour
 
             //FINISH:修改大小
             //FINISH:加上双指缩放的比例
-            //根据摄像机的缩放比例调整拼图的scaleratio
+            //根据panelTC缩放比例调整拼图的scaleratio
             puzzleItemUI.SetScaleRatio();
             float ratio = puzzleItemUI.ScaleRatio * panelTransformationController.ScaleRatio;
             Debug.Log(ratio + " " + puzzleItemUI.ScaleRatio + " " + panelTransformationController.ScaleRatio);

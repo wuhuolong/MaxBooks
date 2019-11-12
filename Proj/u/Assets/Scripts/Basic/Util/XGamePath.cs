@@ -9,7 +9,12 @@ public static class XGamePath
     public static string ResRoot = "FakeResources";
 
     public static string Output = "AssetBundle";
-    public static string OutputPath = string.Format("{0}/../{1}/", Application.dataPath, "AssetBundle");
+    public static string OutputPath {
+        get
+        {
+            return string.Format("{0}/../{1}/", Application.dataPath, "AssetBundle");
+        }
+    } 
     //private static string AssetPath = "Asset";
     //private static string LevelJsonConfig = "FakeResources/Data/LevelConfig/LevelMapConfig.json";//LevelMapConfig
 
@@ -60,6 +65,21 @@ public static class XGamePath
         }
 #else
         return "Atlas/" + filename + ".Prefab";
+#endif
+    }
+    public static string GetFontPath(string filename)
+    {
+#if UNITY_EDITOR
+        if (AbMgr.IsAbMode)
+        {
+            return "Font/" + filename + ".TTF";
+        }
+        else
+        {
+            return "Font/" + filename + ".TTF";
+        }
+#else
+        return "Font/" + filename + ".TTF";
 #endif
     }
     public static string SavePath(string filename)

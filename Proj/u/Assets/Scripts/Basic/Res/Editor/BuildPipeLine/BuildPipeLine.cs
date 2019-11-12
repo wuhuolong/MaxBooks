@@ -17,9 +17,10 @@ public class BuildHelper
         AssetDatabase.Refresh();
         string path = XGamePath.GetResRoot();//Application.dataPath+ "/FakeResources/Prefabs/abtest";//
         AssetCollector.Collecttions(path);
-        AssetCollector.AllSetTag();
         BinCollector.Collecttions(Application.dataPath+"/Data/", XGamePath.OutputPath);
-        var options = BuildAssetBundleOptions.ChunkBasedCompression;
+        ShaderCollector.Collecttions(Application.dataPath + "/Shaders/");
+
+        var options = BuildAssetBundleOptions.ChunkBasedCompression|BuildAssetBundleOptions.DeterministicAssetBundle;
 
         BuildPipeline.BuildAssetBundles(XGamePath.OutputPath, options, EditorUserBuildSettings.activeBuildTarget);
         AssetDatabase.Refresh();

@@ -68,11 +68,11 @@ public class LevelMgr : CSSingleton<LevelMgr>
     private void SortConfig()
     {
         //第一遍排序按照关卡id
-        for(int i=0;i<m_config.Items.Count;i++)
+        for (int i = 0; i < m_config.Items.Count; i++)
         {
-            for(int j=0;j<m_config.Items.Count-i-1;j++)
+            for (int j = 0; j < m_config.Items.Count - i - 1; j++)
             {
-                if(m_config.Items[j].LevelId>m_config.Items[j+1].LevelId)
+                if (m_config.Items[j].LevelId > m_config.Items[j + 1].LevelId)
                 {
                     LevelConfig temp = m_config.Items[j];
                     m_config.Items[j] = m_config.Items[j + 1];
@@ -85,7 +85,7 @@ public class LevelMgr : CSSingleton<LevelMgr>
         {
             for (int j = 0; j < m_config.Items.Count - i - 1; j++)
             {
-                if (string.Compare(m_config.Items[j].LevelTheme,m_config.Items[j+1].LevelTheme)==1)
+                if (string.Compare(m_config.Items[j].LevelTheme, m_config.Items[j + 1].LevelTheme) == 1)
                 {
                     LevelConfig temp = m_config.Items[j];
                     m_config.Items[j] = m_config.Items[j + 1];
@@ -131,9 +131,16 @@ public class LevelMgr : CSSingleton<LevelMgr>
 
     public LevelConfig GetNewLevel()
     {
-        for(int i=0;i<m_config.Items.Count;i++)
+        for (int i = 0; i < m_config.Items.Count; i++)
         {
-            if (XPlayerPrefs.GetInt(m_config.Items[i].LevelId.ToString()+ "isCompleted") ==0)
+            if (m_config.Items[i].LevelType == 1 && XPlayerPrefs.GetInt(m_config.Items[i].LevelId.ToString() + "isCompleted") == 0)
+            {
+                return m_config.Items[i];
+            }
+        }
+        for (int i = m_config.Items.Count-1; i >=0; i--)
+        {
+            if (m_config.Items[i].LevelType == 1)
             {
                 return m_config.Items[i];
             }
@@ -170,7 +177,7 @@ public class LevelMgr : CSSingleton<LevelMgr>
     {
         for (int i = 0; i < m_config.Items.Count; i++)
         {
-            if(i+1 == m_config.Items.Count)
+            if (i + 1 == m_config.Items.Count)
                 ac(m_config.Items[i], m_config.Items[i], i, m_config.Items.Count);
             else
                 ac(m_config.Items[i], m_config.Items[i + 1], i, m_config.Items.Count);
@@ -183,19 +190,19 @@ public class LevelMgr : CSSingleton<LevelMgr>
         data.Map = GetMapArrayData(id);
         if (data.Config == null)
         {
-            Debuger.Log(Tag,string.Empty,"data.Config == null)");
+            Debuger.Log(Tag, string.Empty, "data.Config == null)");
         }
         if (data.Map == null)
         {
-            Debuger.Log(Tag, string.Empty,"data.Map == null");
+            Debuger.Log(Tag, string.Empty, "data.Map == null");
         }
         return data;
     }
     public uint GetNextLevelIDByID(uint id)
     {
-        for(int i=0;i<m_config.Items.Count;i++)
+        for (int i = 0; i < m_config.Items.Count; i++)
         {
-            if(m_config.Items[i].LevelId==id && i<m_config.Items.Count-1)
+            if (m_config.Items[i].LevelId == id && i < m_config.Items.Count - 1)
             {
                 return m_config.Items[i + 1].LevelId;
             }
@@ -205,17 +212,17 @@ public class LevelMgr : CSSingleton<LevelMgr>
     public string GetIndexByID(uint id)
     {
         string index = "";
-        int T_index=0, L_index=1;
+        int T_index = 0, L_index = 1;
         string curTheme = "";
-        for(int i = 0;i<m_config.Items.Count;i++)
+        for (int i = 0; i < m_config.Items.Count; i++)
         {
-            if(m_config.Items[i].LevelTheme!=curTheme)
+            if (m_config.Items[i].LevelTheme != curTheme)
             {
                 T_index++;
                 L_index = 1;
                 curTheme = m_config.Items[i].LevelTheme;
             }
-            if(m_config.Items[i].LevelId==id)
+            if (m_config.Items[i].LevelId == id)
             {
                 return T_index.ToString() + "-" + L_index.ToString();
             }
@@ -229,19 +236,26 @@ public class LevelMgr : CSSingleton<LevelMgr>
         List<int> index = new List<int>();
         string theme = "";
         int curPos = -1;
-        for(int i=0;i<m_config.Items.Count;i++)
+        for (int i = 0; i < m_config.Items.Count; i++)
         {
-            if(theme!=m_config.Items[i].LevelTheme)
+            if(m_config.Items[i].LevelType==2)
+            {
+                break;
+            }
+            Debug.Log(i+" "+m_config.Items[i].LevelTheme+ m_config.Items[i].LevelId);
+            if (theme != m_config.Items[i].LevelTheme)
             {
                 theme = m_config.Items[i].LevelTheme;
                 index.Add(1);
                 curPos++;
             }
-            if(id!=m_config.Items[i].LevelId)
+            if (id != m_config.Items[i].LevelId)
             {
+                Debug.Log(curPos);
                 index[curPos]++;
+                
             }
-            else if(id == m_config.Items[i].LevelId)
+            else if (id == m_config.Items[i].LevelId)
             {
                 return index;
             }
@@ -269,11 +283,11 @@ public class LevelMgr : CSSingleton<LevelMgr>
     {
         return m_themeConfig;
     }
-    
+
     public void GotoLevel(uint levelid)
     {
         CurLevelID = levelid;
-        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+        UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
     }
 
     public uint CurLevelID { get; set; }

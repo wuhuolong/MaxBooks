@@ -11,18 +11,40 @@ public class AdMgr:MonoSingleton<AdMgr>
     public int startUpCount = -1;
     public int tmpCount;
     public int index;
+
+    public bool isPaying = false;
+
     public bool isRewardVideoReady()
     {
         return SDKMgr.GetInstance().isRewardVideoReady();
     }
+    public static readonly string Pay2RemoveAD_Tag = "Pay2RemoveAD";
+
+    public bool isPaid()
+    {
+        return XPlayerPrefs.GetInt(AdMgr.Pay2RemoveAD_Tag) == 1;
+    }
 
     public void showRewardVideo(Action onReward,Action onFail,Action onClose)
     {
+        if (isPaid())
+        {
+            onReward();
+            return;
+        }
         SDKMgr.GetInstance().showRewardVideo(onReward, onFail, onClose);
     }
 
     public void InterstitialTrigger(Action onReward=null, Action onFail=null, Action onClose=null)
     {
+        if (isPaid())
+        {
+            if (onReward != null)
+            {
+                onReward();
+            }
+            return;
+        }
         tmpCount = XPlayerPrefs.GetInt("StartUpCount");
         //int startUpCount = XPlayerPrefs.GetInt("StartUpCount");
         if (startUpCount!= tmpCount)
@@ -50,12 +72,21 @@ public class AdMgr:MonoSingleton<AdMgr>
         {
             //TODO:播放广告
 			SDKMgr.GetInstance().showIntersitialAD(onReward, onFail, onClose);
-            Debug.Log("广告");
+
+#if UNITY_EDITOR
+            Debug.Log("激励广告");
+#endif
         }
     }
 
     public void Pay4RemoveAD()
     {
+        if (isPaying)
+        {
+            //todo 此处应该有tips
+            return;
+        }
+        isPaying = true;
         SDKMgr.GetInstance().pay4RemoveAd();
     }
 }

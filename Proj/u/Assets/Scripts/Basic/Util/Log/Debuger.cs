@@ -41,7 +41,7 @@ public class Debuger
     {
         if (UseUnityEngine)
         {
-            UnityEngine.Debug.Log(msg, (UnityEngine.Object)context);
+            // UnityEngine.Debug.Log(msg, (UnityEngine.Object)context);
         }
         else
         {

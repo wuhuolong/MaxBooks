@@ -17,10 +17,9 @@ public class DayTest : MonoBehaviour, IPointerClickHandler
 
     //数据:
     private DateTime dateTime;
-    public DateTime DateTime { get; set; }
     private int dateTimeInt;
-    private bool isChallenged = false;//是否已通过
-    public bool IsChallenged { get; set; }
+    // private bool isChallenged = false;//是否已通过
+    public bool isChallenged { get; set; }
     public bool isLocked = false;//是否上锁
     public bool isEmpty = false;//是否是空
 
@@ -44,7 +43,7 @@ public class DayTest : MonoBehaviour, IPointerClickHandler
         this.dateTimeInt = TimeUtil.getIntByDateTime(dateTime);
         //TODO:首先获取配置表，如果今天没有配置任何信息，就不显示任何
         SignInConfig signInConfig = SignInMgr.GetInstance().GetConfigByID((uint)dateTimeInt);
-        if (signInConfig == null)
+        if (signInConfig == null || LevelMgr.GetInstance().GetLevelConfig(signInConfig.LevelId).Config == null)
         {
             // InitInvisible();
             dayBGSelectFinish.color = Color.clear;
@@ -95,7 +94,7 @@ public class DayTest : MonoBehaviour, IPointerClickHandler
             // int isChallengedInt = XPlayerPrefs.GetInt(TimeUtil.getIntByDateTime(dateTime) + challengeStr);
 
             //!just for test
-            GameConfig.Init();
+            
 
             // Debug.Log(dateTime.ToShortDateString() + " " + dateTimeInt.ToString());
             // Debug.Log(GameConfig.SignInDay);
@@ -107,13 +106,14 @@ public class DayTest : MonoBehaviour, IPointerClickHandler
             //FINISH：判断当前日期是否被选中
 
             bool isSelected = XPlayerPrefs.GetInt(ChallengeController.selectedDateTimeStr) == dateTimeInt ? true : false;
+
             if (isChallenged && isSelected)
             {
                 //如果當前日期是選中+完成
                 dayBGSelectFinish.color = Color.white;
                 dayText.color = Color.white;
                 //还要通知一下ChallengeController
-                LogicEvent.Broadcast(LogicEvent.CALENDAR_SELECTED, dateTime, this);
+                LogicEvent.Broadcast(LogicEvent.CALENDAR_SELECTED, dateTime, this.gameObject);
             }
             else if (!isChallenged && isSelected)
             {
@@ -124,7 +124,7 @@ public class DayTest : MonoBehaviour, IPointerClickHandler
                 // Debug.Log("select unfinish color?:" + dayBGSelectUnFinish.color.ToString());
 
                 // Debug.Log("select finish color?:" + dayBGSelectFinish.color.ToString());
-                LogicEvent.Broadcast(LogicEvent.CALENDAR_SELECTED, dateTime, this);
+                LogicEvent.Broadcast(LogicEvent.CALENDAR_SELECTED, dateTime, this.gameObject);
 
             }
             else if (isChallenged && !isSelected)
@@ -155,6 +155,6 @@ public class DayTest : MonoBehaviour, IPointerClickHandler
             return;
         }
         Debug.Log("点击了" + dateTime.ToShortDateString());
-        LogicEvent.Broadcast(LogicEvent.CALENDAR_SELECTED, dateTime, this);
+        LogicEvent.Broadcast(LogicEvent.CALENDAR_SELECTED, dateTime, this.gameObject);
     }
 }

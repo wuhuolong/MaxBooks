@@ -89,6 +89,7 @@ MonoBehaviour:
   UIType: 0
   IsNeedMask: 0
   IsClickBgClose: 0
+  IsAnim: 0
   round: {fileID: 4368121132469622893}
 --- !u!1 &4368121132469622893
 GameObject:

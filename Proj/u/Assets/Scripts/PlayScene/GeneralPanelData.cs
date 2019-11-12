@@ -66,50 +66,55 @@ public class GeneralPanelData
         {
             Debug.Log("Sim");
             //!模拟读入长宽
-            pwidth = 10;
-            pheight = 10;
+            pwidth = 15;
+            pheight = 15;
 
             //!模拟读入一个一维数组
             playout = new int[]{
-                1,1,1,1,1,1,1,1,1,1,
-                1,1,1,1,1,1,1,1,1,1,
-                1,1,1,1,1,1,1,1,1,1,
-                1,1,1,2,1,1,1,1,2,1,
-                1,1,1,1,1,1,1,1,1,1,
-                1,1,1,1,1,1,1,1,1,1,
-                1,1,1,1,1,1,1,1,1,1,
-                1,1,1,1,1,1,1,1,1,1,
-                1,1,1,2,1,1,1,1,2,1,
-                1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,
+                1,1,1,2,1,1,2,2,2,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
                 };
         }
         else
         {
-            // pwidth = curLevelData.Map.MapWidth + 2;
-            // pheight = curLevelData.Map.MapHeight + 2;
+            pwidth = curLevelData.Map.MapWidth + 2;
+            pheight = curLevelData.Map.MapHeight + 2;
 
-            // //保存数据进一个一维int数组
-            // int[] tempLayout = curLevelData.Map.MapArray;
-            // playout = new int[pwidth * pheight];
+            //保存数据进一个一维int数组
+            int[] tempLayout = curLevelData.Map.MapArray;
+            playout = new int[pwidth * pheight];
 
-            //FINISH:扩充int数组的边界
-            //UPDATE
-            // for (int i = 0; i < playout.Length; ++i)
-            // {
-            //     int x = i % (pwidth);
-            //     int y = i / (pwidth);
-            //     if (x != 0 && x != pwidth - 1 && y != 0 && y != pheight - 1)
-            //     {
-            //         playout[y * (pwidth) + x] = tempLayout[(y - 1) * (pwidth - 2) + (x - 1)];
-            //     }
-            //     else
-            //     {
-            //         playout[y * (pwidth) + x] = (int)GridType.Non;
-            //     }
-            // }
-            pwidth = curLevelData.Map.MapWidth;
-            pheight = curLevelData.Map.MapHeight;
-            playout = MatrixUtil.ArrayCopy(curLevelData.Map.MapArray);
+            // FINISH:扩充int数组的边界
+            // UPDATE
+            for (int i = 0; i < playout.Length; ++i)
+            {
+                int x = i % (pwidth);
+                int y = i / (pwidth);
+                if (x != 0 && x != pwidth - 1 && y != 0 && y != pheight - 1)
+                {
+                    playout[y * (pwidth) + x] = tempLayout[(y - 1) * (pwidth - 2) + (x - 1)];
+                }
+                else
+                {
+                    playout[y * (pwidth) + x] = (int)GridType.Non;
+                }
+            }
+            // pwidth = curLevelData.Map.MapWidth;
+            // pheight = curLevelData.Map.MapHeight;
+            // playout = MatrixUtil.ArrayCopy(curLevelData.Map.MapArray);
 
 
         }

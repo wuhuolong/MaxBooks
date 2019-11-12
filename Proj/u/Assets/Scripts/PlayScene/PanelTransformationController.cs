@@ -81,284 +81,323 @@ public class PanelTransformationController : MonoBehaviour
 
     private void UpdateCheck()
     {
-        if (!gameOverFlag)
+        if (gameOverFlag)
         {
-            //?PC上无法模拟Input.Touch
-            Input.simulateMouseWithTouches = true;//设置touch=mouse，但mouse!=touch
+            return;
+        }
 
-            int touchCount = Input.touchCount;
-            if (touchCount > 0)
+
+        if (dragController.GeneralDragFlag)
+        {
+            return;
+            //如果正在drag puzzle，以下的单指双指输入全部屏蔽
+        }
+        if (elasticBackFlag)
+        {
+            return;
+        }
+
+        //手机端检测
+#if UNITY_IOS && !UNITY_EDITOR
+        MobileInputDetect();
+#elif UNITY_EDITOR
+        StandaloneInputDetect();
+#endif
+
+
+    }
+
+    private void MobileInputDetect()
+    {
+        //?PC上无法模拟Input.Touch
+        Input.simulateMouseWithTouches = true;//设置touch=mouse，但mouse!=touch
+
+        int touchCount = Input.touchCount;
+        if (touchCount > 0)
+        {
+            miniMapController.RefreshFlag = true;
+        }
+
+        if (touchCount == 1)
+        {
+            //TODO:实现单指移动，避免单指触摸的位置是puzzle或者ui按钮
+            if(scaleMode)
             {
-                miniMapController.RefreshFlag = true;
+                DetectCurrentPos();
+                moveMode = false;
+                scaleMode = false;
+                return;
+            }
+            Touch touch = Input.GetTouch(0);
+            if (moveMode&&touch.phase==TouchPhase.Moved)
+            {
+                //单指移动模式时，记录每一帧的手指位移，应用至playField的位移
+                curPos = touch.position;
+                Vector3 moveVec = Camera.main.ScreenToWorldPoint(curPos) - Camera.main.ScreenToWorldPoint(lastPos);
+                playFieldTrans.position += moveVec;
+
+
+                DetectCurrentPos();
+
+
+                Vector3 offset = playFieldTrans.position - playFieldOriginPos;
+                miniMapController.RefreshOrangeOutline(offset, scaleRatio);
+
+                lastPos = curPos;
             }
 
-            if (dragController.GeneralDragFlag)
+            else if (touch.phase == TouchPhase.Began)
             {
-                return;
-                //如果正在drag puzzle，以下的单指双指输入全部屏蔽
-            }
-            if (elasticBackFlag)
-            {
-                return;
-            }
-            else
-            {
-                if (touchCount == 1)
+                PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+                pointerEventData.position = touch.position;
+                List<RaycastResult> raycastResultsList = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
+                if (raycastResultsList.Count > 0)
                 {
-                    //TODO:实现单指移动，避免单指触摸的位置是puzzle或者ui按钮
-                    Touch touch = Input.GetTouch(0);
-                    if (moveMode)
+                    Debug.Log("raycastHit obj:" + raycastResultsList[0].gameObject.name);
+                    string rayhitObjName = raycastResultsList[0].gameObject.name;
+                    if (rayhitObjName == "BG" || rayhitObjName.Contains("BlankGrid") || rayhitObjName.Contains("FixGrid"))
                     {
-                        //单指移动模式时，记录每一帧的手指位移，应用至playField的位移
-                        curPos = touch.position;
-                        Vector3 moveVec = Camera.main.ScreenToWorldPoint(curPos) - Camera.main.ScreenToWorldPoint(lastPos);
-                        playFieldTrans.position += moveVec;
-
-                        // DetectCurrentPos();
-
-                        Vector3 offset = playFieldTrans.position - playFieldOriginPos;
-                        miniMapController.RefreshOrangeOutline(offset, scaleRatio);
-
-                        lastPos = curPos;
+                        //如果第一次按下时触摸到的是BG或空格子或固定格子，就开始单指移动模式
+                        moveMode = true;
+                        lastPos = touch.position;
                     }
-
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-                        pointerEventData.position = touch.position;
-                        List<RaycastResult> raycastResultsList = new List<RaycastResult>();
-                        EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
-                        if (raycastResultsList.Count > 0)
-                        {
-                            Debug.Log("raycastHit obj:" + raycastResultsList[0].gameObject.name);
-                            string rayhitObjName = raycastResultsList[0].gameObject.name;
-                            if (rayhitObjName == "BG" || rayhitObjName.Contains("BlankGrid") || rayhitObjName.Contains("FixGrid"))
-                            {
-                                //如果第一次按下时触摸到的是BG或空格子或固定格子，就开始单指移动模式
-                                moveMode = true;
-                                lastPos = touch.position;
-                            }
-                        }
-                    }
-
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        DetectCurrentPos();
-
-                        moveMode = false;
-                        scaleMode = false;
-                    }
-
                 }
-                else if (touchCount == 2)
+            }
+
+            else if (touch.phase == TouchPhase.Ended)
+            {
+                // DetectCurrentPos();
+                
+                moveMode = false;
+                scaleMode = false;
+            }
+
+        }
+        else if (touchCount == 2)
+        {
+            //TODO：实现双指缩放，双指开始的位置需要是非UI以及puzzle
+            Touch touch1 = Input.GetTouch(0);
+            Touch touch2 = Input.GetTouch(1);
+            if(moveMode)
+            {
+                DetectCurrentPos();
+                moveMode=false;
+                scaleMode=false;
+                return;
+            }
+
+            if (scaleMode)
+            {
+                //双指模式时，记录每一帧的手指位移，应用至playField的缩放
+
+                //TODO:双指距离增加时，scale相应增加，减少时scale相应减少
+                twoFingersCurDistance = Vector3.Magnitude(touch1.position - touch2.position);
+                float deltaDistance = twoFingersCurDistance - twoFingersLastDistance;
+
+                scaleRatio += deltaDistance * scaleDeltaSpeed * Time.deltaTime;
+                Debug.Log("ScaleRatio:" + scaleRatio);
+                if (scaleRatio > maxScaleRatio)
                 {
-                    //TODO：实现双指缩放，双指开始的位置需要是非UI以及puzzle
-                    Touch touch1 = Input.GetTouch(0);
-                    Touch touch2 = Input.GetTouch(1);
+                    scaleRatio = maxScaleRatio;
+                }
+                else if (scaleRatio < 1)
+                {
+                    scaleRatio = 1;
+                }
+                playFieldTrans.localScale = Vector3.one * scaleRatio;
 
-                    if (scaleMode)
+                Vector3 newPos = new Vector3(scalePoint.x - centerToScalePointVec.x * (scaleRatio / lastScaleRatio), scalePoint.y - centerToScalePointVec.y * (scaleRatio / lastScaleRatio), playFieldTrans.position.z);
+                playFieldTrans.position = newPos;
+
+                // if (scaleRatio > 1)
+                // {
+                DetectCurrentPos();
+                // }
+
+                Vector3 offset = playFieldTrans.position - playFieldOriginPos;
+                miniMapController.RefreshOrangeOutline(offset, scaleRatio);
+
+                twoFingersLastDistance = twoFingersCurDistance;
+            }
+
+            else if ((touch1.phase == TouchPhase.Began && touch2.phase == TouchPhase.Began) ||
+                (touch1.phase == TouchPhase.Began && touch2.phase == TouchPhase.Moved) ||
+                (touch1.phase == TouchPhase.Moved && touch2.phase == TouchPhase.Began) ||
+                (touch1.phase == TouchPhase.Began && touch2.phase == TouchPhase.Stationary) ||
+                (touch1.phase == TouchPhase.Stationary && touch2.phase == TouchPhase.Began))
+            {
+
+                PointerEventData pointerEventData1 = new PointerEventData(EventSystem.current);
+                pointerEventData1.position = touch1.position;
+                PointerEventData pointerEventData2 = new PointerEventData(EventSystem.current);
+                pointerEventData2.position = touch2.position;
+                List<RaycastResult> raycastResultsList1 = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerEventData1, raycastResultsList1);
+                List<RaycastResult> raycastResultsList2 = new List<RaycastResult>();
+                EventSystem.current.RaycastAll(pointerEventData2, raycastResultsList2);
+
+                if (raycastResultsList1.Count > 0 && raycastResultsList2.Count > 0)
+                {
+                    Debug.Log("raycastHit1 obj:" + raycastResultsList1[0].gameObject.name);
+                    Debug.Log("raycastHit2 obj:" + raycastResultsList2[0].gameObject.name);
+
+                    string rayhitObjName1 = raycastResultsList1[0].gameObject.name;
+                    string rayhitObjName2 = raycastResultsList2[0].gameObject.name;
+
+                    if ((rayhitObjName1 == "BG" || rayhitObjName1.Contains("BlankGrid") || rayhitObjName1.Contains("FixGrid") || rayhitObjName1.Contains("SettlePuzzle"))
+                    && (rayhitObjName2 == "BG" || rayhitObjName2.Contains("BlankGrid") || rayhitObjName2.Contains("FixGrid") || rayhitObjName2.Contains("SettlePuzzle")))
                     {
-                        //双指模式时，记录每一帧的手指位移，应用至playField的缩放
-                        //!由于PC无法进行双指缩放，故使用右键进行模拟，右键点击位置为缩放点，右键持续点击滚动鼠标滚轮时，表示双指的距离加大，即缩放比例增大
+                        //如果双指hit的是以上这些，就开始双指缩放模式
+                        //TODO：确定一个缩放点，确定初始的双指距离
+                        Vector3 touchCenterPos = (touch1.position + touch2.position) / 2;
 
-                        //TODO:双指距离增加时，scale相应增加，减少时scale相应减少
+                        scaleMode = true;
+                        scalePoint = Camera.main.ScreenToWorldPoint(touchCenterPos);
+                        lastScaleRatio = scaleRatio;
+
                         twoFingersCurDistance = Vector3.Magnitude(touch1.position - touch2.position);
-                        float deltaDistance = twoFingersCurDistance - twoFingersLastDistance;
-
-                        scaleRatio += deltaDistance * scaleDeltaSpeed * Time.deltaTime;
-                        Debug.Log("ScaleRatio:" + scaleRatio);
-                        if (scaleRatio > maxScaleRatio)
-                        {
-                            scaleRatio = maxScaleRatio;
-                        }
-                        else if (scaleRatio < 1)
-                        {
-                            scaleRatio = 1;
-                        }
-                        playFieldTrans.localScale = Vector3.one * scaleRatio;
-
-                        Vector3 newPos = new Vector3(scalePoint.x - centerToScalePointVec.x * (scaleRatio / lastScaleRatio), scalePoint.y - centerToScalePointVec.y * (scaleRatio / lastScaleRatio), playFieldTrans.position.z);
-                        playFieldTrans.position = newPos;
-
-                        // DetectCurrentPos();
-
-                        Vector3 offset = playFieldTrans.position - playFieldOriginPos;
-                        miniMapController.RefreshOrangeOutline(offset, scaleRatio);
-
                         twoFingersLastDistance = twoFingersCurDistance;
-                    }
-
-                    if ((touch1.phase == TouchPhase.Began && touch2.phase == TouchPhase.Began) ||
-                        (touch1.phase == TouchPhase.Began && touch2.phase == TouchPhase.Moved) ||
-                        (touch1.phase == TouchPhase.Moved && touch2.phase == TouchPhase.Began) ||
-                        (touch1.phase == TouchPhase.Began && touch2.phase == TouchPhase.Stationary) ||
-                        (touch1.phase == TouchPhase.Stationary && touch2.phase == TouchPhase.Began))
-                    {
-
-                        PointerEventData pointerEventData1 = new PointerEventData(EventSystem.current);
-                        pointerEventData1.position = touch1.position;
-                        PointerEventData pointerEventData2 = new PointerEventData(EventSystem.current);
-                        pointerEventData2.position = touch2.position;
-                        List<RaycastResult> raycastResultsList1 = new List<RaycastResult>();
-                        EventSystem.current.RaycastAll(pointerEventData1, raycastResultsList1);
-                        List<RaycastResult> raycastResultsList2 = new List<RaycastResult>();
-                        EventSystem.current.RaycastAll(pointerEventData2, raycastResultsList2);
-
-                        if (raycastResultsList1.Count > 0 && raycastResultsList2.Count > 0)
-                        {
-                            Debug.Log("raycastHit1 obj:" + raycastResultsList1[0].gameObject.name);
-                            Debug.Log("raycastHit2 obj:" + raycastResultsList2[0].gameObject.name);
-
-                            string rayhitObjName1 = raycastResultsList1[0].gameObject.name;
-                            string rayhitObjName2 = raycastResultsList2[0].gameObject.name;
-
-                            if ((rayhitObjName1 == "BG" || rayhitObjName1.Contains("BlankGrid") || rayhitObjName1.Contains("FixGrid") || rayhitObjName1.Contains("SettlePuzzle"))
-                            && (rayhitObjName2 == "BG" || rayhitObjName2.Contains("BlankGrid") || rayhitObjName2.Contains("FixGrid") || rayhitObjName2.Contains("SettlePuzzle")))
-                            {
-                                //如果双指hit的是以上这些，就开始双指缩放模式
-                                //TODO：确定一个缩放点，确定初始的双指距离
-                                Vector3 touchCenterPos = (touch1.position + touch2.position) / 2;
-
-                                scaleMode = true;
-                                scalePoint = Camera.main.ScreenToWorldPoint(touchCenterPos);
-                                lastScaleRatio = scaleRatio;
-
-                                twoFingersCurDistance = Vector3.Magnitude(touch1.position - touch2.position);
-                                twoFingersLastDistance = twoFingersCurDistance;
 
 
-                                centerToScalePointVec = new Vector2(scalePoint.x - playFieldTrans.position.x, scalePoint.y - playFieldTrans.position.y);
-                            }
-                        }
+                        centerToScalePointVec = new Vector2(scalePoint.x - playFieldTrans.position.x, scalePoint.y - playFieldTrans.position.y);
 
-
-                    }
-
-                    if (touch1.phase == TouchPhase.Ended && touch2.phase == TouchPhase.Ended)
-                    {
-                        DetectCurrentPos();
-                        moveMode = false;
-                        scaleMode = false;
                     }
                 }
+
+
             }
 
-
-
-            //!以下为PC端的单指移动的模拟
-
-            // if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
-            // {
-            //     miniMapController.RefreshFlag = true;
-            // }
-
-            // if (moveMode)
-            // {
-            //     //单指移动模式时，记录每一帧的手指位移，应用至playField的位移
-            //     curPos = Input.mousePosition;
-            //     Vector3 moveVec = Camera.main.ScreenToWorldPoint(curPos) - Camera.main.ScreenToWorldPoint(lastPos);
-            //     playFieldTrans.position += moveVec;
-
-            //     // DetectCurrentPos();
-
-            //     Vector3 offset = playFieldTrans.position - playFieldOriginPos;
-            //     miniMapController.RefreshOrangeOutline(offset, scaleRatio);
-
-            //     lastPos = curPos;
-            // }
-
-            // if (Input.GetMouseButtonDown(0))
-            // {
-            //     PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-            //     pointerEventData.position = Input.mousePosition;
-            //     List<RaycastResult> raycastResultsList = new List<RaycastResult>();
-            //     EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
-            //     if (raycastResultsList.Count > 0)
-            //     {
-            //         Debug.Log("raycastHit obj:" + raycastResultsList[0].gameObject.name);
-            //         string rayhitObjName = raycastResultsList[0].gameObject.name;
-            //         if (rayhitObjName == "BG" || rayhitObjName.Contains("BlankGrid") || rayhitObjName.Contains("FixGrid"))
-            //         {
-            //             //如果第一次按下时触摸到的是BG或空格子或固定格子，就开始单指移动模式
-            //             moveMode = true;
-            //             lastPos = Input.mousePosition;
-            //         }
-            //     }
-            // }
-
-            // if (Input.GetMouseButtonUp(0))
-            // {
-            //     DetectCurrentPos();
-
-            //     moveMode = false;
-            // }
-
-            //!以下是PC端双指缩放的模拟
-
-            // if (scaleMode)
-            // {
-            //     //双指模式时，记录每一帧的手指位移，应用至playField的缩放
-            //     //!由于PC无法进行双指缩放，故使用右键进行模拟，右键点击位置为缩放点，右键持续点击时，表示双指的距离加大，即缩放比例增大
-
-
-            //     scaleRatio += Input.mouseScrollDelta.y * 1.5f * Time.deltaTime;
-            //     Debug.Log("ScaleRatio:" + scaleRatio);
-            //     if (scaleRatio > maxScaleRatio)
-            //     {
-            //         scaleRatio = maxScaleRatio;
-            //     }
-            //     else if (scaleRatio < 1)
-            //     {
-            //         scaleRatio = 1;
-            //     }
-            //     playFieldTrans.localScale = Vector3.one * scaleRatio;
-
-            //     Vector3 newPos = new Vector3(scalePoint.x - centerToScalePointVec.x * (scaleRatio / lastScaleRatio), scalePoint.y - centerToScalePointVec.y * (scaleRatio / lastScaleRatio), playFieldTrans.position.z);
-            //     playFieldTrans.position = newPos;
-
-            //     // DetectCurrentPos();
-
-            //     Vector3 offset = playFieldTrans.position - playFieldOriginPos;
-            //     miniMapController.RefreshOrangeOutline(offset, scaleRatio);
-            // }
-
-            // if (Input.GetMouseButtonDown(1))
-            // {
-            //     //确定一个缩放点
-            //     PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-            //     pointerEventData.position = Input.mousePosition;
-            //     List<RaycastResult> raycastResultsList = new List<RaycastResult>();
-            //     EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
-            //     if (raycastResultsList.Count > 0)
-            //     {
-            //         Debug.Log("raycastHit obj:" + raycastResultsList[0].gameObject.name);
-            //         string rayhitObjName = raycastResultsList[0].gameObject.name;
-            //         if (rayhitObjName == "BG" || rayhitObjName.Contains("BlankGrid") || rayhitObjName.Contains("FixGrid") || rayhitObjName.Contains("SettlePuzzle"))
-            //         {
-            //             //如果缩放点是以上这些，就开始双指缩放模式
-            //             scaleMode = true;
-            //             scalePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //             lastScaleRatio = scaleRatio;
-
-            //             centerToScalePointVec = new Vector2(scalePoint.x - playFieldTrans.position.x, scalePoint.y - playFieldTrans.position.y);
-            //         }
-            //     }
-            // }
-
-            // if (Input.GetMouseButtonUp(1))
-            // {
-            //     DetectCurrentPos();
-
-            //     scaleMode = false;
-            // }
+            else if (touch1.phase == TouchPhase.Ended && touch2.phase == TouchPhase.Ended)
+            {
+                DetectCurrentPos();
+                moveMode = false;
+                scaleMode = false;
+            }
         }
 
     }
 
+    private void StandaloneInputDetect()
+    {
+        //!以下为PC端的单指移动的模拟
+
+        if (Input.GetMouseButton(0) || Input.GetMouseButton(1))
+        {
+            miniMapController.RefreshFlag = true;
+        }
+
+        if (moveMode)
+        {
+            //单指移动模式时，记录每一帧的手指位移，应用至playField的位移
+            curPos = Input.mousePosition;
+            Vector3 moveVec = Camera.main.ScreenToWorldPoint(curPos) - Camera.main.ScreenToWorldPoint(lastPos);
+            playFieldTrans.position += moveVec;
+
+            DetectCurrentPos();
+
+            Vector3 offset = playFieldTrans.position - playFieldOriginPos;
+            miniMapController.RefreshOrangeOutline(offset, scaleRatio);
+
+            lastPos = curPos;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+            pointerEventData.position = Input.mousePosition;
+            List<RaycastResult> raycastResultsList = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
+            if (raycastResultsList.Count > 0)
+            {
+                Debug.Log("raycastHit obj:" + raycastResultsList[0].gameObject.name);
+                string rayhitObjName = raycastResultsList[0].gameObject.name;
+                if (rayhitObjName == "BG" || rayhitObjName.Contains("BlankGrid") || rayhitObjName.Contains("FixGrid"))
+                {
+                    //如果第一次按下时触摸到的是BG或空格子或固定格子，就开始单指移动模式
+                    moveMode = true;
+                    lastPos = Input.mousePosition;
+                }
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            DetectCurrentPos_End();
+
+            moveMode = false;
+        }
+
+        //!以下是PC端双指缩放的模拟
+
+        if (scaleMode)
+        {
+            //双指模式时，记录每一帧的手指位移，应用至playField的缩放
+            //!由于PC无法进行双指缩放，故使用右键进行模拟，右键点击位置为缩放点，右键持续点击时，表示双指的距离加大，即缩放比例增大
+
+
+            scaleRatio += Input.mouseScrollDelta.y * 1.5f * Time.deltaTime;
+            Debug.Log("ScaleRatio:" + scaleRatio);
+            if (scaleRatio > maxScaleRatio)
+            {
+                scaleRatio = maxScaleRatio;
+            }
+            else if (scaleRatio < 1)
+            {
+                scaleRatio = 1;
+            }
+            playFieldTrans.localScale = Vector3.one * scaleRatio;
+
+            Vector3 newPos = new Vector3(scalePoint.x - centerToScalePointVec.x * (scaleRatio / lastScaleRatio), scalePoint.y - centerToScalePointVec.y * (scaleRatio / lastScaleRatio), playFieldTrans.position.z);
+            playFieldTrans.position = newPos;
+
+            // if (scaleRatio >= 1)
+            // {
+            //     DetectCurrentPos();
+            // }
+
+
+            Vector3 offset = playFieldTrans.position - playFieldOriginPos;
+            miniMapController.RefreshOrangeOutline(offset, scaleRatio);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            //确定一个缩放点
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+            pointerEventData.position = Input.mousePosition;
+            List<RaycastResult> raycastResultsList = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, raycastResultsList);
+            if (raycastResultsList.Count > 0)
+            {
+                Debug.Log("raycastHit obj:" + raycastResultsList[0].gameObject.name);
+                string rayhitObjName = raycastResultsList[0].gameObject.name;
+                if (rayhitObjName == "BG" || rayhitObjName.Contains("BlankGrid") || rayhitObjName.Contains("FixGrid") || rayhitObjName.Contains("SettlePuzzle"))
+                {
+                    //如果缩放点是以上这些，就开始双指缩放模式
+                    scaleMode = true;
+                    scalePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    lastScaleRatio = scaleRatio;
+
+                    centerToScalePointVec = new Vector2(scalePoint.x - playFieldTrans.position.x, scalePoint.y - playFieldTrans.position.y);
+                }
+            }
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            // DetectCurrentPos();
+            DetectCurrentPos_End();
+
+            scaleMode = false;
+        }
+    }
+
     bool elasticBackFlag = false;
-    public void DetectCurrentPos()
+    private void DetectCurrentPos()
     {
         bool outFlag = false;
+
 
         Vector3 playFieldCurScreenPos = Camera.main.WorldToScreenPoint(playFieldTrans.position);
         float finalX = playFieldTrans.position.x;
@@ -398,21 +437,75 @@ public class PanelTransformationController : MonoBehaviour
 
         if (outFlag)
         {
-            elasticBackFlag = true;
-            StartCoroutine(ElasticBack(finalPos, 0.5f));
+            // elasticBackFlag = true;
+            //!test
+            // StartCoroutine(ElasticBack(finalPos, 0.5f));
+            playFieldTrans.position = finalPos;
         }
 
     }
 
-    public IEnumerator ReturnToOrigin(float time, Action afterMoveAction)
+    private void DetectCurrentPos_End()
     {
-        gameOverFlag = true;
+        bool outFlag = false;
+        Vector3 playFieldCurScale = playFieldTrans.localScale;
+        if (playFieldCurScale.x <= 1)
+        {
+            outFlag = true;
+        }
+        // Vector3 playFieldCurScreenPos = Camera.main.WorldToScreenPoint(playFieldTrans.position);
+        // float finalX = playFieldTrans.position.x;
+        // float finalY = playFieldTrans.position.y;
+
+        // positiveLimitScreenSpaceVec = new Vector2((playFieldOriginScreenPos.x + playFieldOriginWidth * (1 - relRatio / scaleRatio)), (playFieldOriginScreenPos.y + playFieldOriginHeight * (1 - relRatio / scaleRatio)));
+        // negativeLimitScreenSpaceVec = new Vector2((playFieldOriginScreenPos.x - playFieldOriginWidth * (1 - relRatio / scaleRatio)), (playFieldOriginScreenPos.y - playFieldOriginHeight * (1 - relRatio / scaleRatio)));
+
+        // positiveLimitVec = Camera.main.ScreenToWorldPoint(positiveLimitScreenSpaceVec);
+        // negativeLimitVec = Camera.main.ScreenToWorldPoint(negativeLimitScreenSpaceVec);
+
+
+        // if (playFieldCurScreenPos.x > positiveLimitScreenSpaceVec.x)
+        // {
+        //     finalX = positiveLimitVec.x;
+        //     outFlag = true;
+        // }
+        // else if (playFieldCurScreenPos.x < negativeLimitScreenSpaceVec.x)
+        // {
+        //     finalX = negativeLimitVec.x;
+        //     outFlag = true;
+        // }
+        // if (playFieldCurScreenPos.y > positiveLimitScreenSpaceVec.y)
+        // {
+        //     finalY = positiveLimitVec.y;
+        //     outFlag = true;
+        // }
+        // else if (playFieldCurScreenPos.y < negativeLimitScreenSpaceVec.y)
+        // {
+        //     finalY = negativeLimitVec.y;
+        //     outFlag = true;
+        // }
+
+
+        // // playFieldTrans.position = new Vector3(finalX, finalY, playFieldTrans.position.z);
+        // Vector3 finalPos = new Vector3(finalX, finalY, playFieldTrans.position.z);
+
+        if (outFlag)
+        {
+            // elasticBackFlag = true;
+            StartCoroutine(ReturnToOrigin(0.2f, () => { }, false));
+        }
+    }
+
+    public IEnumerator ReturnToOrigin(float time, Action afterMoveAction, bool gameOverFlag = true)
+    {
+        this.gameOverFlag = gameOverFlag;
         StopCoroutine("ElasticBack");
 
         Vector3 playFieldCurPos = playFieldTrans.position;
         Vector3 direction = Vector3.Normalize(playFieldOriginPos - playFieldCurPos);
         float moveSpeed = Vector3.Magnitude(playFieldOriginPos - playFieldCurPos) / time;
         float scaleSpeed = (scaleRatio - 1) / time;
+        Debug.Log("scaleSpeed" + scaleSpeed);
         while (time > 0)
         {
             time -= Time.deltaTime;

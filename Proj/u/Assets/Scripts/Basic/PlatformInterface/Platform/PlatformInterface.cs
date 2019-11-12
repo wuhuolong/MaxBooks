@@ -65,6 +65,10 @@ public class pcSdkInterface : SdkInterface
     public override void pay4RemoveAd()
     {
         this.Log("pay4RemoveAd");
+        JsonData data = new JsonData();
+        data["Ret"] = 1;
+        data["Type"] = 8;
+        UCallback.GetInstance().SdkInterfaceCallback(data.ToJson());
     }
 
     public override void sendMsg(string json)
@@ -75,15 +79,18 @@ public class pcSdkInterface : SdkInterface
     public override void showInterstitialAd()
     {
         this.Log("showInterstitialAd");
+        JsonData data = new JsonData();
+        data["Ret"] = 1;
+        data["Type"] = 2;
+        UCallback.GetInstance().SdkInterfaceCallback(data.ToJson());
     }
 
     public override void showRewardVideo()
     {
         JsonData data = new JsonData();
-        data["Type"] = 1;
+        data["Type"] = 6;
         data["Ret"] = 1;
-        string json = data.ToJson();
-        UCallback.GetInstance().SendMessage("SdkInterfaceCallback", json);
+        UCallback.GetInstance().SdkInterfaceCallback(data.ToJson());
     }
 
     public override void Test()

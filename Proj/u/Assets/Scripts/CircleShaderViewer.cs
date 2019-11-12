@@ -20,6 +20,17 @@ public class CircleShaderViewer : MonoBehaviour
     public int curIndex;
     public int maxIndex;
 
+    public GameObject animOpObj;
+    public GameObject animGreatObj;
+
+    public RectTransform tap;
+    public RectTransform tap1;
+    public RectTransform tap2;
+    public RectTransform tap3;
+
+    public Animator animOp;
+    public Animator animGreat;
+
     GuidingConfig config;
     private CircleShaderController shaderCtl;
     private EventPenetrate ep;
@@ -27,7 +38,6 @@ public class CircleShaderViewer : MonoBehaviour
     public GameObject generalPanel;
     public GameObject puzzlePanel;
     public Image deleteArea;
-    public Animator anim;
     private List<Image> targets;
     // Start is called before the first frame update
     void Start()
@@ -66,8 +76,8 @@ public class CircleShaderViewer : MonoBehaviour
         InitData(id,index);
         ReadConfig(index);
         ep.SetTarget(targets[0]);
-        shaderCtl.SetTarget(targets);
-        shaderCtl.Init();
+        //shaderCtl.SetTarget(targets);
+        //shaderCtl.Init();
     }
 
     public void Clear()
@@ -89,34 +99,52 @@ public class CircleShaderViewer : MonoBehaviour
         int opSup = config.OpSup1[index];//辅助参数-仅用于拖动放置，旋转
 
 
-        //switch (index)
-        //{
-        //    case 1:
-        //        Debug.Log("case 1");
-        //        targets.Add(puzzleBar.transform.GetChild(0).GetComponent<Image>());
-        //        targets.Add(generalPanel.transform.GetChild(118).GetComponent<Image>());
-        //        break;
-        //    case 2:
-        //        targets.Add(puzzleBar.transform.GetChild(0).GetComponent<Image>());
-        //        break;
-        //    default:
-        //        break;
-        //}
-
-
+        animOpObj.SetActive(true);
+        //animGreatObj.SetActive(false);
         //TODO:根据配置表数据设置targets
         switch (opType)
         {
             case 1:
                 targets.Add(puzzleBar.transform.GetChild(0).GetComponent<Image>());
                 targets.Add(generalPanel.transform.GetChild(opSup).GetComponent<Image>());
+                animOpObj.GetComponent<RectTransform>().position = puzzleBar.transform.GetChild(0).GetComponent<RectTransform>().position;
+                animOpObj.GetComponent<RectTransform>().position = new Vector3(animOpObj.GetComponent<RectTransform>().position.x, 
+                    animOpObj.GetComponent<RectTransform>().position.y - 0.2f, animOpObj.GetComponent<RectTransform>().position.z);
+                ResetTapState();
+                //animOp.SetBool("OnDrag1", true);
+                switch (opSup)
+                {
+                    case 1:
+                        animOp.Play("Mask_anim3", 0, 0f);
+                        break;
+                    case 2:
+                        Debug.Log("drag2");
+                        animOp.Play("Mask_anim5", 0, 0f);
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case 2:
                 targets.Add(puzzlePanel.transform.GetChild(0).GetComponent<Image>());
                 targets.Add(deleteArea);
+                animOpObj.GetComponent<RectTransform>().position = deleteArea.GetComponent<RectTransform>().position;
+                animOpObj.GetComponent<RectTransform>().position = new Vector3(animOpObj.GetComponent<RectTransform>().position.x,
+                    animOpObj.GetComponent<RectTransform>().position.y + 0.4f, animOpObj.GetComponent<RectTransform>().position.z);
+                ResetTapState();
+                //animOp.SetBool("OnDelete", true);
+                animOp.Play("Mask_anim4", 0, 0f);
                 break;
             case 3:
                 targets.Add(puzzleBar.transform.GetChild(0).GetComponent<Image>());
+                animOpObj.GetComponent<RectTransform>().position = puzzleBar.transform.GetChild(0).GetComponent<RectTransform>().position;
+                animOpObj.GetComponent<RectTransform>().position = new Vector3(animOpObj.GetComponent<RectTransform>().position.x,
+                    animOpObj.GetComponent<RectTransform>().position.y - 0.2f, animOpObj.GetComponent<RectTransform>().position.z);
+                ResetTapState();
+                //animOpObj.transform.position = puzzleBar.transform.GetChild(0).GetComponent<Transform>().position;
+                Debug.Log(animOpObj.GetComponent<RectTransform>().anchoredPosition3D);
+                //animOp.SetBool("OnTap", true);
+                animOp.Play("Mask_anim2", 0, 0f);
                 break;
         }
 
@@ -134,6 +162,12 @@ public class CircleShaderViewer : MonoBehaviour
                 if (op.opType == 0)
                 {
                     //转换动画状态
+                    animOp.SetBool("OnDrag1", false);
+                    animOp.SetBool("GreatEnd", false);                                               
+                    animOpObj.SetActive(false);
+                    animGreatObj.SetActive(true);
+                    animOp.Play("donothing");
+                    animGreat.Play("Mask_anim", 0, 0f);
                     return true;
                 }
                 break;
@@ -141,6 +175,15 @@ public class CircleShaderViewer : MonoBehaviour
                 if (op.opType == 2)
                 {
                     //转换动画状态
+                    animOp.SetBool("OnDelete", false);
+                    animOp.SetBool("GreatEnd", false);
+                    animOpObj.SetActive(false);
+                    animGreatObj.SetActive(true);
+                    //animGreatObj.GetComponent<RectTransform>().position = deleteArea.GetComponent<RectTransform>().position;
+                    //animGreatObj.GetComponent<RectTransform>().position = new Vector3(animGreatObj.GetComponent<RectTransform>().position.x,
+                    //    animGreatObj.GetComponent<RectTransform>().position.y + 0.4f, animGreatObj.GetComponent<RectTransform>().position.z);
+                    //animOp.Play("donothing");
+                    animGreat.Play("Mask_anim", 0, 0f);
                     return true;
                 }
                 break;
@@ -161,6 +204,16 @@ public class CircleShaderViewer : MonoBehaviour
                 if (targets[0].gameObject.GetComponent<PuzzleItemUI>().RotateState == opSup)
                 {
                     //转换动画状态
+                    animOp.SetBool("OnTap", false);
+                    animOp.SetBool("GreatEnd", false);
+                    animOpObj.SetActive(false);
+                    animGreatObj.SetActive(true);
+                    animOp.Play("donothing");
+                    //animGreat.Play("Mask_anim", 0, 0f);
+                    Clear();
+                    Debug.Log("step" + curIndex);
+                    Init(curID, curIndex + 1);
+                    Debug.Log(curIndex);
                     return true;
                 }
                 break;
@@ -170,8 +223,15 @@ public class CircleShaderViewer : MonoBehaviour
         return false;
     }
 
-    private void SetAnimation(uint id,int index)
+    private void ResetTapState()
     {
+        Debug.Log("reset");
+        tap1.anchoredPosition3D = Vector3.zero;
+        tap2.anchoredPosition3D = Vector3.zero;
+    }
 
+    private void NextStep()
+    {
+        
     }
 }

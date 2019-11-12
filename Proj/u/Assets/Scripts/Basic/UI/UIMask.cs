@@ -21,7 +21,7 @@ public class UIMask : UIBase
     {
         if (isHaveClickCallback)
         {
-            UIMgr.Pop();
+            UIMgr.GetInstance().Pop();
         }
     }
 

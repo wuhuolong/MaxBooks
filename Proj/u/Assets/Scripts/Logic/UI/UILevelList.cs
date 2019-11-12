@@ -6,6 +6,9 @@ using X.Res;
 
 public class UILevelList : UIPage
 {
+    public RectTransform top;
+    public RectTransform scrollrect;
+
     string menuPath = "Prefabs/UI/Menu.Prefab";
     string levelBtnPath = "Prefabs/UI/UILevelBtn.Prefab";
 
@@ -43,14 +46,14 @@ public class UILevelList : UIPage
     GameObject levelBtn;
 
     float offsetY = 480.0f;
-    float offsetX = 320.0f;
+    float offsetX = 360.0f;
     float offsetMenu = 260.0f;
 
     float rectWidth;
 
     float curHeight = 0.0f;
 
-    private float totalLen = 100.0f;
+    private float totalLen = 0.0f;
 
     string curTheme = "";
     int themeCnt = 0;
@@ -58,7 +61,11 @@ public class UILevelList : UIPage
 
     private void Start()
     {
-        
+        if (Mathf.Abs(((float)Screen.height / (float)Screen.width) - 2.16f) < 0.1f)//判断是否是刘海屏iphone
+        {
+            top.anchoredPosition = new Vector2(-305, -194);
+            scrollrect.anchoredPosition = new Vector2(0, -60);
+        }
     }
     private void OnEnable()
     {
@@ -75,6 +82,8 @@ public class UILevelList : UIPage
             RefreshLevelList();
         }
         isFirst = false;
+
+        
 
     }
     private void FixedUpdate()
@@ -105,7 +114,7 @@ public class UILevelList : UIPage
                     //进入主界面
                     isShadowToLevel = false;
                     black.alpha = 1.0f;
-                    UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+                    UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
                 }
             }
         }
@@ -121,7 +130,7 @@ public class UILevelList : UIPage
                     //进入主界面
                     isShadowToMain = false;
                     black.alpha = 1.0f;
-                    UIMgr.ShowPage(UIPageEnum.Main_Page);
+                    UIMgr.GetInstance().ShowPage(UIPageEnum.Main_Page);
                 }
             }
         }
@@ -143,7 +152,7 @@ public class UILevelList : UIPage
     }
     protected override void InitData()
     {
-
+        
     }
 
     private void SetTopText()
@@ -220,7 +229,7 @@ public class UILevelList : UIPage
             //isShadowToLevel = true;
             //RandomType();
             //ShadowInit2();
-            UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+            UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
         }
     }
 
@@ -234,7 +243,7 @@ public class UILevelList : UIPage
             //isShadowToMain = true;
             //RandomType();
             //ShadowInit2();
-            UIMgr.ShowPage(UIPageEnum.Main_Page);
+            UIMgr.GetInstance().ShowPage(UIPageEnum.Main_Page);
         }
     }
 
@@ -297,13 +306,15 @@ public class UILevelList : UIPage
 
     private void LoadLevelListContent(LevelConfig config,LevelConfig nextConfig,int i,int count)
     {
-        
+
         ////设置星星数量
         //if(!XPlayerPrefs.HasKey(config.LevelId.ToString()+numStar))
         //{
         //    XPlayerPrefs.SetInt(config.LevelId.ToString() + numStar, 0);
         //}
-        
+
+        if (config.LevelType == 2)
+            return;
         //新的主题
         if (curTheme != config.LevelTheme)
         {
@@ -370,6 +381,7 @@ public class UILevelList : UIPage
         Text name = menu.GetComponentInChildren<Text>();
         //name.text = LevelMgr.GetInstance().GetThemeConfig(n).ThemeName;
         uint id = LevelMgr.GetInstance().GetThemeConfig(n).ThemeName;
+        //Debug.Log(name.text + id);
         LanguageMgr.GetInstance().GetLangStrByID(name,id);
     }
 
@@ -407,7 +419,7 @@ public class UILevelList : UIPage
             }
             else if(XPlayerPrefs.GetInt(id.ToString()+isUnlock)==-1)
             {
-                Debug.Log("isunlock");
+                //Debug.Log("isunlock");
                 ats2.SetSprite("unknown");
                 ats.Sp.rectTransform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
                 uiLevelBtn._new.SetActive(true);
@@ -420,7 +432,7 @@ public class UILevelList : UIPage
                 uiLevelBtn.star.SetActive(false);
                 uiLevelBtn._new.SetActive(false);
                 uiLevelBtn.SetGray();
-                Debug.Log("islock");
+                //Debug.Log("islock");
                 //未解锁
                 ats2.SetSprite("lock");
                 ats.Sp.rectTransform.localScale = new Vector3(0.8f, 0.8f, 0.8f);

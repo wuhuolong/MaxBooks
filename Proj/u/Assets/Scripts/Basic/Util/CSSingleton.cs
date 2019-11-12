@@ -11,7 +11,7 @@ public class CSSingleton<T> where T:CSSingleton<T> ,new()
             return typeof(T).ToString();
         }
     }
-    private static T _ins = null;
+    protected static T _ins = null;
     public static T GetInstance()
     {
         if (_ins == null)

@@ -11,8 +11,5 @@ public class GameStart : MonoBehaviour
         kernel = GameKernel.GetInstance();
         kernel.Init();
     }
-    void Start()
-    {
-        kernel.OnStart();
-    }
+
 }

@@ -31,9 +31,20 @@ public class MiniMapController : MonoBehaviour
         set { refreshFlag = value; }
     }
 
+    private bool miniMapOn = false;
+
     void Update()
     {
+        // UpdateMiniMap();
+    }
+
+    void UpdateMiniMap()
+    {
         //!以下是鼠标移动到小地图上的处理
+        if (!miniMapOn)
+        {
+            return;
+        }
 
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
         pointerEventData.position = Input.mousePosition;
@@ -51,6 +62,7 @@ public class MiniMapController : MonoBehaviour
 
     public void InitMiniMap()
     {
+        miniMapOn = true;
         orangeOutlineRectTrans = orangeOutline.GetComponent<RectTransform>();
         InitRatio();
         RefreshMiniMap();
@@ -71,6 +83,10 @@ public class MiniMapController : MonoBehaviour
 
     public void RefreshMiniMap()
     {
+        if (!miniMapOn)
+        {
+            return;
+        }
         if (puzzleContainPanelClone != null)
         {
             Destroy(puzzleContainPanelClone);
@@ -94,6 +110,10 @@ public class MiniMapController : MonoBehaviour
 
     public void RefreshOrangeOutline(Vector3 offset, float scaleRatio)
     {
+        if (!miniMapOn)
+        {
+            return;
+        }
         //获取偏移值
         Vector3 miniMapOffset = offset * ratio / scaleRatio;
         orangeOutlineRectTrans.position = generalPanelClone.transform.position - miniMapOffset;

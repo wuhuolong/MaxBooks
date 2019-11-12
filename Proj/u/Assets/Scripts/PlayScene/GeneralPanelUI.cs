@@ -32,17 +32,40 @@ public class GeneralPanelUI : MonoBehaviour
     public UIPlay uiplayPage;
     public RectTransform playFieldMaskRectTrans;
     public RectTransform topBarRectTrans;
+    public Transform settlePuzzleMaskAreaTrans;
 
-    //各种格子的Prefab：
+    public enum GridType
+    {
+        nonGrid,//无
+        blankGrid,//阻挡
+        fixGrid,//可填充
+        preCheckGrid,//检测 空节点
+        preCheckGreenGrid,//检测 绿色
+        preCheckRedGrid,//检测 红色
+        whiteLightGrid,//白线
+        imgMaskForWhite,//???
+        max,
+    }
+
+    //各种Prefab：
     public GameObject nonGridPrefab;
+    //public List<GameObject> nonGridPrefab_list;
     public GameObject blankGridPrefab;
+    // public List<GameObject> blankGridPrefab_list;
     public GameObject fixGridPrefab;
-    public List<GameObject> fixGridPrefabList;
+    //public List<GameObject> fixGridPrefab_list;
     public GameObject preCheckGreenGridPrefab;
+    //public List<GameObject> preCheckGreenGridPrefab_list;
     public GameObject preCheckRedGridPrefab;
+    //public List<GameObject> preCheckRedGridPrefab_list;
     public GameObject whiteLightGridPrefab;
+    //public List<GameObject> whiteLightGridPrefab_list;
     public ParticleSystem deleteParticleEffect;
     public ParticleSystem sparkParticleEffect;
+    public GameObject imgMaskForWhite;
+    public GameObject PreCheckGrid;
+
+    private GridHandler m_GridHandler;
 
     //同对象组件：
     public GeneralPanelData generalPanelData;
@@ -61,14 +84,35 @@ public class GeneralPanelUI : MonoBehaviour
 
     public void InitComp(bool isregen = false)
     {
+
+        //nonGridPrefab_list = new List<GameObject>();
+        //blankGridPrefab_list = new List<GameObject>();
+        //fixGridPrefab_list = new List<GameObject>();
+        //preCheckGreenGridPrefab_list = new List<GameObject>();
+        //preCheckRedGridPrefab_list = new List<GameObject>();
+        //whiteLightGridPrefab_list = new List<GameObject>();
+
         generalPanelData = new GeneralPanelData();
         generalPanelData.InitGeneralPanelData(isregen);
+    }
+
+    private void Awake()
+    {
+        m_GridHandler = new GridHandler();
+        m_GridHandler.Register(GridType.nonGrid, nonGridPrefab);
+        m_GridHandler.Register(GridType.blankGrid, blankGridPrefab);
+        m_GridHandler.Register(GridType.fixGrid, fixGridPrefab);
+        m_GridHandler.Register(GridType.preCheckGreenGrid, preCheckGreenGridPrefab);
+        m_GridHandler.Register(GridType.preCheckRedGrid, preCheckRedGridPrefab);
+        m_GridHandler.Register(GridType.whiteLightGrid, whiteLightGridPrefab);
+        m_GridHandler.Register(GridType.imgMaskForWhite, imgMaskForWhite);
+        m_GridHandler.Register(GridType.preCheckGrid, PreCheckGrid);
     }
 
     public void InitGeneralPanelUI()
     {
         //TODO:根据分辨率判断机型，进而修改UI中的topbar和playfieldmask的高度
-        InitTopBarHeight();
+        // InitTopBarHeight();
 
 
         //修改delete粒子效果的位置
@@ -120,6 +164,7 @@ public class GeneralPanelUI : MonoBehaviour
         //TODO:利用对象池优化
         //!此处逻辑应该改为显示面板，在游戏打开时就要搭建面板了
         int ie = 0;
+        //Debug.Log("地图长度==>"+Playout.Length+" "+MatrixUtil.PrintIntArray(Playout));
         foreach (GeneralPanelData.GridType i in Playout)
         {
             switch (i)
@@ -132,23 +177,30 @@ public class GeneralPanelUI : MonoBehaviour
                         preCheckGrid.transform.SetParent(preCheckPanelTrans, false);
                         GameObject.Instantiate(preCheckGreenGridPrefab, preCheckGrid.transform).SetActive(false);
                         GameObject.Instantiate(preCheckRedGridPrefab, preCheckGrid.transform).SetActive(false);
-
                         GameObject.Instantiate(nonGridPrefab, whiteLightPanelTrans.transform);
 
+                        //m_GridHandler.GetGrid(GridType.nonGrid,this.transform);
+                        //GameObject preCheckGrid = m_GridHandler.GetGrid(GridType.preCheckGrid, preCheckPanelTrans,false);
+                        //m_GridHandler.GetGrid(GridType.preCheckGreenGrid, preCheckGrid.transform,false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.preCheckRedGrid, preCheckGrid.transform, false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.nonGrid, whiteLightPanelTrans.transform);
                         break;
                     }
                 case GeneralPanelData.GridType.Blank:
                     {
                         GameObject grid = GameObject.Instantiate(blankGridPrefab, this.transform);
-
                         GameObject preCheckGrid = new GameObject("PreCheckGrid");
                         preCheckGrid.AddComponent<RectTransform>();
                         preCheckGrid.transform.SetParent(preCheckPanelTrans, false);
                         GameObject.Instantiate(preCheckGreenGridPrefab, preCheckGrid.transform).SetActive(false);
                         GameObject.Instantiate(preCheckRedGridPrefab, preCheckGrid.transform).SetActive(false);
-
                         GameObject.Instantiate(whiteLightGridPrefab, whiteLightPanelTrans.transform);
 
+                        //m_GridHandler.GetGrid(GridType.blankGrid, transform);
+                        //GameObject preCheckGrid = m_GridHandler.GetGrid(GridType.preCheckGrid, preCheckPanelTrans, false);
+                        //m_GridHandler.GetGrid(GridType.preCheckGreenGrid, preCheckGrid.transform, false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.preCheckRedGrid, preCheckGrid.transform, false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.whiteLightGrid, whiteLightPanelTrans.transform);
                         break;
                     }
                 case GeneralPanelData.GridType.Fix:
@@ -177,9 +229,13 @@ public class GeneralPanelUI : MonoBehaviour
                         preCheckGrid.transform.SetParent(preCheckPanelTrans, false);
                         GameObject.Instantiate(preCheckGreenGridPrefab, preCheckGrid.transform).SetActive(false);
                         GameObject.Instantiate(preCheckRedGridPrefab, preCheckGrid.transform).SetActive(false);
-
                         GameObject.Instantiate(whiteLightGridPrefab, whiteLightPanelTrans.transform);
 
+                        //m_GridHandler.GetGrid(GridType.fixGrid, transform);
+                        //GameObject preCheckGrid = m_GridHandler.GetGrid(GridType.preCheckGrid, preCheckPanelTrans, false);
+                        //m_GridHandler.GetGrid(GridType.preCheckGreenGrid, preCheckGrid.transform, false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.preCheckRedGrid, preCheckGrid.transform, false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.whiteLightGrid, whiteLightPanelTrans.transform);
                         break;
                     }
                 case GeneralPanelData.GridType.Fill:
@@ -193,6 +249,11 @@ public class GeneralPanelUI : MonoBehaviour
 
                         GameObject.Instantiate(whiteLightGridPrefab, whiteLightPanelTrans.transform);
 
+                        //m_GridHandler.GetGrid(GridType.blankGrid, transform);
+                        //GameObject preCheckGrid = m_GridHandler.GetGrid(GridType.preCheckGrid, preCheckPanelTrans, false);
+                        //m_GridHandler.GetGrid(GridType.preCheckGreenGrid, preCheckGrid.transform, false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.preCheckRedGrid, preCheckGrid.transform, false).SetActive(false);
+                        //m_GridHandler.GetGrid(GridType.whiteLightGrid, whiteLightPanelTrans.transform);
                         break;
                     }
                 default:
@@ -342,59 +403,99 @@ public class GeneralPanelUI : MonoBehaviour
             // }
             // Debug.Log(allhit);
 
-            GameObject hitObj2 = results.Find((RaycastResult a) => a.gameObject.transform == deleteArea.transform).gameObject;
-            if (hitObj2 != null)
+            if (DetectDeleteArea(puzzleItemUI))
             {
-                if (onDeleteAreaFlag)
-                {
-
-                }
-                else
-                {
-                    onDeleteAreaFlag = true;
-                    //TODO:deleteArea放大
-                    StartCoroutine(DeleteAreaLinearScaleUp());
-
-                    // deleteArea.transform.localScale = Vector3.one * 1.1f;
-                }
-
                 panelGridIndex = -1;
                 outputBlankLayout = null;
                 return 3;
             }
+        }
+
+        panelGridIndex = -1;
+        outputBlankLayout = null;
+        return 2;
+    }
+
+    private bool DetectDeleteArea(PuzzleItemUI puzzleItemUI)
+    {
+        PointerEventData pointerDataForDelete = new PointerEventData(EventSystem.current);
+        Vector3[] worldCornersOfPuzzleUI = new Vector3[4];
+        puzzleItemUI.GetComponent<RectTransform>().GetWorldCorners(worldCornersOfPuzzleUI);
+
+        Vector3 puzzleBottomWorldPoint = new Vector3(puzzleItemUI.transform.position.x, worldCornersOfPuzzleUI[0].y, puzzleItemUI.transform.position.z);
+        Vector3 puzzleTopWorldPoint = new Vector3(puzzleItemUI.transform.position.x, worldCornersOfPuzzleUI[2].y, puzzleItemUI.transform.position.z);
+        Vector3 puzzleLeftWorldPoint = new Vector3(worldCornersOfPuzzleUI[0].x, puzzleItemUI.transform.position.y, puzzleItemUI.transform.position.z);
+        Vector3 puzzleRightWorldPoint = new Vector3(worldCornersOfPuzzleUI[2].x, puzzleItemUI.transform.position.y, puzzleItemUI.transform.position.z);
+
+        List<RaycastResult> buttomResultsForDelete = new List<RaycastResult>();
+        List<RaycastResult> topResultsForDelete = new List<RaycastResult>();
+        List<RaycastResult> leftResultsForDelete = new List<RaycastResult>();
+        List<RaycastResult> rightResultsForDelete = new List<RaycastResult>();
+
+        // pointerDataForDelete.position = Camera.main.WorldToScreenPoint(puzzleItemUI.transform.GetChild((int)(puzzleItemData.PcenterOrigin)).position);
+        pointerDataForDelete.position = Camera.main.WorldToScreenPoint(puzzleBottomWorldPoint);
+        EventSystem.current.RaycastAll(pointerDataForDelete, buttomResultsForDelete);
+
+        pointerDataForDelete.position = Camera.main.WorldToScreenPoint(puzzleTopWorldPoint);
+        EventSystem.current.RaycastAll(pointerDataForDelete, topResultsForDelete);
+
+        pointerDataForDelete.position = Camera.main.WorldToScreenPoint(puzzleLeftWorldPoint);
+        EventSystem.current.RaycastAll(pointerDataForDelete, leftResultsForDelete);
+
+        pointerDataForDelete.position = Camera.main.WorldToScreenPoint(puzzleRightWorldPoint);
+        EventSystem.current.RaycastAll(pointerDataForDelete, rightResultsForDelete);
+
+        List<RaycastResult> allResultsForDelete = buttomResultsForDelete;
+        allResultsForDelete.AddRange(topResultsForDelete);
+        allResultsForDelete.AddRange(leftResultsForDelete);
+        allResultsForDelete.AddRange(rightResultsForDelete);
+
+        GameObject hitObj_deleteArea;
+        hitObj_deleteArea = allResultsForDelete.Find((RaycastResult a) => a.gameObject.transform == deleteArea.transform).gameObject;
+
+        if (hitObj_deleteArea != null)
+        {
+            if (onDeleteAreaFlag)
+            {
+
+            }
             else
             {
-                if (Mathf.Abs(deleteAreaScaleRatioMax - deleteAreaScaleRatio) > 0.1f)
+                onDeleteAreaFlag = true;
+                //TODO:deleteArea放大
+                StartCoroutine(DeleteAreaLinearScaleUp());
+
+                // deleteArea.transform.localScale = Vector3.one * 1.1f;
+            }
+            return true;
+
+        }
+        else
+        {
+            if (Mathf.Abs(deleteAreaScaleRatioMax - deleteAreaScaleRatio) > 0.1f)
+            {
+                if (!onDeleteAreaFlag)
                 {
-                    if (!onDeleteAreaFlag)
-                    {
-                        // Debug.Log("没在放大区域");
-                    }
-                    else
-                    {
-                        onDeleteAreaFlag = false;
-                        //TODO:deleteArea缩小为1
-                        StartCoroutine(DeleteAreaLinearScaleDown());
-                        // deleteArea.transform.localScale = Vector3.one;
-                    }
+                    // Debug.Log("没在放大区域");
                 }
                 else
                 {
                     onDeleteAreaFlag = false;
                     //TODO:deleteArea缩小为1
                     StartCoroutine(DeleteAreaLinearScaleDown());
+                    // deleteArea.transform.localScale = Vector3.one;
                 }
-
-
+            }
+            else
+            {
+                onDeleteAreaFlag = false;
+                //TODO:deleteArea缩小为1
+                StartCoroutine(DeleteAreaLinearScaleDown());
             }
 
-
+            return false;
 
         }
-
-        panelGridIndex = -1;
-        outputBlankLayout = null;
-        return 2;
     }
 
 
@@ -630,7 +731,7 @@ public class GeneralPanelUI : MonoBehaviour
             generalPanelData.ModiLayout(GeneralPanelData.GridType.Fill, puzzleItemData);
             int[] newLayout = generalPanelData.Playout;
 
-            puzzle.SetActive(true);
+            opPuzzle.SetActive(true);
 
             if (opRecordFlag)
             {
@@ -640,16 +741,19 @@ public class GeneralPanelUI : MonoBehaviour
                 operationHistoryRecorder.Record(op);
 
                 //播放下落动画
-                StartCoroutine(PuzzleDownMove(opPuzzle, 0.5f, 0.1f, () =>
-                {
-                    //检查游戏是否结束
-                    if (generalPanelData.CheckOver())
-                    {
-                        //通关
-                        //跳转到UIEnd
-                        uiplayPage.LevelOverStep1();
-                    }
-                }));
+                // StartCoroutine(PuzzleDownMove(opPuzzle, 0.5f, 0.1f, () =>
+                // {
+                //     //检查游戏是否结束
+                //     if (generalPanelData.CheckOver())
+                //     {
+                //         //通关
+                //         //跳转到UIEnd
+                //         uiplayPage.LevelOverStep1();
+                //     }
+                // }));
+
+                StartCoroutine(PuzzleSettleAnim(opPuzzle, () => { }));
+
 
 
             }
@@ -694,7 +798,9 @@ public class GeneralPanelUI : MonoBehaviour
                 operationHistoryRecorder.Record(op);
 
                 //播放下落动画
-                StartCoroutine(PuzzleDownMove(puzzle, 0.5f, 0.1f, () => { }));
+                // StartCoroutine(PuzzleDownMove(puzzle, 0.5f, 0.1f, () => { }));
+
+                StartCoroutine(PuzzleSettleAnim(puzzle, () => { }));
 
 
 
@@ -747,11 +853,69 @@ public class GeneralPanelUI : MonoBehaviour
         puzzle.transform.position = finalPos;
         // Debug.Log("finalPos:" + finalPos + " " + Camera.main.WorldToScreenPoint(finalPos));
         puzzle.GetComponent<PuzzleItemUI>().PlaySettleAnim();
-        sparkParticleEffect.transform.position = puzzle.transform.position;
-        sparkParticleEffect.Play();
+        // sparkParticleEffect.transform.position = puzzle.transform.position;
+        // sparkParticleEffect.Play();
         DragController.VibrateFeedbackIntern();
         afterAnimAction();
     }
+
+
+    IEnumerator PuzzleSettleAnim(GameObject puzzle, UnityAction afterAnimAction = null)
+    {
+        yield return new WaitForFixedUpdate();
+
+        //设置拼图上层的白色mask
+
+        int maskCount = settlePuzzleMaskAreaTrans.childCount;
+        for (int i = 0; i < maskCount; ++i)
+        {
+            Destroy(settlePuzzleMaskAreaTrans.GetChild(i).gameObject);
+        }
+        int puzzleGridCount = puzzle.transform.childCount;
+
+        RectTransform settlePuzzleMaskAreaRectTrans = settlePuzzleMaskAreaTrans.GetComponent<RectTransform>();
+        settlePuzzleMaskAreaRectTrans.position = puzzle.transform.position;
+        // settlePuzzleMaskAreaRectTrans.sizeDelta = puzzle.GetComponent<RectTransform>().sizeDelta;
+
+        for (int i = 0; i < puzzleGridCount; ++i)
+        {
+            Transform gridTrans = puzzle.transform.GetChild(i);
+            if (gridTrans.GetComponent<Image>() == null)
+            {
+                continue;
+            }
+            RectTransform gridRectTrans = gridTrans.GetComponent<RectTransform>();
+            GameObject newImgMaskForWhite = GameObject.Instantiate(imgMaskForWhite, settlePuzzleMaskAreaTrans);
+            RectTransform newImgMaskForWhiteRectTrans = newImgMaskForWhite.GetComponent<RectTransform>();
+            newImgMaskForWhiteRectTrans.position = gridRectTrans.position;
+            newImgMaskForWhiteRectTrans.sizeDelta = new Vector2(gridRectTrans.rect.width, gridRectTrans.rect.height);
+            //Debug.Log(gridRectTrans.gameObject.name + " " + gridRectTrans.rect.max + " " + gridRectTrans.rect.min);
+            newImgMaskForWhite.GetComponent<Image>().sprite = gridTrans.GetComponent<Image>().sprite;
+        }
+
+        // Debug.Log("finalPos:" + finalPos + " " + Camera.main.WorldToScreenPoint(finalPos));
+        settlePuzzleMaskAreaTrans.GetComponent<Animator>().enabled = true;
+        settlePuzzleMaskAreaTrans.GetComponent<Animator>().Play("UIPLAY_SettlepuzzleMaskArea", 0, 0);
+
+        puzzle.GetComponent<PuzzleItemUI>().PlaySettleAnim();
+        if (afterAnimAction != null)
+        {
+            afterAnimAction();
+        }
+    }
+
+    public void CheckOver()
+    {
+        //检查游戏是否结束
+        if (generalPanelData.CheckOver())
+        {
+            //通关
+            //跳转到UIEnd
+            uiplayPage.LevelOverStep1();
+        }
+    }
+
+
 
     float deleteAreaScaleRatio = 1.0f;
     float deleteAreaScaleRatioMax = 1.3f;
@@ -820,7 +984,83 @@ public class GeneralPanelUI : MonoBehaviour
         }
     }
 
+    public void Dispose()
+    {
+        m_GridHandler.Dispose();
+    }
 
+    private class GridHandler
+    {
+        Dictionary<int, GameObject> m_Dic_Prefab;
+        List<List<GameObject>> m_All;
+        List<int> m_AllIndex;
+        public GridHandler()
+        {
+            m_Dic_Prefab = new Dictionary<int, GameObject>();
+            m_All = new List<List<GameObject>>();
+            m_AllIndex = new List<int>();
+            for (int i = (int)GridType.max; i > 0; i--)
+            {
+                m_All.Add(new List<GameObject>());
+                m_AllIndex.Add(0);
+            }
+        }
+        public void Register(GridType type, GameObject obj)
+        {
+            int index = (int)type;
+            m_Dic_Prefab.Add(index, obj);
+        }
+        private void AddGrid(GridType type, GameObject obj)
+        {
+            int index = (int)type;
+            m_All[index].Add(obj);
+            m_AllIndex[index]++;
+        }
+        public GameObject GetGrid(GridType type, Transform parent, bool isworld = false)
+        {
+            return GetGrid((int)type, parent, isworld);
+        }
+        public GameObject GetGrid(int type, Transform parent, bool isworld = false)
+        {
+            int curindex = m_AllIndex[type];
+            List<GameObject> curlist = m_All[type];
+            GameObject target;
+            if (curlist.Count <= curindex)
+            {
+                Debug.Log("生成" + ((GridType)type).ToString());
+                GameObject prefab = m_Dic_Prefab[type];
+                target = GameObject.Instantiate(prefab, parent, isworld);
+                m_All[type].Add(target);
+            }
+            else
+            {
+                Debug.Log("使用老数据" + ((GridType)type).ToString());
+                target = curlist[curindex];
+                target.SetActive(true);
+            }
+            curindex++;
+            m_AllIndex[type] = curindex;
+            return target;
+        }
+        public void Dispose()
+        {
+            for (int i = 0; i < m_AllIndex.Count; i++)
+            {
+                m_AllIndex[i] = 0;
+            }
+            for (int i = 0; i < m_All.Count; i++)
+            {
+                for (int ii = 0; ii < m_All[i].Count; ii++)
+                {
+                    m_All[i][ii].SetActive(false);
+                }
+            }
+        }
+        public void OnLevelGenOver()
+        {
+
+        }
+    }
 
 
 }

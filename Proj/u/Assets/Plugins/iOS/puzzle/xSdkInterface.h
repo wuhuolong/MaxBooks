@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)OnApplicationDidEnterBackground;
 + (void)OnApplicationWillEnterForeground;
 + (void)SendMsg2Unity:(NSString *)json;
++(NSString *)Dic2Json:(NSDictionary *)dic;
++(NSDictionary *)Json2Dic:(NSString *)json;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -21,11 +21,15 @@ public class UCallback : MonoSingleton<UCallback>
             case SDKMsgType.OnRewardAdShowOver:
                 OnRewardedVideoBack(data);
                 break;
+            case SDKMsgType.OnPay2RemoveAdSucc:
+                OnPayRemoveAD(data);
+                break;
             default:
                 Debuger.LogError(m_Tag, m_Func_Tag, "sdk call back type error");
                 break;
         }
     }
+
     private void OnRewardedVideoBack(JsonData data)
     {
         int retcode = (int)data["Ret"];
@@ -45,5 +49,22 @@ public class UCallback : MonoSingleton<UCallback>
         }
         onReward = null;
         onFail = null;
+    }
+
+    private void OnPayRemoveAD(JsonData data)
+    {
+        int retcode = (int)data["Ret"];
+        if (retcode == 1)
+        {
+#if UNITY_EDITOR
+            //UIMgr.GetInstance().ShowSimpleTips("购买去广告服务成功");
+#endif
+            XPlayerPrefs.SetInt(AdMgr.Pay2RemoveAD_Tag, 1);
+        }
+        else
+        {
+            XPlayerPrefs.SetInt(AdMgr.Pay2RemoveAD_Tag, 0);
+        }
+        AdMgr.GetInstance().isPaying = false;
     }
 }

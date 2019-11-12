@@ -21,6 +21,8 @@
 
 #import "STRIAPManager.h"
 #import <StoreKit/StoreKit.h>
+#import "xSdkInterface.h"
+#import "UMMgr.h"
 @interface STRIAPManager()<SKPaymentTransactionObserver,SKProductsRequestDelegate>{
    NSString           *_purchID;
    IAPCompletionHandle _handle;
@@ -73,25 +75,57 @@
 #pragma mark - 🔒private
 - (void)handleActionWithType:(SIAPPurchType)type data:(NSData *)data{
 //#if DEBUG
-NSLog(@"开始购买服务 ==>handleActionWithType");
+    NSLog(@"开始购买服务 ==>handleActionWithType");
+    NSDictionary *dic;
+    NSString *json;
     switch (type) {
         case SIAPPurchSuccess:
+            [[UMMgr sharedInstance] Track:@"8"];
+                dic= [NSDictionary dictionaryWithObjectsAndKeys:
+                          @8,@"Type",
+                          @1,@"Ret",nil];
+            json = [xSdkInterface Dic2Json:dic];
+            [xSdkInterface SendMsg2Unity:json];
             NSLog(@"购买成功");
             break;
         case SIAPPurchFailed:
+            [[UMMgr sharedInstance] Track:@"8"];
+                dic= [NSDictionary dictionaryWithObjectsAndKeys:
+                          @8,@"Type",
+                          @0,@"Ret",nil];
+            json = [xSdkInterface Dic2Json:dic];
+            [xSdkInterface SendMsg2Unity:json];
             NSLog(@"购买失败");
             break;
         case SIAPPurchCancle:
             NSLog(@"用户取消购买");
+            [[UMMgr sharedInstance] Track:@"8"];
+                dic= [NSDictionary dictionaryWithObjectsAndKeys:
+                          @8,@"Type",
+                          @0,@"Ret",nil];
+            json = [xSdkInterface Dic2Json:dic];
+            [xSdkInterface SendMsg2Unity:json];
             break;
         case SIAPPurchVerFailed:
             NSLog(@"订单校验失败");
+            [[UMMgr sharedInstance] Track:@"8"];
+                dic= [NSDictionary dictionaryWithObjectsAndKeys:
+                          @8,@"Type",
+                          @0,@"Ret",nil];
+            json = [xSdkInterface Dic2Json:dic];
+            [xSdkInterface SendMsg2Unity:json];
             break;
         case SIAPPurchVerSuccess:
             NSLog(@"订单校验成功");
             break;
         case SIAPPurchNotArrow:
             NSLog(@"不允许程序内付费");
+            [[UMMgr sharedInstance] Track:@"8"];
+                dic= [NSDictionary dictionaryWithObjectsAndKeys:
+                          @8,@"Type",
+                          @0,@"Ret",nil];
+            json = [xSdkInterface Dic2Json:dic];
+            [xSdkInterface SendMsg2Unity:json];
             break;
         default:
             break;
@@ -128,7 +162,7 @@ NSLog(@"开始购买服务 ==>handleActionWithType");
 }
  
 - (void)verifyPurchaseWithPaymentTransaction:(SKPaymentTransaction *)transaction isTestServer:(BOOL)flag{
-    NSLog(@"max ==> verifyPurchaseWithPaymentTransaction 交易验证");
+    NSLog(@"max ==> verifyPurchaseWithPayment Transaction 交易验证");
     //交易验证
     NSURL *recepitURL = [[NSBundle mainBundle] appStoreReceiptURL];
     NSData *receipt = [NSData dataWithContentsOfURL:recepitURL];
@@ -187,9 +221,9 @@ NSLog(@"开始购买服务 ==>handleActionWithType");
                                    }else if(status && [status isEqualToString:@"0"]){
                                        [self handleActionWithType:SIAPPurchVerSuccess data:nil];
                                    }
-#if DEBUG
+
                                    NSLog(@"----验证结果 %@",jsonResponse);
-#endif
+
                                }
                            }];
      

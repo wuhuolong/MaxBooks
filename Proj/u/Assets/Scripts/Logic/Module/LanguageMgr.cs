@@ -158,6 +158,45 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
             txtw.Txt.text = tempstr;
         }
         txtw.Txt.text = sb.ToString();
+        txtw.Txt.fontSize = (int)txtw.Config.Fontsize[(int)GameConfig.Language];
+        txtw.Txt.font = FontUtil.GetFont(txtw.Config.Fonttype[(int)GameConfig.Language]);
+    }
+
+    private string GetLangStrByIDv1(uint id,params object[] args)
+    {
+        LanguageConfig config;
+        if (!m_LanDic.TryGetValue(id, out config))
+        {
+            Debuger.LogError(Tag, string.Empty, "language id not exist " + id);
+            return string.Empty;
+        }
+        sb.Clear();
+        switch (GameConfig.Language)
+        {
+            case LangType.zh_Hans:
+                sb.Append(config.Cn);
+                break;
+            case LangType.en:
+                sb.Append(config.En);
+                break;
+            default:
+                break;
+        }
+        if (config.Count > 0)
+        {
+            string tempstr;
+            try
+            {
+                tempstr = string.Format(sb.ToString(), args);
+            }
+            catch (System.Exception e)
+            {
+                tempstr = string.Empty;
+                Debuger.LogError(Tag, "GetLangStrByID", e.Message);
+            }
+            return tempstr;
+        }
+        return sb.ToString();
     }
 
     private void SetSelectedLang(TextWrap txtw)
@@ -190,11 +229,29 @@ public class LanguageMgr : CSSingleton<LanguageMgr>
             txtw.Txt.text = tempstr;
         }
         txtw.Txt.text = sb.ToString();
+        txtw.Txt.fontSize = (int)txtw.Config.Fontsize[(int)GameConfig.Language];
+        txtw.Txt.font = FontUtil.GetFont(txtw.Config.Fonttype[(int)GameConfig.Language]);
     }
 
-    public void GetLangStrByID(Text txt, uint id, params object[] args)
+    public void GetLangStrByID(Text txt, uint id,bool isregister = true, params object[] args)
     {
-        TextWrap txtw = RegisterText(txt);
+        TextWrap txtw;
+        if (isregister)
+        {
+            txtw = RegisterText(txt);
+        }
+        else
+        {
+            txtw = new TextWrap()
+            {
+                Txt = txt,
+            };
+        }
         GetLangStrByID(id, txtw, args);
+    }
+
+    public string GetLangStrByID(uint id, params object[] args)
+    {
+        return GetLangStrByIDv1(id,args);
     }
 }

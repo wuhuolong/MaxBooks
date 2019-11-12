@@ -24,6 +24,8 @@ tpsheetFileNames:
 - Assets/img/star.tpsheet
 - Assets/img/unlock.tpsheet
 - Assets/RefSprites/common.tpsheet
+- Assets/RefSprites/end_altas/calendarEnd1.tpsheet
+- Assets/RefSprites/end_altas/calender1.tpsheet
 - Assets/RefSprites/end_altas/end1.tpsheet
 - Assets/RefSprites/end_altas/end10.tpsheet
 - Assets/RefSprites/end_altas/end11.tpsheet
@@ -68,6 +70,8 @@ textureFileNames:
 - Assets/img/star.png
 - Assets/img/unlock.png
 - Assets/RefSprites/common.png
+- Assets/RefSprites/end_altas/calendarEnd1.png
+- Assets/RefSprites/end_altas/calender1.png
 - Assets/RefSprites/end_altas/end1.png
 - Assets/RefSprites/end_altas/end10.png
 - Assets/RefSprites/end_altas/end11.png
@@ -89,6 +93,8 @@ textureFileNames:
 - Assets/RefSprites/list_altas/list1.png
 - Assets/RefSprites/list_altas/list2.png
 normalmapFileNames:
+- 
+- 
 - 
 - 
 - 

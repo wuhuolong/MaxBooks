@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class UIPlay : UIPage
 {
+    //UI转场动画用
+    public Transform m_bgt;
+    public Transform m_roott;
+
     public bool debugFlag = false;
     /// <summary>
     /// 新手引导
@@ -54,8 +58,8 @@ public class UIPlay : UIPage
     public Transform whiteLightTrans;
 
     //Canvas：
-    public Canvas BGCanvas;
-    public Canvas MainUICanvas;
+    //public Canvas BGCanvas;
+    //public Canvas MainUICanvas;
 
     //需要使用的一些组件：
     public GeneralPanelUI generalPanelUI;
@@ -74,6 +78,21 @@ public class UIPlay : UIPage
 
     private void OnEnable()
     {
+        InitUIPlay();
+        // BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
+        // if (levelmode.GetType() == typeof(NormalLevel))
+        // {
+        //     if (levelID == LevelMgr.GetInstance().CurLevelID)
+        //     {
+        //         //DoNothing
+        //         Debug.Log("*****level init already*****");
+        //         return;
+        //     }
+        // }
+    }
+
+    private void InitUIPlay()
+    {
         mask.SetActive(false);
         needMask = 0;
         if (LevelMgr.GetInstance().GetIndexByID(LevelMgr.GetInstance().CurLevelID) == "1-1")
@@ -86,7 +105,7 @@ public class UIPlay : UIPage
             needMask = 2;
         }
 
-        
+
 
         buttonCheck = true;
         animator = GetComponent<Animator>();
@@ -118,12 +137,11 @@ public class UIPlay : UIPage
 
         //heimu-test
         StartCoroutine(Guiding());
-        
     }
 
     IEnumerator Guiding()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.15f);
         if (needMask == 1)
         {
             Debug.Log("init");
@@ -137,8 +155,8 @@ public class UIPlay : UIPage
             {
                 SettlePuzzle newSettlePuzzle = new SettlePuzzle();
                 newSettlePuzzle.puzzleID = 0;
-                newSettlePuzzle.puzzleRotateState = 1;
-                newSettlePuzzle.puzzleGridIndex = 128;
+                newSettlePuzzle.puzzleRotateState = 0;
+                newSettlePuzzle.puzzleGridIndex = 127;
                 generalPanelUI.SettlePuzzleFunc(newSettlePuzzle);
                 Debug.Log("init");
                 mask.SetActive(true);
@@ -147,10 +165,63 @@ public class UIPlay : UIPage
         }
     }
 
+    public override IEnumerator DoTween(bool isleft, int uiid, Action<int> onend)
+    {
+        if (!IsAnim)
+        {
+            if (onend != null)
+            {
+                onend(uiid);
+            }
+            AfterTween();
+            yield break;
+        }
+        float now = 0f;
+        float progress = 0f;
+
+        //RectTransform rt = ub.GetComponent<RectTransform>();
+        Vector3 target = Vector3.zero;//rt.position;
+        UIRoot root = UIMgr.GetInstance().uiRoot;
+        Vector3 v3 = isleft ? root.LeftPoint : root.RightPoint;
+        m_roott.position = v3;
+        m_bgt.position = v3;
+        Vector3 v33 = v3;
+        while (AnimatTime > now)
+        {
+            progress = now / AnimatTime;
+            float newx = Mathf.Lerp(v3.x, 0, progress);
+            v33.x = newx;
+            //rt.position = v33;
+            m_roott.position = v33;
+            m_bgt.position = v33;
+            //Debug.Log(GetType().ToString() + "DoTweenOnPop ==>" + v33);
+            now += Time.deltaTime;
+            yield return null;
+        }
+        v33.x = 0;
+        m_roott.position = v33;
+        m_bgt.position = v33;
+        if (onend != null)
+        {
+            onend(uiid);
+        }
+        AfterTween();
+    }
+
+    protected override void AfterTween()
+    {
+        panelTransformationController.InitPTController();
+        // miniMapController.InitMiniMap();
+        dragController.GameOverFlag = false;
+        dragController.GeneralDragFlag=false;
+        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelEnter, (int)levelID);
+    }
+
     private void LoadOriginImg()
     {
         //加载原图
         X.Res.LevelConfig levelConfig = LevelMgr.GetInstance().GetLevelConfig(levelID).Config;
+        Debug.Log("levelID:" + levelID);
         int pitcureId = levelConfig.LevelPicture;
         string altasname = AltasMgr.GetInstance().GetConfigByID((uint)pitcureId).AltasName2;
         Debug.Log(altasname);
@@ -210,7 +281,7 @@ public class UIPlay : UIPage
                         //进入关卡列表界面
                         // pausePage.SetActive(false);
                         black.alpha = 1.0f;
-                        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
+                        UIMgr.GetInstance().ShowPage(UIPageEnum.LevelList_Page);
                     }
                 }
             }
@@ -289,8 +360,8 @@ public class UIPlay : UIPage
 
     protected override void InitData()
     {
-        BGCanvas.worldCamera = Camera.main;
-        MainUICanvas.worldCamera = Camera.main;
+        //BGCanvas.worldCamera = Camera.main;
+        //MainUICanvas.worldCamera = Camera.main;
     }
 
     public void LevelStart(params object[] argv)
@@ -325,11 +396,6 @@ public class UIPlay : UIPage
         generalPanelUI.InitGeneralPanelUI();
 
         StartCoroutine(generalPanelUI.InitPuzzleContainPanel(isReGen));
-
-        panelTransformationController.InitPTController();
-        miniMapController.InitMiniMap();
-        dragController.GameOverFlag = false;
-        SDKMgr.GetInstance().Track(SDKMsgType.OnLevelEnter, (int)levelID);
     }
 
     private void RecCheck()
@@ -367,7 +433,7 @@ public class UIPlay : UIPage
     {
         // CheckRating();//检查评星
         StartCoroutine(panelTransformationController.ReturnToOrigin(0.2f, LevelOverStep2));
-        dragController.GameOverFlag = false;
+        dragController.GameOverFlag = true;
     }
 
     public void LevelOverStep2()
@@ -391,12 +457,15 @@ public class UIPlay : UIPage
         //RandomType();
         //ShadowInit2();
         //isShadowToList = true;
-        
+
 
         SaveOperation();
         CloseUIPlay();
 
-        UIMgr.ShowPage(UIPageEnum.LevelList_Page);
+        BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
+        levelmode.OnClickQuit();
+
+        // UIMgr.ShowPage(UIPageEnum.LevelList_Page);
     }
 
     private void LevelRestart()
@@ -424,7 +493,7 @@ public class UIPlay : UIPage
             XPlayerPrefs.DelRec(curLevelID);
             // pausePage.SetActive(false);
             CloseUIPlay();
-            UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+            UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
         }
     }
 
@@ -444,7 +513,7 @@ public class UIPlay : UIPage
         }
         animator.enabled = false;
 
-        UIMgr.ShowPage(UIPageEnum.End_Page);
+        UIMgr.GetInstance().ShowPage(UIPageEnum.End_Page);
 
         CloseUIPlay();
     }
@@ -455,7 +524,7 @@ public class UIPlay : UIPage
     {
         // levelTimer.SetTime(0);
         operationHistoryRecorder.Clear();
-
+        generalPanelUI.Dispose();
 
         for (int i = 0; i < playFieldTrans.childCount; ++i)
         {

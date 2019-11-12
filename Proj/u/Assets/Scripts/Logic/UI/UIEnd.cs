@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIEnd : UIPage
 {
+    public RectTransform top;
+
     private uint levelID;
     private uint nextLevelID;
     private LevelData data;
@@ -14,6 +16,7 @@ public class UIEnd : UIPage
     //static string numStar = "numStar";
     //static string tmpNumStar = "tmpNumStar";
     static string isCompleted = "isCompleted";
+    RectTransform ac;
 
     static string curLevel = "curLevel";
 
@@ -22,6 +25,8 @@ public class UIEnd : UIPage
     public GameObject returnTips;
     public Text[] texts;
     public Image screenShot;
+
+    public GameObject nextLevelButton;
 
     //public GameObject[] starEffects;
     //public GameObject allStar;
@@ -46,6 +51,12 @@ public class UIEnd : UIPage
     private static string shadowType = "shadowType";
     private int type;
 
+    protected override void AfterTween()
+    {
+        Debug.Log("anim");
+        this.gameObject.GetComponent<Animator>().Play("UIEnd_Anim");
+    }
+
     private void OnEnable()
     {
         black.alpha = 0.0f;
@@ -54,7 +65,6 @@ public class UIEnd : UIPage
         levelID = LevelMgr.GetInstance().CurLevelID;
         data = LevelMgr.GetInstance().GetLevelConfig(levelID);
         value = LevelMgr.GetInstance().GetValueConfig();
-        //ShadowInit();
         OnShow();
     }
 
@@ -79,6 +89,11 @@ public class UIEnd : UIPage
         returnTips.SetActive(false);
         toList = false;
         toLevel = false;
+
+        //if (Mathf.Abs(((float)Screen.height / (float)Screen.width) - 2.16f) < 0.1f)//判断是否是刘海屏iphone
+        //{
+        //    //top.anchoredPosition = new Vector2(0, -100);
+        //}
     }
 
     private void FixedUpdate()
@@ -100,13 +115,13 @@ public class UIEnd : UIPage
                     //2 如果是每日挑戰模式，回到每日挑戰界面并且設置好選擇的日期
                     if(toLevel)
                     {
-                        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+                        UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
                         return;
                     }
                     if(toList)
                     {
                         BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
-                        levelmode.OnClickQuit_UIEnd();
+                        levelmode.OnClickQuit();
                         return;
                     }
                 }
@@ -187,7 +202,7 @@ public class UIEnd : UIPage
     private void ClickRestart()
     {
         //重新开始
-        UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+        UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
     }
     private void SetToNextLevel()
     {
@@ -215,14 +230,14 @@ public class UIEnd : UIPage
                 buttonCheck = false;
                 if (LevelMgr.GetInstance().GetNextLevelIDByID(levelID) == 0)
                 {
-                    returnTips.SetActive(true);
+                    UIMgr.GetInstance().ShowPage(UIPageEnum.LevelList_Page);
                     return;
                 }
                 //heimu-test
                 //Debug.Log("next");
                 //isShadow = true;
                 //toLevel = true;
-                UIMgr.ShowPage_Play(UIPageEnum.Play_Page);
+                UIMgr.GetInstance().ShowPage_Play(UIPageEnum.Play_Page);
             }
         }
     }
@@ -377,7 +392,7 @@ public class UIEnd : UIPage
     public void OnLevelEnd()
     {
         BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
-        levelmode.OnExit();
+        levelmode.OnExit(nextLevelButton);
     }
     public void ClickScreenShot()
     {
@@ -404,7 +419,7 @@ public class UIEnd : UIPage
             {
                 buttonCheck = false;
                 BaseLevel levelmode = LevelMgr.GetInstance().CurLevelMode;
-                levelmode.OnClickQuit_UIEnd();
+                levelmode.OnClickQuit();
                 //返回关卡列表
                 //toList = true;
                 //isShadow = true;

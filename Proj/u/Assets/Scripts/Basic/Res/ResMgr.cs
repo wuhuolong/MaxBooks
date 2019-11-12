@@ -105,6 +105,13 @@ public class ResMgr
         });
     }
 
+    public static Font GetFont(string fontname)
+    {
+        string path = XGamePath.GetFontPath(fontname);
+        Font font = Load<Font>(path);
+        return font;
+    }
+
     public static GameObject LoadGameObject(string path, Transform parent)
     {
         //Debug.Log(path);
@@ -148,13 +155,13 @@ public class ResMgr
         Log(Tag, "Load", path);
         
         AssetBundle ab = AbMgr.GetInstance().SyncLoad(path);
-        return ab.LoadAsset<T>(ab.GetAllAssetNames()[0]);
+        obj = ab.LoadAsset<T>(ab.GetAllAssetNames()[0]);
+        return obj as T;
 #endif
     }
     public static void LoadAsync<T>(string path, Action<T> callback) where T : UnityEngine.Object
     {
         int hash = path.GetHashCode();
-        object obj ;
 
 #if UNITY_EDITOR
         if (AbMgr.IsAbMode)
@@ -180,6 +187,7 @@ public class ResMgr
         }
         else
         {
+            object obj;
             path = "Assets/" + XGamePath.ResRoot + "/" + path;
             obj = UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
             callback(obj as T);

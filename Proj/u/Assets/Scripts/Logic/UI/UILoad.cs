@@ -47,7 +47,7 @@ public class UILoad : UIPage
             else
             {
                 //UIMgr.ShowPage(UIPageEnum.LevelList_Page);
-                UIMgr.ShowPage(UIPageEnum.Main_Page);
+                UIMgr.GetInstance().ShowPage(UIPageEnum.Main_Page);
             }
         }
     }

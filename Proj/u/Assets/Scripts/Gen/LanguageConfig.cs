@@ -24,15 +24,15 @@ namespace X.Res {
     static LanguageConfigReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CiJnZW4veGxzMnByb3RvL0xhbmd1YWdlQ29uZmlnLnByb3RvEgVYLlJlcyJH",
+            "CiJnZW4veGxzMnByb3RvL0xhbmd1YWdlQ29uZmlnLnByb3RvEgVYLlJlcyJr",
             "Cg5MYW5ndWFnZUNvbmZpZxIOCgZ0eHRfaWQYASABKA0SDQoFY291bnQYAiAB",
-            "KA0SCgoCZW4YAyABKAkSCgoCY24YBCABKAkiPAoUTGFuZ3VhZ2VDb25maWdf",
-            "QVJSQVkSJAoFaXRlbXMYASADKAsyFS5YLlJlcy5MYW5ndWFnZUNvbmZpZ2IG",
-            "cHJvdG8z"));
+            "KA0SCgoCZW4YAyABKAkSCgoCY24YBCABKAkSEAoIZm9udHNpemUYBSADKA0S",
+            "EAoIZm9udHR5cGUYBiADKAkiPAoUTGFuZ3VhZ2VDb25maWdfQVJSQVkSJAoF",
+            "aXRlbXMYASADKAsyFS5YLlJlcy5MYW5ndWFnZUNvbmZpZ2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LanguageConfig), global::X.Res.LanguageConfig.Parser, new[]{ "TxtId", "Count", "En", "Cn" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LanguageConfig), global::X.Res.LanguageConfig.Parser, new[]{ "TxtId", "Count", "En", "Cn", "Fontsize", "Fonttype" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::X.Res.LanguageConfig_ARRAY), global::X.Res.LanguageConfig_ARRAY.Parser, new[]{ "Items" }, null, null, null, null)
           }));
     }
@@ -69,6 +69,8 @@ namespace X.Res {
       count_ = other.count_;
       en_ = other.en_;
       cn_ = other.cn_;
+      fontsize_ = other.fontsize_.Clone();
+      fonttype_ = other.fonttype_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -133,6 +135,32 @@ namespace X.Res {
       }
     }
 
+    /// <summary>Field number for the "fontsize" field.</summary>
+    public const int FontsizeFieldNumber = 5;
+    private static readonly pb::FieldCodec<uint> _repeated_fontsize_codec
+        = pb::FieldCodec.ForUInt32(42);
+    private readonly pbc::RepeatedField<uint> fontsize_ = new pbc::RepeatedField<uint>();
+    /// <summary>
+    ///* 字体字号 
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<uint> Fontsize {
+      get { return fontsize_; }
+    }
+
+    /// <summary>Field number for the "fonttype" field.</summary>
+    public const int FonttypeFieldNumber = 6;
+    private static readonly pb::FieldCodec<string> _repeated_fonttype_codec
+        = pb::FieldCodec.ForString(50);
+    private readonly pbc::RepeatedField<string> fonttype_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    ///* 字体类型 
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> Fonttype {
+      get { return fonttype_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as LanguageConfig);
@@ -150,6 +178,8 @@ namespace X.Res {
       if (Count != other.Count) return false;
       if (En != other.En) return false;
       if (Cn != other.Cn) return false;
+      if(!fontsize_.Equals(other.fontsize_)) return false;
+      if(!fonttype_.Equals(other.fonttype_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -160,6 +190,8 @@ namespace X.Res {
       if (Count != 0) hash ^= Count.GetHashCode();
       if (En.Length != 0) hash ^= En.GetHashCode();
       if (Cn.Length != 0) hash ^= Cn.GetHashCode();
+      hash ^= fontsize_.GetHashCode();
+      hash ^= fonttype_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -189,6 +221,8 @@ namespace X.Res {
         output.WriteRawTag(34);
         output.WriteString(Cn);
       }
+      fontsize_.WriteTo(output, _repeated_fontsize_codec);
+      fonttype_.WriteTo(output, _repeated_fonttype_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -209,6 +243,8 @@ namespace X.Res {
       if (Cn.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Cn);
       }
+      size += fontsize_.CalculateSize(_repeated_fontsize_codec);
+      size += fonttype_.CalculateSize(_repeated_fonttype_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -232,6 +268,8 @@ namespace X.Res {
       if (other.Cn.Length != 0) {
         Cn = other.Cn;
       }
+      fontsize_.Add(other.fontsize_);
+      fonttype_.Add(other.fonttype_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -257,6 +295,15 @@ namespace X.Res {
           }
           case 34: {
             Cn = input.ReadString();
+            break;
+          }
+          case 42:
+          case 40: {
+            fontsize_.AddEntriesFrom(input, _repeated_fontsize_codec);
+            break;
+          }
+          case 50: {
+            fonttype_.AddEntriesFrom(input, _repeated_fonttype_codec);
             break;
           }
         }

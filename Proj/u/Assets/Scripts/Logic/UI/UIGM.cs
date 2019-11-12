@@ -56,7 +56,7 @@ public class UIGM : UIWindows
 
     public void OnClickClose()
     {
-        UIMgr.Pop();
+        UIMgr.GetInstance().Pop();
     }
 
     public void OnBtnClick()

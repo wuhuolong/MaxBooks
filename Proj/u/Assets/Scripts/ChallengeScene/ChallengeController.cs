@@ -7,7 +7,7 @@ using X.Res;
 
 public class ChallengeController : MonoBehaviour
 {
-    private DayTest m_selectedDay;
+    private GameObject m_selectedDayObject;
     private DateTime m_selectedDateTime;
 
     private uint m_selectedLevelID;
@@ -25,9 +25,17 @@ public class ChallengeController : MonoBehaviour
     public Text tryButtonText;
     public Transform AdImgTrans;
 
+    private static Color normalTryButtonTextColor = new Color(191f / 255f, 100f / 255f, 33f / 255f);
+
+    bool initFlag = false;
+
     private void OnEnable()
     {
         LogicEvent.RegEvent(LogicEvent.CALENDAR_SELECTED, OnSelected);
+        if (initFlag)
+        {
+            calendarPanel.InitAllCalendars();
+        }
     }
 
     private void OnDisable()
@@ -38,13 +46,6 @@ public class ChallengeController : MonoBehaviour
     private void Start()
     {
         InitUI();
-        calendarPanel.InitPanelSize();
-        calendarPanel.InitAllCalendars();
-    }
-
-    public void InitUI()
-    {
-        //TODO:多语言修改，通过配置读取title，星期的显示
 
         //TODO:修改选择，上方界面的显示和下方界面的显示 
         // 从主界面-每日挑战 默认选择最新一关
@@ -52,7 +53,16 @@ public class ChallengeController : MonoBehaviour
         //重置选择：
         XPlayerPrefs.SetInt(selectedDateTimeStr, 0);
 
-        //根据选择重置界面
+        calendarPanel.InitPanelSize();
+        calendarPanel.InitAllCalendars();
+
+        initFlag = true;
+    }
+
+    public void InitUI()
+    {
+        //TODO:多语言修改，通过配置读取title，星期的显示
+
 
 
 
@@ -62,21 +72,23 @@ public class ChallengeController : MonoBehaviour
     private void OnSelected(params object[] values)
     {
         DateTime newSelectedDateTime = (DateTime)values[0];
-        DayTest newSelectedDay = (DayTest)values[1];
-        SetSelectedDay(newSelectedDateTime, newSelectedDay);
+        GameObject newSelectedDayObject = values[1] as GameObject;
+        SetSelectedDay(newSelectedDateTime, newSelectedDayObject);
         ModiMapAndInfo();
     }
     #endregion
 
-    private void SetSelectedDay(DateTime newSelectedDateTime, DayTest newSelectedDay)
+    private void SetSelectedDay(DateTime newSelectedDateTime, GameObject newSelectedDayObject)
     {
         //修改选择的日期以及显示
         m_selectedDateTime = newSelectedDateTime;
+        DayTest m_selectedDay;
 
-        if (m_selectedDay != null)
+        if (m_selectedDayObject != null && m_selectedDayObject.GetComponent<DayTest>() != null)
         {
-            Debug.Log("m_selectedDay.IsChallenged" + m_selectedDay.IsChallenged);
-            if (m_selectedDay.IsChallenged)
+            m_selectedDay = m_selectedDayObject.GetComponent<DayTest>();
+            // Debug.Log("oldSelectedDay isChallenged" + m_selectedDay.isChallenged);
+            if (m_selectedDay.isChallenged)
             {
                 m_selectedDay.dayBGSelectFinish.color = Color.clear;
                 m_selectedDay.dayBGUnSelectFinish.color = Color.white;
@@ -86,8 +98,11 @@ public class ChallengeController : MonoBehaviour
                 m_selectedDay.dayBGSelectUnFinish.color = Color.clear;
             }
         }
-        m_selectedDay = newSelectedDay;
-        if (m_selectedDay.IsChallenged)
+        m_selectedDayObject = newSelectedDayObject;
+        m_selectedDay = m_selectedDayObject.GetComponent<DayTest>();
+        // Debug.Log("newSelectedDay isChallenged" + m_selectedDay.isChallenged);
+
+        if (m_selectedDay.isChallenged)
         {
             m_selectedDay.dayBGSelectFinish.color = Color.white;
             m_selectedDay.dayBGUnSelectFinish.color = Color.clear;
@@ -124,35 +139,68 @@ public class ChallengeController : MonoBehaviour
         if (ats != null)
         {
             ats.Sp = mapIcon;
-            ats.SetSprite("p_" + levelConfig.LevelPicture.ToString());
+            if (SignInMgr.GetInstance().IsSign(dayId - GameConfig.SignInDay))
+            {
+                ats.SetSprite("p_" + levelConfig.LevelPicture.ToString());
+            }
+            else
+            {
+                ats.SetSprite("s_" + levelConfig.LevelPicture.ToString());
+            }
+
         }
 
         //TODO:修改info，包括了编号、名字、剩余时间和按钮的状态、文字等
         levelNumText.text = "#" + (SignInMgr.GetInstance().GetIndexByID((uint)dayId) + 1).ToString();
-        levelNameText.text = levelConfig.LevelName;
+        LanguageMgr.GetInstance().GetLangStrByID(levelNameText, signInConfig.DailylevelName);
 
         StartCoroutine(TimeLeftUpdate(m_selectedDateTime.AddDays(1)));
 
-        if (m_selectedDateTime != DateTime.Today && !m_selectedDay.IsChallenged)
+        ModiTryButton();
+
+    }
+
+    private void ModiTryButton()
+    {
+        if (!TimeUtil.isNetworkOn())
+        {
+            UIGray.SetUIGray(tryButton.GetComponent<Image>());
+            UIGray.SetUIGray(AdImgTrans.GetComponent<Image>());
+
+            tryButton.interactable = false;
+            tryButtonText.color = Color.grey;
+            UIMgr.GetInstance().ShowSimpleTips(306);
+            return;
+        }
+        else
+        {
+            UIGray.Recovery(tryButton.GetComponent<Image>());
+            UIGray.Recovery(AdImgTrans.GetComponent<Image>());
+
+            tryButtonText.color = normalTryButtonTextColor;
+            tryButton.interactable = true;
+        }
+
+        if (m_selectedDateTime != DateTime.Today && !m_selectedDayObject.GetComponent<DayTest>().isChallenged)
         {
             //还需要读取多语言配置
-            tryButtonText.text = "挑战关卡";
+            LanguageMgr.GetInstance().GetLangStrByID(tryButtonText, 304);//"挑战关卡"
             RectUtils.SetLeft(tryButtonText.GetComponent<RectTransform>(), 95);
             AdImgTrans.gameObject.SetActive(true);
         }
         else if (m_selectedDateTime == DateTime.Today)
         {
-            tryButtonText.text = "挑战关卡";
+            LanguageMgr.GetInstance().GetLangStrByID(tryButtonText, 304);//"挑战关卡"
             RectUtils.SetLeft(tryButtonText.GetComponent<RectTransform>(), 10);
             AdImgTrans.gameObject.SetActive(false);
         }
         else
         {
-            tryButtonText.text = "重新挑战";
+            LanguageMgr.GetInstance().GetLangStrByID(tryButtonText, 305);//"再次挑战"
+
             RectUtils.SetLeft(tryButtonText.GetComponent<RectTransform>(), 10);
             AdImgTrans.gameObject.SetActive(false);
         }
-
     }
 
     bool updateFlag = false;
@@ -189,7 +237,9 @@ public class ChallengeController : MonoBehaviour
 
     public void CheckChallenge()
     {
-        if (m_selectedDateTime != DateTime.Today && !m_selectedDay.IsChallenged)
+
+#if UNITY_IOS && !UNITY_EDITOR
+        if (m_selectedDateTime != DateTime.Today && !m_selectedDayObject.GetComponent<DayTest>().isChallenged)
         {
             //未挑战通过的关卡，播放广告
             AdMgr.GetInstance().showRewardVideo(() =>
@@ -201,6 +251,11 @@ public class ChallengeController : MonoBehaviour
         {
             StartChallenge();
         }
+#elif UNITY_EDITOR
+        Debug.Log("播放广告");
+        StartChallenge();
+#endif
+
 
     }
 
@@ -219,6 +274,6 @@ public class ChallengeController : MonoBehaviour
 
     public void QuitToMain()
     {
-        UIMgr.ShowPage(UIPageEnum.Main_Page);
+        UIMgr.GetInstance().ShowPage(UIPageEnum.Main_Page);
     }
 }

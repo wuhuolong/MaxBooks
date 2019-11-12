@@ -1,0 +1,16 @@
+#
+# Sprite sheet data for Unity.
+#
+# To import these sprites into your Unity project, download "TexturePackerImporter":
+# https://www.codeandweb.com/texturepacker/unity
+#
+# $TexturePacker:SmartUpdate:e3badac30e6895faa86f6317e30a309a:7972fbdaeb2190e050a29312d281b3e5:6636f1db43a16ee37f5e3c9f4e72f097$
+#
+:format=40300
+:texture=calender1.png
+:size=128x256
+:pivotpoints=enabled
+:borders=disabled
+
+p_20011;1;131;124;124; 0.5;0.5; 0;0;0;0
+p_20012;1;5;124;124; 0.5;0.5; 0;0;0;0

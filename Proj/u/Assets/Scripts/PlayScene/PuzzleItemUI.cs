@@ -271,7 +271,7 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void RotatePuzzleOnce(bool check = true)
     {
-        if(canRorate)
+        if (canRorate)
         {
             //FINISH:旋转拼图，需要做的是修改UI（把拼图的rectTransform的rotation进行修改即可）,以及修改拼图的Data（修改pwidth，pheight，playout，pcenter）
             GetComponent<RectTransform>().Rotate(Vector3.forward, -90);
@@ -286,24 +286,10 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             if (check && shaderViewer != null)
             {
                 Debug.Log(shaderViewer.curIndex);
-                if (shaderViewer.CheckRorate(shaderViewer.curIndex))
-                {
-                    if (shaderViewer.curIndex < shaderViewer.maxIndex)
-                    {
-                        shaderViewer.Clear();
-                        Debug.Log("step" + shaderViewer.curIndex);
-                        shaderViewer.Init(shaderViewer.curID, shaderViewer.curIndex + 1);
-                    }
-                    else
-                    {
-                        Debug.Log("complete");
-                        shaderViewer.Clear();
-                        shaderViewer.Delete();
-                    }
-                }
+                shaderViewer.CheckRorate(shaderViewer.curIndex);
             }
         }
-        
+
     }
 
 
@@ -334,7 +320,7 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
             if (puzzleItemData.NotSettleFlag)
             {
-                if(draggedState)
+                if (draggedState)
                 {
                     return;
                 }
@@ -414,5 +400,7 @@ public class PuzzleItemUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void StopSettleAnim()
     {
         GetComponent<Animator>().enabled = false;
+        DragController.VibrateFeedbackIntern();
+        generalPanelUI.CheckOver();
     }
 }

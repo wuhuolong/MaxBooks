@@ -27,7 +27,7 @@ namespace X.Res {
             "CiBnZW4veGxzMnByb3RvL1NpZ25JbkNvbmZpZy5wcm90bxIFWC5SZXMiXQoM",
             "U2lnbkluQ29uZmlnEhIKCmxldmVsX3R5cGUYASABKA0SDgoGZGF5X2lkGAIg",
             "ASgNEhAKCGxldmVsX2lkGAMgASgNEhcKD2RhaWx5bGV2ZWxfbmFtZRgEIAEo",
-            "CSI4ChJTaWduSW5Db25maWdfQVJSQVkSIgoFaXRlbXMYASADKAsyEy5YLlJl",
+            "DSI4ChJTaWduSW5Db25maWdfQVJSQVkSIgoFaXRlbXMYASADKAsyEy5YLlJl",
             "cy5TaWduSW5Db25maWdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
@@ -121,15 +121,15 @@ namespace X.Res {
 
     /// <summary>Field number for the "dailylevel_name" field.</summary>
     public const int DailylevelNameFieldNumber = 4;
-    private string dailylevelName_ = "";
+    private uint dailylevelName_;
     /// <summary>
-    ///* 关卡描述 
+    ///* 关卡描述（文本ID） 
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string DailylevelName {
+    public uint DailylevelName {
       get { return dailylevelName_; }
       set {
-        dailylevelName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        dailylevelName_ = value;
       }
     }
 
@@ -159,7 +159,7 @@ namespace X.Res {
       if (LevelType != 0) hash ^= LevelType.GetHashCode();
       if (DayId != 0) hash ^= DayId.GetHashCode();
       if (LevelId != 0) hash ^= LevelId.GetHashCode();
-      if (DailylevelName.Length != 0) hash ^= DailylevelName.GetHashCode();
+      if (DailylevelName != 0) hash ^= DailylevelName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -185,9 +185,9 @@ namespace X.Res {
         output.WriteRawTag(24);
         output.WriteUInt32(LevelId);
       }
-      if (DailylevelName.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(DailylevelName);
+      if (DailylevelName != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(DailylevelName);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -206,8 +206,8 @@ namespace X.Res {
       if (LevelId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(LevelId);
       }
-      if (DailylevelName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(DailylevelName);
+      if (DailylevelName != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DailylevelName);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -229,7 +229,7 @@ namespace X.Res {
       if (other.LevelId != 0) {
         LevelId = other.LevelId;
       }
-      if (other.DailylevelName.Length != 0) {
+      if (other.DailylevelName != 0) {
         DailylevelName = other.DailylevelName;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -255,8 +255,8 @@ namespace X.Res {
             LevelId = input.ReadUInt32();
             break;
           }
-          case 34: {
-            DailylevelName = input.ReadString();
+          case 32: {
+            DailylevelName = input.ReadUInt32();
             break;
           }
         }

@@ -13,6 +13,7 @@ public class ShowFPS_OnGUI : MonoBehaviour
 
     private void Start()
     {
+        //Debug.Log("==>"+gameObject.name);
         timePassed = 0.0f;
     }
 

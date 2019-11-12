@@ -138,21 +138,7 @@ public class OperationHistoryRecorder : MonoBehaviour
 
         if(shaderViewer.isActiveAndEnabled)
         {
-            if (shaderViewer.CheckOP(shaderViewer.curIndex,op))
-            {
-                if (shaderViewer.curIndex < shaderViewer.maxIndex)
-                {
-                    shaderViewer.Clear();
-                    Debug.Log("step" + shaderViewer.curIndex);
-                    shaderViewer.Init(shaderViewer.curID, shaderViewer.curIndex + 1);
-                }
-                else
-                {
-                    Debug.Log("complete");
-                    shaderViewer.Clear();
-                    shaderViewer.Delete();
-                }
-            }
+            shaderViewer.CheckOP(shaderViewer.curIndex, op);
         }
     }
 
