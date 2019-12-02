@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{3C0339A8-F969-4958-BEB7-1F4C10E3D566}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Base</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="UnityEngine" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BehaviourTree\BehaviourActionNode.cs" />
+    <Compile Include="BehaviourTree\BehaviourConditionalNode.cs" />
+    <Compile Include="BehaviourTree\BehaviourInverterNode.cs" />
+    <Compile Include="BehaviourTree\BehaviourNode.cs" />
+    <Compile Include="BehaviourTree\BehaviourRandomNode.cs" />
+    <Compile Include="BehaviourTree\BehaviourReturnCode.cs" />
+    <Compile Include="BehaviourTree\BehaviourSelectorNode.cs" />
+    <Compile Include="BehaviourTree\BehaviourSequenceNode.cs" />
+    <Compile Include="BehaviourTree\BehaviourTree.cs" />
+    <Compile Include="BehaviourTree\BehaviourWithParametersNode.cs" />
+    <Compile Include="BehaviourTree\IBehaviourEmployee.cs" />
+    <Compile Include="csv\RowData.cs" />
+    <Compile Include="csv\Table.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafeCoroutine\Coroutine.cs" />
+    <Compile Include="SafeCoroutine\CoroutineManager.cs" />
+    <Compile Include="SafeCoroutine\IYieldInstruction.cs" />
+    <Compile Include="SafeCoroutine\SafeWaitForSeconds.cs" />
+    <Compile Include="SafeCoroutine\WaitForCondition.cs" />
+    <Compile Include="SafeCoroutine\WaitForHeavyCall.cs" />
+    <Compile Include="SGameEngine\IPoolable.cs" />
+    <Compile Include="SGameEngine\ObjectPool.cs" />
+    <Compile Include="SGameEngine\Pool.cs" />
+    <Compile Include="SGameEngine\ScopeList.cs" />
+    <Compile Include="Utils\Context.cs" />
+    <Compile Include="Utils\CycleCallBackTimer.cs" />
+    <Compile Include="Utils\DataFormatHelper.cs" />
+    <Compile Include="Utils\DecimalTimer.cs" />
+    <Compile Include="Utils\DecimalTimerManager.cs" />
+    <Compile Include="Utils\FourByteParse.cs" />
+    <Compile Include="Utils\Identifier.cs" />
+    <Compile Include="Utils\OneByteParse.cs" />
+    <Compile Include="Utils\ParseBase.cs" />
+    <Compile Include="Utils\PathHelp.cs" />
+    <Compile Include="Utils\SimpleFiniteState.cs" />
+    <Compile Include="Utils\SimpleFSMachine.cs" />
+    <Compile Include="Utils\SingleTimer.cs" />
+    <Compile Include="Utils\ThreeByteParse.cs" />
+    <Compile Include="Utils\Timer.cs" />
+    <Compile Include="Utils\TimerManager.cs" />
+    <Compile Include="Utils\TwoByteParse.cs" />
+    <Compile Include="Utils\Utf8Parse.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
