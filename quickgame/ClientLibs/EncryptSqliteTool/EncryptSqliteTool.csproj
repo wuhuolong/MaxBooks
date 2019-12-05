@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EE433AB3-8905-4C9D-92D1-789FDC23FD81}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EncryptSqlite</RootNamespace>
+    <AssemblyName>EncryptSqlite</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;SQLITE_STANDARD</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Mono.Data.Sqlite_2.0\MonoPInvokeCallbackAttribute.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLite3.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLite3_UTF16.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteBase.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteCommandBuilder.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteConnectionPool.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteConnectionStringBuilder.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteConvert.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteDataAdapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteDataReader.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SqliteDataSourceEnumerator.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteEnlistment.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteException.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteFactory.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteFunction.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteFunctionAttribute.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteKeyReader.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteMetaDataCollectionNames.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteParameter.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteParameterCollection.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteStatement.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SQLiteTransaction.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\SR.Designer.cs" />
+    <Compile Include="Mono.Data.Sqlite_2.0\UnsafeNativeMethods.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

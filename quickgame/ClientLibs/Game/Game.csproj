@@ -1,0 +1,1838 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B1FAA772-1ED2-4A38-929D-2E3617A5483D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Game</RootNamespace>
+    <AssemblyName>Game</AssemblyName>
+    <CodePage>65001</CodePage>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'IOS_Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\IOS_Release</OutputPath>
+    <DefineConstants>USE_HOT;UNITY_IPHONE;SQLITE_STANDARD;GAMEMARK_PLUS;INCLUDE_GARBAGE_CODE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp Game.dll ../../../../Assets/Plugins/gamelib/Game.dll" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Android_Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Android_Release</OutputPath>
+    <DefineConstants>UNITY_ANDROID;SQLITE_STANDARD</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'IOS_Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\IOS_Debug</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;USE_HOT;UNITY_IPHONE;TEST_HOST;SQLITE_STANDARD;ENABLE_PROFILER</DefineConstants>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp Game.dll ../../../../Assets/Plugins/gamelib/Game.dll" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <DebugSymbols>True</DebugSymbols>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Android_Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Android_Debug</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>UNITY_ANDROID;TEST_HOST;SQLITE_STANDARD</DefineConstants>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <DebugSymbols>True</DebugSymbols>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;USE_HOT;XLUA;UNITY_EDITOR;TEST_HOST;UNITY_STANDALONE_WIN;SQLITE_STANDARD;DISABLE_MULTI_PATCH;NOT_GEN_WARNING</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <NoWarn>0436</NoWarn>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <WarningLevel>2</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <DefineConstants>USE_HOT;TEST_HOST;UNITY_STANDALONE_WIN;SQLITE_STANDARD;</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Android_Dev_Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Android_Dev_Debug\</OutputPath>
+    <DefineConstants>TEST_HOST;UNITY_STANDALONE_WIN;SQLITE_STANDARD;UNITY_MOBILE_LOCAL</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>true</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Android_Cmpt_Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Android_Cmpt_Release\</OutputPath>
+    <DefineConstants>UNITY_ANDROID;SQLITE_STANDARD;CMPT_RELEASE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>true</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AndroidHD_Release|AnyCPU'">
+    <OutputPath>bin\AndroidHD_Release\</OutputPath>
+    <DefineConstants>UNITY_ANDROID;SQLITE_STANDARD;HD_RESOURCE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Android_Plus_Release|AnyCPU'">
+    <OutputPath>bin\Android_Plus_Release\</OutputPath>
+    <DefineConstants>UNITY_ANDROID;SQLITE_STANDARD;GAMEMARK_PLUS</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'IOS_Release_HD|AnyCPU'">
+    <OutputPath>bin\IOS_Release_HD\</OutputPath>
+    <DefineConstants>USE_HOT;UNITY_IPHONE;SQLITE_STANDARD;FULL_APP;GAMEMARK_PLUS</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Android_Pre_Release|AnyCPU'">
+    <OutputPath>bin\Android_Pre_Release\</OutputPath>
+    <DefineConstants>UNITY_ANDROID;SQLITE_STANDARD;PRE_RELEASE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Library\ScriptAssemblies\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Library\ScriptAssemblies\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="MikuBinary">
+      <HintPath>..\..\Assets\Plugins\MikuBinary.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\Assets\ThirdParty\Json.NET\Plugins\Newtonsoft\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\lib\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Base">
+      <HintPath>..\..\Assets\Plugins\gamelib\Base.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\Assets\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>..\lib\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\lib\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\lib\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>..\lib\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\lib\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\lib\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\lib\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\lib\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Timeline">
+      <HintPath>..\lib\UnityEngine.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\lib\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>..\lib\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\lib\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>..\lib\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>..\lib\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\FootprintBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\NpcHeadBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\HPProgressBarBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\PKModeBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\TargetGuideBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\WorshipModelHeadBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorUtils.cs" />
+    <Compile Include="src\FrameWork\Actor\AvatarUtils.cs" />
+    <Compile Include="src\FrameWork\Actor\Managers\ActorModelCullManager.cs" />
+    <Compile Include="src\FrameWork\Actor\Model\AvatarProperty.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\Pet.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\WorshipModel.cs" />
+    <Compile Include="src\FrameWork\AI\AIMonsterFunction.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourEmptyFiniteState.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourRunFiniteState.cs" />
+    <Compile Include="src\FrameWork\Battle\BuffCtrl.cs" />
+    <Compile Include="src\FrameWork\Battle\CooldownCtrlMgr.cs" />
+    <Compile Include="src\FrameWork\Battle\CooldownManager.cs" />
+    <Compile Include="src\FrameWork\Battle\LockTargetManager.cs" />
+    <Compile Include="src\FrameWork\Battle\SkillEditorLoader.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\SkillAction.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\SkillActionBaseStage.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\SkillActionCastingStage.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\SkillActionCastStage.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\SkillActionRigidityStage.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\SkillActionCastingReady.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\SkillActoinEndingStage.cs" />
+    <Compile Include="src\FrameWork\Battle\ThunderHitInfo.cs" />
+    <Compile Include="src\FrameWork\Database\DBTableManager.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugCommandConfig.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugPanel\CommandPanel.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugPanel\DebugBasePanel.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugPanel\LogPanel.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugPanel\NetPanel.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugWindow.cs" />
+    <Compile Include="src\FrameWork\Effect\BattleSFXAudioSource.cs" />
+    <Compile Include="src\FrameWork\Effect\BackGroundAudio.cs" />
+    <Compile Include="src\FrameWork\Effect\StateEffectPlayer.cs" />
+    <Compile Include="src\FrameWork\Event\ClientEventArgs.cs" />
+    <Compile Include="src\FrameWork\Event\ClientEventManager.cs" />
+    <Compile Include="src\FrameWork\Event\ClientEventMgr.cs" />
+    <Compile Include="src\FrameWork\Event\EventCtrl.cs" />
+    <Compile Include="src\FrameWork\FSM.cs" />
+    <Compile Include="src\FrameWork\Localize\GameLocalizeHelper.cs" />
+    <Compile Include="src\FrameWork\Localize\ImageLocalize.cs" />
+    <Compile Include="src\FrameWork\Localize\RawImageLocalize.cs" />
+    <Compile Include="src\FrameWork\Localize\TextLocalize.cs" />
+    <Compile Include="src\FrameWork\Utils\AES.cs" />
+    <Compile Include="src\FrameWork\Net\RingBuffer.cs" />
+    <Compile Include="src\FrameWork\PerformanceLog\DebugFPS.cs" />
+    <Compile Include="src\FrameWork\PerformanceLog\FPSNotice.cs" />
+    <Compile Include="src\FrameWork\Platform\ChannelHelper.cs" />
+    <Compile Include="src\FrameWork\Platform\SDKHelper.cs" />
+    <Compile Include="src\FrameWork\Profiler\DebugProfile.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\LuaProfiler.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\NativeHelper.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\ObjectPool.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\Parse\Common.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\Parse\LLex.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\Parse\Parse.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\Parse\Util.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Driver\Sample.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\LuaHookSetup.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\NetWork\NetWorkClient.cs" />
+    <Compile Include="src\FrameWork\Profiler\LuaProfiler\Setting\LuaDeepProfilerSetting.cs" />
+    <Compile Include="src\FrameWork\Resource\Patch\ResCopying.cs" />
+    <Compile Include="src\FrameWork\Resource\Patch\NewInitSceneLoader.cs" />
+    <Compile Include="src\FrameWork\Scene\XSceneManager.cs" />
+    <Compile Include="src\FrameWork\ShaderVariantInfo.cs" />
+    <Compile Include="src\FrameWork\Singleton.cs" />
+    <Compile Include="src\FrameWork\Timeline\TimelinePlayableEmployee.cs" />
+    <Compile Include="src\GarbageCode\GarbageCode.cs" />
+    <Compile Include="src\GarbageCode\GarbageCodeUtils.cs" />
+    <Compile Include="src\Logic\BuriedPoint\BuriedPointHelper.cs" />
+    <Compile Include="src\Logic\Command\CommandInvoker.cs" />
+    <Compile Include="src\Logic\Command\ICommand.cs" />
+    <Compile Include="src\FrameWork\Database\LuaSqliteUtility.cs" />
+    <Compile Include="src\FrameWork\DeviceAdapter\QualitySetting.cs" />
+    <Compile Include="src\FrameWork\Effect\AudioManager.cs" />
+    <Compile Include="src\FrameWork\Effect\ShadowCull.cs" />
+    <Compile Include="src\FrameWork\Effect\ShadowManager.cs" />
+    <Compile Include="src\FrameWork\Effect\SkillEffectPlayer.cs" />
+    <Compile Include="src\FrameWork\Game.cs" />
+    <Compile Include="src\FrameWork\InterObject\Behavior\InterObjectShadowBehavior.cs" />
+    <Compile Include="src\FrameWork\InterObject\InterObject.cs" />
+    <Compile Include="src\FrameWork\InterObject\InterObjectManager.cs" />
+    <Compile Include="src\FrameWork\InterObject\InterObjectMono.cs" />
+    <Compile Include="src\FrameWork\InterObject\InterObjectUnitID.cs" />
+    <Compile Include="src\FrameWork\Net\BitConverter.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\ILZ4Compressor.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\ILZ4Decompressor.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4Compressor32.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4Compressor64.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4CompressorFactory.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4Decompressor32.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4Decompressor64.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4DecompressorFactory.cs" />
+    <Compile Include="src\FrameWork\Net\LZ4\LZ4Util.cs" />
+    <Compile Include="src\FrameWork\Resource\ResMgr\CachedObjectInfo.cs" />
+    <Compile Include="src\FrameWork\Resource\ResMgr\CacheReleaser.cs" />
+    <Compile Include="src\FrameWork\Resource\ResMgr\ObjectCachePool.cs" />
+    <Compile Include="src\FrameWork\Timeline\TimelineManager.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UICacheManager.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UILayerInfo.cs" />
+    <Compile Include="src\FrameWork\Voice\VoiceControlComponent.cs" />
+    <Compile Include="src\FrameWork\Voice\VoiceManager.cs" />
+    <Compile Include="src\FrameWork\XComponent.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UIBaseWindow.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UIBehaviour\IUIBehaviour.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UIBehaviour\UILuaBehaviour.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UILuaBaseWindow.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UIMainCtrl.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UIManager.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Core\UINavgationCtrl.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Utils\ClientEventType.cs" />
+    <Compile Include="src\FrameWork\UI\UIFrame\Utils\UIHelper.cs" />
+    <Compile Include="src\FrameWork\XNavMesh\DetourMgrEx.cs" />
+    <Compile Include="src\FrameWork\XNavMesh\XNavMesh.cs" />
+    <Compile Include="src\FrameWork\XNavMesh\XNavMeshHit.cs" />
+    <Compile Include="src\FrameWork\XNavMesh\XNavMeshPath.cs" />
+    <Compile Include="src\FrameWork\XNavMesh\XNavMeshPathStatus.cs" />
+    <Compile Include="src\Logic\Activity\ActivityHelper.cs" />
+    <Compile Include="src\Logic\Command\ShapeShiftCommand.cs" />
+    <Compile Include="src\Logic\Command\UnShapeShiftCommand.cs" />
+    <Compile Include="src\Logic\DB\DBAndroidMajia.cs" />
+    <Compile Include="src\Logic\DB\DBAttrs.cs" />
+    <Compile Include="src\Logic\DB\DBBaptizeAttrStandard.cs" />
+    <Compile Include="src\Logic\DB\DBBaptizeColorPool.cs" />
+    <Compile Include="src\Logic\DB\DBBaptizeCost.cs" />
+    <Compile Include="src\Logic\DB\DBBaptizeGroove.cs" />
+    <Compile Include="src\Logic\DB\DBBattlePower.cs" />
+    <Compile Include="src\Logic\DB\DBCharIndex.cs" />
+    <Compile Include="src\Logic\DB\DBCurrencyPanel.cs" />
+    <Compile Include="src\Logic\DB\DBCurrencyInfo.cs" />
+    <Compile Include="src\Logic\DB\DBDecorate.cs" />
+    <Compile Include="src\Logic\DB\DBDecoratePos.cs" />
+    <Compile Include="src\Logic\DB\DBElementAreaEvilValue.cs" />
+    <Compile Include="src\Logic\DB\DBElementEquipGoods.cs" />
+    <Compile Include="src\Logic\DB\DBEngrave.cs" />
+    <Compile Include="src\Logic\DB\DBEquipBase.cs" />
+    <Compile Include="src\Logic\DB\DBEvilValue.cs" />
+    <Compile Include="src\Logic\DB\DBFightEfffectLayout.cs" />
+    <Compile Include="src\Logic\DB\DBFlyWord.cs" />
+    <Compile Include="src\Logic\DB\DBFootprint.cs" />
+    <Compile Include="src\Logic\DB\DBGem.cs" />
+    <Compile Include="src\Logic\DB\DBGemHole.cs" />
+    <Compile Include="src\Logic\DB\DBGodEquipGoods.cs" />
+    <Compile Include="src\Logic\DB\DBGoods.cs" />
+    <Compile Include="src\Logic\DB\DBGoodsEffectIcon.cs" />
+    <Compile Include="src\Logic\DB\DBGoodsName.cs" />
+    <Compile Include="src\Logic\DB\DBGoodsShowAttrs.cs" />
+    <Compile Include="src\Logic\DB\DBGoodsVocationIcon.cs" />
+    <Compile Include="src\Logic\DB\DBGuideCopyBehavior.cs" />
+    <Compile Include="src\Logic\DB\DBGuildTotem.cs" />
+    <Compile Include="src\Logic\DB\DBGuildWareColorFilter.cs" />
+    <Compile Include="src\Logic\DB\DBGuildWareStepFilter.cs" />
+    <Compile Include="src\Logic\DB\DBHonor.cs" />
+    <Compile Include="src\Logic\DB\DBIOSDevice.cs" />
+    <Compile Include="src\Logic\DB\DBLightWeaponSoul.cs" />
+    <Compile Include="src\Logic\DB\DBLvEfficiency.cs" />
+    <Compile Include="src\Logic\DB\DBMagic.cs" />
+    <Compile Include="src\Logic\DB\DBMagicEquip.cs" />
+    <Compile Include="src\Logic\DB\DBMarketFilter.cs" />
+    <Compile Include="src\Logic\DB\DBMarketPasswordFilter.cs" />
+    <Compile Include="src\Logic\DB\DBMarketQualityAndStarFilter.cs" />
+    <Compile Include="src\Logic\DB\DBMarketQualityFilter.cs" />
+    <Compile Include="src\Logic\DB\DBMarketStepFilter.cs" />
+    <Compile Include="src\Logic\DB\DBMarryFirework.cs" />
+    <Compile Include="src\Logic\DB\DBMountEquipGoods.cs" />
+    <Compile Include="src\Logic\DB\DBMoney.cs" />
+    <Compile Include="src\Logic\DB\DBPayProduct.cs" />
+    <Compile Include="src\Logic\DB\DBPetQual.cs" />
+    <Compile Include="src\Logic\DB\DBPreloadInfo.cs" />
+    <Compile Include="src\Logic\DB\DBProbabilityBtn.cs" />
+    <Compile Include="src\Logic\DB\DBRefund.cs" />
+    <Compile Include="src\Logic\DB\DBRewardGroup.cs" />
+    <Compile Include="src\Logic\DB\DBSensitiveWordsPlayerName.cs" />
+    <Compile Include="src\Logic\DB\DBShemale.cs" />
+    <Compile Include="src\Logic\DB\DBShiftStateControl.cs" />
+    <Compile Include="src\Logic\DB\DBSoulHole.cs" />
+    <Compile Include="src\Logic\DB\DBSoulLv.cs" />
+    <Compile Include="src\Logic\DB\DBStrengthAttr.cs" />
+    <Compile Include="src\Logic\DB\DBStrengthLv.cs" />
+    <Compile Include="src\Logic\DB\DBSuit.cs" />
+    <Compile Include="src\Logic\DB\DBSuitAttr.cs" />
+    <Compile Include="src\Logic\DB\DBSuitRefine.cs" />
+    <Compile Include="src\Logic\DB\DBSysPreview.cs" />
+    <Compile Include="src\Logic\DB\DBTask.cs" />
+    <Compile Include="src\Logic\DB\DBTaskGuide.cs" />
+    <Compile Include="src\Logic\DB\DBTaskPriority.cs" />
+    <Compile Include="src\Logic\DB\DBTitle.cs" />
+    <Compile Include="src\Logic\DB\DBTitleEffect.cs" />
+    <Compile Include="src\Logic\DB\DBTranslate.cs" />
+    <Compile Include="src\Logic\DB\DBUIManager.cs" />
+    <Compile Include="src\Logic\DB\DBVocationMountInfo.cs" />
+    <Compile Include="src\Logic\DB\DBVoice.cs" />
+    <Compile Include="src\Logic\DB\DBWeddingRingGoods.cs" />
+    <Compile Include="src\Logic\Foreplay\VersionInfoManager.cs" />
+    <Compile Include="src\Logic\Foundation\SensitiveWordsFilterPlayerName.cs" />
+    <Compile Include="src\Logic\Foundation\SpriteMaterialManager.cs" />
+    <Compile Include="src\Logic\Guide\GuideHelper.cs" />
+    <Compile Include="src\Logic\Instance\GuildLeagueManager.cs" />
+    <Compile Include="src\Logic\Instance\InstanceBehaviour\HostileAttackBehaviour.cs" />
+    <Compile Include="src\Logic\Mainmap\ChargeManager.cs" />
+    <Compile Include="src\Logic\Mainmap\Decorate\DecorateHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Decorate\GoodsDecorate.cs" />
+    <Compile Include="src\Logic\Mainmap\ElementEquip\ElementEquipHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\ElementEquip\GoodsElementEquip.cs" />
+    <Compile Include="src\Logic\Mainmap\GodEquip\GodEquipHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\GodEquip\GoodsGodEquip.cs" />
+    <Compile Include="src\Logic\Mainmap\GodWare\GodWareHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Handbook\HandbookHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\LightWeapon\GoodsLightWeaponHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\LightWeapon\GoodsLightWeaponSoul.cs" />
+    <Compile Include="src\Logic\Mainmap\MagicWeapon\GoodsMagicEquip.cs" />
+    <Compile Include="src\Logic\Mainmap\MagicWeapon\MagicEquipHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Marry\MarryFireworkManager.cs" />
+    <Compile Include="src\Logic\Mainmap\Marry\MarryHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Marry\MarryManager.cs" />
+    <Compile Include="src\Logic\Mainmap\Item\BagConditionHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Marry\WeddingChapelTimelineBehaviour.cs" />
+    <Compile Include="src\Logic\Mainmap\MountEquip\GoodsMountEquip.cs" />
+    <Compile Include="src\Logic\Mainmap\MountEquip\MountEquipHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\TreasureHunt\TreasureHuntHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\WeddingRing\GoodsWeddingRing.cs" />
+    <Compile Include="src\Logic\Mainmap\WeddingRing\WeddingRingHelper.cs" />
+    <Compile Include="src\Logic\Mate\MateButton.cs" />
+    <Compile Include="src\Logic\MiniGame\IMiniGame.cs" />
+    <Compile Include="src\Logic\MiniGame\MiniGameManager.cs" />
+    <Compile Include="src\Logic\MiniGame\RainMiniGame.cs" />
+    <Compile Include="src\Logic\Net\NetworkManager.cs" />
+    <Compile Include="src\Logic\NewUI\UINotice2Window.cs" />
+    <Compile Include="src\Logic\NewUI\UIProbabilityPublish.cs" />
+    <Compile Include="src\Logic\NewUI\UISingleCurrency.cs" />
+    <Compile Include="src\Logic\NewUI\UIUnderAttackWindow.cs" />
+    <Compile Include="src\Logic\PostEffect\WaterWaveEffect.cs" />
+    <Compile Include="src\Logic\SpanServer\SpanServerManager.cs" />
+    <Compile Include="src\Logic\SysPreview\SysPreviewManager.cs" />
+    <Compile Include="src\Logic\Transfer\TransferHelper.cs" />
+    <Compile Include="src\Logic\Translate\TranslateManager.cs" />
+    <Compile Include="src\Logic\UI\Charge\UIChargeTreasureWindow.cs" />
+    <Compile Include="src\Logic\UI\Component\ListTrailRenderer.cs" />
+    <Compile Include="src\Logic\UI\Component\LoadMaJiaImage.cs" />
+    <Compile Include="src\Logic\UI\Component\Sprite3DEx.cs" />
+    <Compile Include="src\Logic\UI\Component\UIChatBubbleWidget.cs" />
+    <Compile Include="src\Logic\UI\Component\UIFinishGuideBtn.cs" />
+    <Compile Include="src\Logic\UI\Component\UIGuildLeagueSysBtn.cs" />
+    <Compile Include="src\Logic\UI\Component\UIOnlineRewardSysBtn.cs" />
+    <Compile Include="src\Logic\UI\Component\UIPhotoFrameWidget.cs" />
+    <Compile Include="src\Logic\UI\Component\UISysBtnSpecialEffect.cs" />
+    <Compile Include="src\Logic\UI\EdgeFadeComponent.cs" />
+    <Compile Include="src\Logic\UI\GreyMaterialComponent.cs" />
+    <Compile Include="src\Logic\UI\Charge\UIChargeWindow.cs" />
+    <Compile Include="src\Logic\UI\Guide\TargetModelInfo.cs" />
+    <Compile Include="src\Logic\UI\BuffImageLoader.cs" />
+    <Compile Include="src\Logic\UI\LockIconDataMgr.cs" />
+    <Compile Include="src\Logic\UI\Login\ControlServerInfo.cs" />
+    <Compile Include="src\Logic\UI\Login\ResNameMapping.cs" />
+    <Compile Include="src\Logic\UI\Login\UIVersionWindow.cs" />
+    <Compile Include="src\Logic\UI\NewMarkerDataMgr.cs" />
+    <Compile Include="src\Logic\UI\UIHandBookItemSlot.cs" />
+    <Compile Include="src\Logic\UI\UIPlayerHpBarBehaviour.cs" />
+    <Compile Include="src\Logic\UI\UIPreviewModel.cs" />
+    <Compile Include="src\Logic\UI\Component\WWWLoadImage.cs" />
+    <Compile Include="src\Logic\UI\UISingleSysBtn.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\CreateColliderAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\JumpToSceneAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\KillBGMAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\PlayTimelineAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\PreloadTimelineAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\SceneActiveRainAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\SendSpawnMonsterMessageAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\SetCameraFollowDistanceAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\SetCameraFOVAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\SetIsShowAutoFightingGotExpAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\TranMusicAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\MainTaskIsPassedCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\TaskIsInStateCondition.cs" />
+    <Compile Include="src\Logic\UserCfg\CustomDataMgr.cs" />
+    <Compile Include="src\Logic\DB\DBDataAllSkill.cs" />
+    <Compile Include="src\Logic\DB\DBDeadSpaceLv.cs" />
+    <Compile Include="src\Logic\DB\DBDeviceList.cs" />
+    <Compile Include="src\Logic\DB\DBEquipPos.cs" />
+    <Compile Include="src\Logic\DB\DBFightFlyWord.cs" />
+    <Compile Include="src\Logic\DB\DBGrowLv.cs" />
+    <Compile Include="src\Logic\DB\DBGrowSkin.cs" />
+    <Compile Include="src\Logic\DB\DBGuildBoss.cs" />
+    <Compile Include="src\Logic\DB\DBGuildDuty.cs" />
+    <Compile Include="src\Logic\DB\DBGuildLv.cs" />
+    <Compile Include="src\Logic\DB\DBGuildSkill.cs" />
+    <Compile Include="src\Logic\DB\DBHang.cs" />
+    <Compile Include="src\Logic\DB\DBInstancePhase.cs" />
+    <Compile Include="src\Logic\DB\DBInstanceType.cs" />
+    <Compile Include="src\Logic\DB\DBInstanceTypeControl.cs" />
+    <Compile Include="src\Logic\DB\DBMainmapAnimation.cs" />
+    <Compile Include="src\Logic\DB\DBMallType.cs" />
+    <Compile Include="src\Logic\DB\DBMonster.cs" />
+    <Compile Include="src\Logic\DB\DBPassiveSkill.cs" />
+    <Compile Include="src\Logic\DB\DBPet.cs" />
+    <Compile Include="src\Logic\DB\DBPetFetter.cs" />
+    <Compile Include="src\Logic\DB\DBPetStep.cs" />
+    <Compile Include="src\Logic\DB\DBRedPoint.cs" />
+    <Compile Include="src\Logic\DB\DBSkillSelection.cs" />
+    <Compile Include="src\Logic\DB\DBSkillSlot.cs" />
+    <Compile Include="src\Logic\DB\DBSpecialMon.cs" />
+    <Compile Include="src\Logic\DB\DBStigma.cs" />
+    <Compile Include="src\Logic\DB\DBStigmaLv.cs" />
+    <Compile Include="src\Logic\DB\DBTrialBoss.cs" />
+    <Compile Include="src\Logic\DB\DBTrialBossDifficulty.cs" />
+    <Compile Include="src\Logic\DB\DBUISoundCommon.cs" />
+    <Compile Include="src\Logic\DB\DBWidgetShield.cs" />
+    <Compile Include="src\Logic\DB\DBWorldBoss.cs" />
+    <Compile Include="src\Logic\Debug\DebugServer.cs" />
+    <Compile Include="src\Logic\Debug\TestAnimationCtrl.cs" />
+    <Compile Include="src\Logic\Debug\TestUnit.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\CollectionObjectManager.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\ColliderObjectManager.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\DoorObjectManager.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\InteractionObjectManager.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\LevelDefine.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\LevelManager.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\CollectionObject.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\CollectionObjectBehaviour.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\ColliderObject.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\ColliderObjectBehaviour.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\DoorObject.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\ILevelObject.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\InteractionObject.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Object\OrdinaryObjectObject.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\OrdinaryObjectManager.cs" />
+    <Compile Include="src\Logic\Dungeon\Level\Util\LevelObjectHelper.cs" />
+    <Compile Include="src\Logic\Effect\BindEffectInfo.cs" />
+    <Compile Include="src\Logic\Foreplay\ServerListHelper.cs" />
+    <Compile Include="src\Logic\Foundation\CommonHelper.cs" />
+    <Compile Include="src\Logic\Foundation\CommonSliderHelper.cs" />
+    <Compile Include="src\Logic\Foundation\FightEffectHelp.cs" />
+    <Compile Include="src\Logic\Foundation\UGUIMath.cs" />
+    <Compile Include="src\Logic\Fury\FuryButton.cs" />
+    <Compile Include="src\Logic\GlobalConst.cs" />
+    <Compile Include="src\Logic\Instance\Component\DropComponent.cs" />
+    <Compile Include="src\Logic\Instance\Component\GuildBossFireComponent.cs" />
+    <Compile Include="src\Logic\Instance\InstanceBehaviour\BossBehaviour.cs" />
+    <Compile Include="src\Logic\Instance\InstanceBehaviour\DropBehaviour.cs" />
+    <Compile Include="src\FrameWork\Battle\SkillInfo.cs" />
+    <Compile Include="src\Logic\Instance\InstanceBehaviour\PickBossChipBehaviour.cs" />
+    <Compile Include="src\Logic\Mainmap\HookSettingManager.cs" />
+    <Compile Include="src\Logic\Mainmap\Item\GoodsLuaEx.cs" />
+    <Compile Include="src\Logic\Mainmap\Item\GoodsSoul.cs" />
+    <Compile Include="src\Logic\Mainmap\MainmapManager.cs" />
+    <Compile Include="src\Logic\Mainmap\TargetPathManager.cs" />
+    <Compile Include="src\Logic\Mainmap\TargetPathNode.cs" />
+    <Compile Include="src\Logic\Mainmap\Task\Task.cs" />
+    <Compile Include="src\Logic\Mainmap\Task\TaskDefine.cs" />
+    <Compile Include="src\Logic\Mainmap\Task\TaskHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Task\TaskManager.cs" />
+    <Compile Include="src\Logic\Mainmap\Task\TaskNet.cs" />
+    <Compile Include="src\Logic\Mainmap\Team\TeamHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Team\TeamManager.cs" />
+    <Compile Include="src\Logic\Mainmap\SkillHoleManager.cs" />
+    <Compile Include="src\Logic\Mainmap\UIMainMapAnimationBehaviour.cs" />
+    <Compile Include="src\Logic\Net\ChangeRoleManager.cs" />
+    <Compile Include="src\Logic\Net\FailState.cs" />
+    <Compile Include="src\Logic\Net\NetReconnect.cs" />
+    <Compile Include="src\Logic\Net\NormalState.cs" />
+    <Compile Include="src\Logic\Net\ReconnectState.cs" />
+    <Compile Include="src\Logic\NewUI\UIAutoConnectWindow.cs" />
+    <Compile Include="src\Logic\NewUI\UICreateActorWindow.cs" />
+    <Compile Include="src\Logic\NewUI\UIFightEffectWindow.cs" />
+    <Compile Include="src\Logic\NewUI\UIGameComponent\UIGoodsTipsComponent.cs" />
+    <Compile Include="src\Logic\NewUI\UICurrencyWindow.cs" />
+    <Compile Include="src\Logic\NewUI\UINoticeWindow.cs" />
+    <Compile Include="src\Logic\NewUI\UISelectActorWindow.cs" />
+    <Compile Include="src\FrameWork\Debug\PackRecorder.cs" />
+    <Compile Include="src\Logic\NewUI\UIHudActorWindow.cs" />
+    <Compile Include="src\Logic\NewUI\UILoadingWindow.cs" />
+    <Compile Include="src\FrameWork\Database\DBSqliteTableResource.cs" />
+    <Compile Include="src\Logic\Push\PushManager.cs" />
+    <Compile Include="src\Logic\ShieldManager.cs" />
+    <Compile Include="src\Logic\UI\Component\UIFightDamageWordAnimComponent.cs" />
+    <Compile Include="src\Logic\UI\Component\UIFollow3DObject.cs" />
+    <Compile Include="src\Logic\UI\Component\UILockCDSlot.cs" />
+    <Compile Include="src\Logic\UI\Component\UINewLockCDSlot.cs" />
+    <Compile Include="src\Logic\Foreplay\CreateActorScene.cs" />
+    <Compile Include="src\Logic\Foreplay\SelectActorScene.cs" />
+    <Compile Include="src\Logic\DB\DBLevelExp.cs" />
+    <Compile Include="src\Logic\DB\DBSkillTotal.cs" />
+    <Compile Include="src\GameEvent.cs" />
+    <Compile Include="src\GameState.cs" />
+    <Compile Include="src\Logic\Guide\Trigger\GuideTriggerClickInBag.cs" />
+    <Compile Include="src\Logic\Instance\CommonLuaInstanceState.cs" />
+    <Compile Include="src\Logic\Instance\CommonInstanceState.cs" />
+    <Compile Include="src\Logic\Instance\InstanceBehaviour\AoiBehaviour.cs" />
+    <Compile Include="src\Logic\Mainmap\Npc\NpcDefine.cs" />
+    <Compile Include="src\Logic\Mainmap\Npc\NpcHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Npc\NpcScenePosition.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Chat\ChatNetEx.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Chat\ChatVoicePressCtrl.cs" />
+    <Compile Include="src\Logic\UI\Component\UIPlayerTargetInfo.cs" />
+    <Compile Include="src\Logic\UI\Guide\GuideGameObject.cs" />
+    <Compile Include="src\Logic\UI\Guide\GuideObject.cs" />
+    <Compile Include="src\Logic\UI\Login\LoginNoticeUtil.cs" />
+    <Compile Include="src\Logic\UI\Login\UILoginNoticeWindow.cs" />
+    <Compile Include="src\Logic\UI\Login\UILoginWindow.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\MiniMapCom.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\MiniMapHelp.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\NoticeScroll.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\SystemMark.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\UIMainMapSysOpenBehaviour.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\UIMainMapSysPreviewBehaviour.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\UIMapWindowBehaviour.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\UIMinimapWindowBehaviour.cs" />
+    <Compile Include="src\Logic\UI\Mainmap\UIWorldMapWindowBehaviour.cs" />
+    <Compile Include="src\Logic\UI\RedPoint.cs" />
+    <Compile Include="src\Logic\UI\RedPointDataMgr.cs" />
+    <Compile Include="src\Logic\UI\SkillButtonManager.cs" />
+    <Compile Include="src\Logic\UI\UI3DGameObject.cs" />
+    <Compile Include="src\Logic\UI\UI3DImage.cs" />
+    <Compile Include="src\Logic\UI\UI3DTargetGuide.cs" />
+    <Compile Include="src\Logic\UI\UI3DWidget.cs" />
+    <Compile Include="src\Logic\UI\UIBossHpBarBehaviour.cs" />
+    <Compile Include="src\Logic\UI\UIDropAffiBar.cs" />
+    <Compile Include="src\Logic\UI\UIItemNewSlot.cs" />
+    <Compile Include="src\Logic\UI\UIItemRef.cs" />
+    <Compile Include="src\Logic\UI\UIPlayerHpBar.cs" />
+    <Compile Include="src\Logic\UI\Login\UIServerListWindow.cs" />
+    <Compile Include="src\Logic\UI\Utils\EcanConvertToCh.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\EnterPKAreaAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\EnterSafeAreaAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\ExitPKAreaAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\ExitSafeAreaAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\FloatTipsAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\HerbCollectAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\LuaHotfixAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\OpenWorldMapWindowAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\SetIsFirstNavigatingJumpToSceneAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\TestAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Actions\TransferAction.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\ColliderCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\ColliderEventCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\IsFirstNavigatingJumpToSceneCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\LuaHotfixCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\TestCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\ToggleCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\Conditions\IsInstancePhaseCondition.cs" />
+    <Compile Include="src\Logic\Uranus\Logic\UranusManager.cs" />
+    <Compile Include="src\Logic\VideoMovie\VideoMovieManager.cs" />
+    <Compile Include="src\Logic\Vip\VipHelper.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\MonoPInvokeCallbackAttribute.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLite3.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLite3_UTF16.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteBase.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteCommandBuilder.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteConnectionPool.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteConnectionStringBuilder.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteConvert.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteDataAdapter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteDataReader.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SqliteDataSourceEnumerator.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteEnlistment.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteException.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteFactory.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteFunction.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteFunctionAttribute.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteKeyReader.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteMetaDataCollectionNames.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteParameter.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteParameterCollection.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteStatement.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SQLiteTransaction.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\SR.Designer.cs" />
+    <Compile Include="src\Mono.Data.Sqlite_2.0\UnsafeNativeMethods.cs" />
+    <Compile Include="src\Logic\Instance\PKModeManagerEx.cs" />
+    <Compile Include="src\FrameWork\Scene\QuadTreeSceneManager.cs" />
+    <Compile Include="src\FrameWork\Scene\QuadTreeSpaceCube.cs" />
+    <Compile Include="src\FrameWork\Scene\QuadtreeScenePart.cs" />
+    <Compile Include="src\Logic\Mainmap\SocietyManagerEx.cs" />
+    <Compile Include="src\Logic\Instance\Component\WildSafeAreaComponent.cs" />
+    <Compile Include="src\Logic\DB\DBEquipAttr.cs" />
+    <Compile Include="src\Logic\DB\DBEquipMod.cs" />
+    <Compile Include="src\Logic\DB\DBEquipSubAttr.cs" />
+    <Compile Include="src\Logic\DB\DBSysGroupConfig.cs" />
+    <Compile Include="src\Logic\Mainmap\Equip\Attributes.cs" />
+    <Compile Include="src\Logic\Mainmap\Equip\EquipAttributes.cs" />
+    <Compile Include="src\Logic\Mainmap\Equip\EquipAttribute\DefaultAttribute.cs" />
+    <Compile Include="src\Logic\Mainmap\Equip\EquipAttribute\IEquipAttribute.cs" />
+    <Compile Include="src\Logic\Mainmap\Equip\EquipHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Equip\GoodsEquip.cs" />
+    <Compile Include="src\Logic\GameState\GameInitState.cs" />
+    <Compile Include="src\FrameWork\Input\GameInput.cs" />
+    <Compile Include="src\Logic\Guide\Condition\GuideConditionSysBtnIsShow.cs" />
+    <Compile Include="src\Logic\Guide\Condition\GuideConditionWidgetIsShow.cs" />
+    <Compile Include="src\Logic\Guide\GuideCondition.cs" />
+    <Compile Include="src\Logic\Guide\GuideStep.cs" />
+    <Compile Include="src\Logic\Guide\GuideTrigger.cs" />
+    <Compile Include="src\Logic\Guide\Trigger\GuideTriggerClick.cs" />
+    <Compile Include="src\Logic\Guide\Trigger\GuideTriggerClickSysBtn.cs" />
+    <Compile Include="src\Logic\Instance\InstanceHelper.cs" />
+    <Compile Include="src\Logic\Instance\Wild\WildPlayerInfo.cs" />
+    <Compile Include="src\Logic\Instance\Wild\WildPlayerManager.cs" />
+    <Compile Include="src\FrameWork\Utils\PingTime.cs" />
+    <Compile Include="src\Logic\GameState\PlayingTestState.cs" />
+    <Compile Include="src\FrameWork\Animation\AnimationController.cs" />
+    <Compile Include="src\FrameWork\Effect\BindSoundComponent.cs" />
+    <Compile Include="src\Logic\UI\Component\Sprite3D.cs" />
+    <Compile Include="src\Logic\UI\Component\TrackWorldTargetInUI.cs" />
+    <Compile Include="src\FrameWork\Net\ByteArray.cs" />
+    <Compile Include="src\FrameWork\Net\NetClient.cs" />
+    <Compile Include="src\FrameWork\Net\TextEncode.cs" />
+    <Compile Include="src\Logic\UI\RockButton.cs" />
+    <Compile Include="src\Logic\UI\UI3DComponent.cs" />
+    <Compile Include="src\FrameWork\Input\UIJoystick.cs" />
+    <Compile Include="src\FrameWork\Heart.cs" />
+    <Compile Include="src\Logic\DB\DBActor.cs" />
+    <Compile Include="src\Logic\DB\DBCommandList.cs" />
+    <Compile Include="src\Logic\DB\DBSkill.cs" />
+    <Compile Include="src\Logic\DB\DBSkillSev.cs" />
+    <Compile Include="src\Logic\Mainmap\Item\ItemManager.cs" />
+    <Compile Include="src\Logic\UI\UI3DText.cs" />
+    <Compile Include="src\FrameWork\Scene\SceneLoader.cs" />
+    <Compile Include="src\FrameWork\ScenePostProcess.cs" />
+    <Compile Include="src\FrameWork\Net\HttpRequest.cs" />
+    <Compile Include="src\FrameWork\Net\DBEncrypt.cs" />
+    <Compile Include="src\FrameWork\Net\PackBase.cs" />
+    <Compile Include="src\Protocols\msg.cs" />
+    <Compile Include="src\Protocols\NetDefine.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\BclHelpers.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\BufferExtension.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\BufferPool.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\CallbackAttributes.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\DataFormat.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Extensible.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ExtensibleUtil.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\GlobalSuppressions.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Helpers.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\IExtensible.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\IExtension.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ImplicitFields.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\KeyValuePairProxy.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\NetObjectCache.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\PrefixStyle.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoContractAttribute.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoConverterAttribute.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoEnumAttribute.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoException.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoIgnoreAttribute.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoIncludeAttribute.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoMemberAttribute.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoReader.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ProtoWriter.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\SerializationContext.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\SubItemToken.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\WireType.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Compiler\CompilerContext.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Compiler\CompilerDelegates.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Compiler\Local.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\AttributeMap.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\BasicList.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\CallbackSet.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\MetaType.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\RuntimeTypeModel.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\SubType.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\TypeFormatEventArgs.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\TypeModel.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Meta\ValueMember.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Properties\AssemblyInfo.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\ArrayDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\BlobSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\BooleanSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\ByteSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\CharSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\CompiledSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\DateTimeSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\DecimalSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\DefaultValueDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\DoubleSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\EnumSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\FieldDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\GuidSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\ImmutableCollectionDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\Int16Serializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\Int32Serializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\Int64Serializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\IProtoSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\IProtoTypeSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\ISerializerProxy.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\KeyValuePairDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\ListDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\MemberSpecifiedDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\NetObjectSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\NullDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\ParseableSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\PropertyDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\ProtoDecoratorBase.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\SByteSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\SingleSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\StringSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\SubItemSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\SurrogateSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\SystemTypeSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\TagDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\TimeSpanSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\TupleSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\TypeSerializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\UInt16Serializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\UInt32Serializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\UInt64Serializer.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\Serializers\UriDecorator.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ServiceModel\ProtoBehaviorAttribute.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ServiceModel\ProtoBehaviorExtensionElement.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ServiceModel\ProtoEndpointBehavior.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ServiceModel\ProtoOperationBehavior.cs" />
+    <Compile Include="src\FrameWork\Net\protobuf-net\ServiceModel\XmlProtoSerializer.cs" />
+    <Compile Include="src\Logic\UI\UIMainmapJoystick.cs" />
+    <Compile Include="src\Logic\UI\UINotice.cs" />
+    <Compile Include="src\Logic\DB\DBReward.cs" />
+    <Compile Include="src\FrameWork\AI\AI.cs" />
+    <Compile Include="src\Logic\DB\DBNotice.cs" />
+    <Compile Include="src\Logic\UI\UI3DProgressBar.cs" />
+    <Compile Include="src\Logic\UI\UI3DDialogBubble.cs" />
+    <Compile Include="src\Logic\Instance\InstanceManager.cs" />
+    <Compile Include="src\Logic\DB\DBGuide.cs" />
+    <Compile Include="src\Logic\DB\DBGuideStep.cs" />
+    <Compile Include="src\Logic\UI\Guide\UIGuideWindow.cs" />
+    <Compile Include="src\Logic\DB\DBErrorCode.cs" />
+    <Compile Include="src\FrameWork\Utils\ClassConstructHelper.cs" />
+    <Compile Include="src\FrameWork\Utils\Maths.cs" />
+    <Compile Include="src\Logic\DB\DBSysConfig.cs" />
+    <Compile Include="src\FrameWork\Actor\CullManager.cs" />
+    <Compile Include="src\ErrorCode.cs" />
+    <Compile Include="src\Logic\UI\Component\UIRollNumWidget.cs" />
+    <Compile Include="src\FrameWork\AI\AIHelper.cs" />
+    <Compile Include="src\FrameWork\Platform\CShapeJavaBridge.cs" />
+    <Compile Include="src\FrameWork\Platform\CShapeObjectCBridge.cs" />
+    <Compile Include="src\FrameWork\Platform\DBOSManager.cs" />
+    <Compile Include="src\FrameWork\Platform\IBridge.cs" />
+    <Compile Include="src\FrameWork\Platform\CShapeWinBridge.cs" />
+    <Compile Include="src\FrameWork\Camera\CameraShake.cs" />
+    <Compile Include="src\GameConst.cs" />
+    <Compile Include="src\Logic\DB\DBModel.cs" />
+    <Compile Include="src\FrameWork\Actor\Model\ModelInfo.cs" />
+    <Compile Include="src\FrameWork\Actor\Model\ModelHelper.cs" />
+    <Compile Include="src\FrameWork\Platform\speech\AndroidSpeechManager.cs" />
+    <Compile Include="src\FrameWork\Platform\speech\IOSSpeechManager.cs" />
+    <Compile Include="src\FrameWork\Platform\speech\ISpeechManager.cs" />
+    <Compile Include="src\FrameWork\Platform\speech\WinSpeechManager.cs" />
+    <Compile Include="src\FrameWork\Net\CrossServerIntegration.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugCommand.cs" />
+    <Compile Include="src\Logic\Foundation\DateHelper.cs" />
+    <Compile Include="src\Logic\Foundation\SensitiveWordsFilter.cs" />
+    <Compile Include="src\FrameWork\Debug\DebugUI.cs" />
+    <Compile Include="src\FrameWork\Database\DBManager.cs" />
+    <Compile Include="src\FrameWork\Database\DBTextResource.cs" />
+    <Compile Include="src\FrameWork\Event\ClientEvent.cs" />
+    <Compile Include="src\FrameWork\Battle\Buff.cs" />
+    <Compile Include="src\FrameWork\Battle\Skill\Skill.cs" />
+    <Compile Include="src\FrameWork\Battle\SkillManager.cs" />
+    <Compile Include="src\FrameWork\Battle\BuffEffect.cs" />
+    <Compile Include="src\FrameWork\Battle\BeattackedCtrl.cs" />
+    <Compile Include="src\FrameWork\Battle\AttackCtrl.cs" />
+    <Compile Include="src\FrameWork\Battle\RockCommandSystem.cs" />
+    <Compile Include="src\Protocols\NetMsg.cs" />
+    <Compile Include="src\Logic\Foundation\UIWidgetHelp.cs" />
+    <Compile Include="src\FrameWork\Event\ClientEventArg.cs" />
+    <Compile Include="src\Logic\DB\DBInstance.cs" />
+    <Compile Include="src\FrameWork\Battle\BaseCtrl.cs" />
+    <Compile Include="src\Logic\SysConfig\SysConfigManager.cs" />
+    <Compile Include="src\Logic\UserCfg\GlobalSettings.cs" />
+    <Compile Include="src\Logic\UserCfg\GlobalConfig.cs" />
+    <Compile Include="src\FrameWork\Battle\MoveCtrl.cs" />
+    <Compile Include="src\FrameWork\Battle\CooldownCtrl.cs" />
+    <Compile Include="src\FrameWork\Battle\MoveImpl.cs" />
+    <Compile Include="src\Logic\Guide\GuideManager.cs" />
+    <Compile Include="src\Logic\Mainmap\RouterManager.cs" />
+    <Compile Include="src\FrameWork\Battle\IControlDelegate.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Mail\MailNet.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Mail\MailManager2.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Mail\MailInfo.cs" />
+    <Compile Include="src\FrameWork\Effect\AnimationOptions.cs" />
+    <Compile Include="src\FrameWork\Effect\AnimationEffect.cs" />
+    <Compile Include="src\FrameWork\Effect\EffectEmitter.cs" />
+    <Compile Include="src\FrameWork\Effect\EffectManager.cs" />
+    <Compile Include="src\Logic\DB\DBBuffSev.cs" />
+    <Compile Include="src\FrameWork\Attribute\LocalPlayerManager.cs" />
+    <Compile Include="src\FrameWork\Attribute\ActorAttributeData.cs" />
+    <Compile Include="src\FrameWork\Attribute\ActorHelper.cs" />
+    <Compile Include="src\FrameWork\AI\AIRuningProperty.cs" />
+    <Compile Include="src\FrameWork\AI\AIBaseFunction.cs" />
+    <Compile Include="src\FrameWork\AI\BehaviourAI.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourWalkFiniteState.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourAttackFiniteState.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourStandFiniteState.cs" />
+    <Compile Include="src\FrameWork\AI\BehaviourMachine.cs" />
+    <Compile Include="src\Logic\Mainmap\Item\GoodsHelper.cs" />
+    <Compile Include="src\Logic\Mainmap\Item\GoodsItem.cs" />
+    <Compile Include="src\Logic\Mainmap\Item\Goods.cs" />
+    <Compile Include="src\Logic\Foundation\PhysicsHelp.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourChaseTargetFiniteState.cs" />
+    <Compile Include="src\Logic\Foundation\TextHelper.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourPatrolFiniteState.cs" />
+    <Compile Include="src\Logic\Instance\InstanceDropManager.cs" />
+    <Compile Include="src\FrameWork\PerformanceLog\PerformanceInterface.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Chat\ChatItem.cs" />
+    <Compile Include="src\FrameWork\Battle\Damage.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Friends\FriendsManager.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Friends\FriendsNet.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Friends\FriendsInfo.cs" />
+    <Compile Include="src\FrameWork\Effect\SimpleShadowLight.cs" />
+    <Compile Include="src\FrameWork\Effect\SimpleShadowRecv.cs" />
+    <Compile Include="src\Logic\UI\Component\UIBuffUpdate.cs" />
+    <Compile Include="src\Logic\Foundation\RoleHelp.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourFollowFiniteState.cs" />
+    <Compile Include="src\Logic\Mainmap\DialogManager.cs" />
+    <Compile Include="src\Logic\DB\DBDialog.cs" />
+    <Compile Include="src\Logic\DB\DBDialogContent.cs" />
+    <Compile Include="src\FrameWork\AI\BehaviourPlayerAI.cs" />
+    <Compile Include="src\FrameWork\AI\AIPlayerFunction.cs" />
+    <Compile Include="src\FrameWork\AI\BehaviourMonsterAI.cs" />
+    <Compile Include="src\Logic\Foundation\SceneHelp.cs" />
+    <Compile Include="src\Logic\Mainmap\Npc\NpcManager.cs" />
+    <Compile Include="src\FrameWork\AI\BehaviourNpcAI.cs" />
+    <Compile Include="src\FrameWork\AI\AINpcFunction.cs" />
+    <Compile Include="src\Logic\UI\Component\UIExpandScrollView.cs" />
+    <Compile Include="src\Logic\Foundation\ObjInstHelp.cs" />
+    <Compile Include="src\FrameWork\Net\ControlServerLogHelper.cs" />
+    <Compile Include="src\Logic\UI\Login\UIQuickLoginWindow.cs" />
+    <Compile Include="src\FrameWork\AI\AIActorPathWalker.cs" />
+    <Compile Include="src\FrameWork\Resource\ResMgr\ObjCachePoolMgr.cs" />
+    <Compile Include="src\FrameWork\Resource\ResMgr\ObjCachePoolType.cs" />
+    <Compile Include="src\FrameWork\Platform\SDKControler.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Chat\ChatNoticeInfo.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Friends\FriendsHelper.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorManager.cs" />
+    <Compile Include="src\FrameWork\Actor\Actor.cs" />
+    <Compile Include="src\FrameWork\Net\UDPNetClient.cs" />
+    <Compile Include="src\Logic\GameNet.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Chat\ChatHelper.cs" />
+    <Compile Include="src\Logic\DB\DBMap.cs" />
+    <Compile Include="src\Logic\DB\DBConstText.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorState\ActorMachine.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorState\ActorStateTransfering.cs" />
+    <Compile Include="src\Logic\DB\DBVocationInfo.cs" />
+    <Compile Include="src\Logic\DB\DBAvatarPart.cs" />
+    <Compile Include="src\Logic\DB\DBAvatarDefault.cs" />
+    <Compile Include="src\FrameWork\AI\FiniteState\BehaviourEscapeFiniteState.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\ClientModel.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\LocalPlayer.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\Monster.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\NpcPlayer.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\Player.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\RemotePlayer.cs" />
+    <Compile Include="src\FrameWork\Debug\GameDebug.cs" />
+    <Compile Include="src\FrameWork\Actor\UnitCacheInfo.cs" />
+    <Compile Include="src\Logic\Effect\MaterialEffectCtrl.cs" />
+    <Compile Include="src\Logic\DB\DBPay.cs" />
+    <Compile Include="src\FrameWork\Resource\ResMgr\PoolGameObject.cs" />
+    <Compile Include="src\Logic\DB\DBSensitiveWords.cs" />
+    <Compile Include="src\FrameWork\AI\AIAmbientState.cs" />
+    <Compile Include="src\Logic\UI\Login\UIAccountWindow.cs" />
+    <Compile Include="src\FrameWork\Utils\SafeInteger.cs" />
+    <Compile Include="src\FrameWork\Utils\ZipFile.cs" />
+    <Compile Include="src\Logic\DB\DBSuitEffect.cs" />
+    <Compile Include="src\Logic\Foundation\GameConstHelper.cs" />
+    <Compile Include="src\FrameWork\Utils\FrequencyCallRunner.cs" />
+    <Compile Include="src\Logic\Mainmap\Relation\Mail\MailHelper.cs" />
+    <Compile Include="src\Logic\DB\DBSDKFilter.cs" />
+    <Compile Include="src\Logic\DB\DBServerType.cs" />
+    <Compile Include="src\Logic\DB\DBSystemToggle.cs" />
+    <Compile Include="src\Logic\UserCfg\UserPlayerPrefs.cs" />
+    <Compile Include="src\FrameWork\Resource\GameObjectWrapper.cs" />
+    <Compile Include="src\Logic\DB\DBGameLocalize.cs" />
+    <Compile Include="src\FrameWork\Utils\EnumUtil.cs" />
+    <Compile Include="src\FrameWork\PerformanceLog\FPSRespond.cs" />
+    <Compile Include="src\FrameWork\Utils\Couple.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\LocalPet.cs" />
+    <Compile Include="src\FrameWork\Actor\Object\RemotePet.cs" />
+    <Compile Include="src\FrameWork\Resource\AssetObject.cs" />
+    <Compile Include="src\FrameWork\Resource\AssetResource.cs" />
+    <Compile Include="src\FrameWork\Resource\BundleNameDef.cs" />
+    <Compile Include="src\FrameWork\Resource\BundleObject.cs" />
+    <Compile Include="src\FrameWork\Resource\Mutex.cs" />
+    <Compile Include="src\FrameWork\Resource\PrefabResource.cs" />
+    <Compile Include="src\FrameWork\Resource\ResourceLoader.cs" />
+    <Compile Include="src\FrameWork\Resource\ResourceUtilEx.cs" />
+    <Compile Include="src\FrameWork\Resource\Version.cs" />
+    <Compile Include="src\FrameWork\Utils\CommonTool.cs" />
+    <Compile Include="src\FrameWork\Utils\Base\ObjWrapper.cs" />
+    <Compile Include="src\FrameWork\Utils\Base\Tuple.cs" />
+    <Compile Include="src\FrameWork\Utils\Base\Tuple2.cs" />
+    <Compile Include="src\FrameWork\Utils\Base\Tuple3.cs" />
+    <Compile Include="src\FrameWork\Utils\Base\Tuple4.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorMono.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\IActorBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\TextNameBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\Component\AvatarCtrl.cs" />
+    <Compile Include="src\FrameWork\Attribute\ActorAttribute.cs" />
+    <Compile Include="src\FrameWork\Attribute\DefaultActorAttribute.cs" />
+    <Compile Include="src\FrameWork\Attribute\IActorAttribute.cs" />
+    <Compile Include="src\FrameWork\Actor\Component\RideCtrl.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\HeadIconsBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\SkillInfoBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\Component\VisibleCtrl.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\BattleStateBehavior.cs" />
+    <Compile Include="src\FrameWork\MainGame.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\ShadowBehavior.cs" />
+    <Compile Include="src\FrameWork\Actor\ActorBehavior\BindEffectBehavior.cs" />
+    <Compile Include="src\FrameWork\Resource\WXIconAsset.cs" />
+    <Compile Include="src\FrameWork\Language\GameLocalize.cs" />
+    <Compile Include="src\Logic\UserCfg\UIDynamicPrefabCfg.cs" />
+    <Compile Include="src\Logic\Foundation\ClientAttrHelper.cs" />
+    <Compile Include="src\FrameWork\Battle\TraceTargetComponent.cs" />
+    <Compile Include="src\Logic\DB\DBBulletTrace.cs" />
+    <Compile Include="src\FrameWork\Battle\BulletTraceInstance.cs" />
+    <Compile Include="src\FrameWork\Effect\AudioData.cs" />
+    <Compile Include="src\FrameWork\Battle\StretchComponent.cs" />
+    <Compile Include="src\FrameWork\Battle\TraceBaseComponent.cs" />
+    <Compile Include="src\Logic\UI\Component\BatteryUpdate.cs" />
+    <Compile Include="src\Logic\DB\DBRegister.cs" />
+    <Compile Include="src\Logic\DB\DBSkillEffect.cs" />
+    <Compile Include="src\Logic\DB\DBBattleState.cs" />
+    <Compile Include="src\Logic\DB\DBDamageEffect.cs" />
+    <Compile Include="src\FrameWork\Battle\SkillAttackInstance.cs" />
+    <Compile Include="src\FrameWork\Battle\SkillBaseComponent.cs" />
+    <Compile Include="src\Logic\DB\DBBattleFx.cs" />
+    <Compile Include="src\FrameWork\Battle\ImmediateHitComponent.cs" />
+    <Compile Include="src\Logic\Instance\Wild\WildAoiInfo.cs" />
+    <Compile Include="src\Logic\Instance\Wild\WildMonsterInfo.cs" />
+    <Compile Include="src\Logic\DB\DBServerIdMaping.cs" />
+    <Compile Include="Propertics\AssemblyInfo.cs" />
+    <Compile Include="src\FrameWork\Resource\Patch\DowloadManager.cs" />
+    <Compile Include="src\ResPath.cs" />
+    <Compile Include="src\SplashVideo.cs" />
+    <Compile Include="src\Util\UtilHtml.cs" />
+    <Compile Include="src\Util\UtilType.cs" />
+    <Compile Include="src\XIl\Auto\CLR\Actor_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\CLRBindings.cs" />
+    <Compile Include="src\XIl\Auto\CLR\ILRuntime_Runtime_Intepreter_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Array_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_Dictionary_2_ILTypeInstance_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_Dictionary_2_Int32_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_Dictionary_2_Int64_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_Dictionary_2_String_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_Dictionary_2_UInt32_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_Dictionary_2_UInt64_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_HashSet_1_Int32_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_HashSet_1_Int64_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_HashSet_1_String_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Collections_Generic_List_1_ILTypeInstance_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Convert_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_DateTime_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Enum_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Int32_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Int64_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Math_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Object_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Reflection_FieldInfo_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Reflection_MethodInfo_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Reflection_PropertyInfo_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Single_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_String_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Text_RegularExpressions_CaptureCollection_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Text_RegularExpressions_GroupCollection_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Text_RegularExpressions_Group_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Text_RegularExpressions_Match_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Text_RegularExpressions_Regex_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Text_StringBuilder_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_TimeSpan_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\System_Type_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_AssetBundle_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Camera_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Canvas_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Color_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_EventSystems_UIBehaviour_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_GameObject_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_MonoBehaviour_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Object_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Quaternion_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_RectTransform_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_SystemInfo_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Texture2D_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Texture_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Time_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Transform_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_UI_Image_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_UI_LayoutElement_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_UI_Text_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Vector2_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\UnityEngine_Vector3_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\wxb_Hotfix_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\wxb_hotMgr_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\wxb_IL_Help_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\wxb_L_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\wxb_RefType_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\xc_Game_Binding.cs" />
+    <Compile Include="src\XIl\Auto\CLR\xc_SceneHelp_Binding.cs" />
+    <Compile Include="src\XIl\Auto\GenDelegateBridge_pc.cs" />
+    <Compile Include="src\XIl\Auto\GenObjects_pc.cs" />
+    <Compile Include="src\XIl\Auto\ILRegType_pc.cs" />
+    <Compile Include="src\XIl\Scripts\BehaviourAction.cs" />
+    <Compile Include="src\XIl\Scripts\CacheType.cs" />
+    <Compile Include="src\XIl\Scripts\Custom\ILLog.cs" />
+    <Compile Include="src\XIl\Scripts\Custom\UnityEngine_Debug_Binding.cs" />
+    <Compile Include="src\XIl\Scripts\Help.cs" />
+    <Compile Include="src\XIl\Scripts\HotLoader.cs" />
+    <Compile Include="src\XIl\Scripts\hotMgr.cs" />
+    <Compile Include="src\XIl\Scripts\ILHotfix\CoroutineAdapter.cs" />
+    <Compile Include="src\XIl\Scripts\ILHotfix\DelegateBridge.cs" />
+    <Compile Include="src\XIl\Scripts\ILHotfix\ILHotfix.cs" />
+    <Compile Include="src\XIl\Scripts\ILHotfix\ObjectArrayPools.cs" />
+    <Compile Include="src\XIl\Scripts\ILHotfix\Objects.cs" />
+    <Compile Include="src\XIl\Scripts\Log.cs" />
+    <Compile Include="src\XIl\Scripts\RefOutParam.cs" />
+    <Compile Include="src\XIl\Scripts\RefType.cs" />
+    <Compile Include="src\XIl\Scripts\RefType_InvokeMethod.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\AnyTypeSerialize.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\ArrayAnyType.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\BaseTypeSerialize.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\BaseTypeSerializeArray.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\IListAnyType.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\ILMonoBehaviour.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\MonoSerialize.cs" />
+    <Compile Include="src\XIl\Scripts\Serialize\WRStream.cs" />
+    <Compile Include="src\XLua\Attribute\WrapManualGenAttribute.cs" />
+    <Compile Include="src\XLua\BuildInInit.cs" />
+    <Compile Include="src\XLua\LuaClassBehaviour.cs" />
+    <Compile Include="src\XLua\LuaClient.cs" />
+    <Compile Include="src\XLua\LuaMonoBehaviour.cs" />
+    <Compile Include="src\XLua\LuaScriptMgr.cs" />
+    <Compile Include="src\XLua\LuaTestMgr.cs" />
+    <Compile Include="src\XLua\LuaUtility.cs" />
+    <Compile Include="src\XLua\ManualGen\xcLuaSqliteUtilityWrap.cs" />
+    <Compile Include="src\XLua\ManualGen\xcLuaUtilityWrap.cs" />
+    <Compile Include="src\XLua\ResExtract.cs" />
+    <Compile Include="src\XLua\Sources\CodeEmit.cs" />
+    <Compile Include="src\XLua\Sources\CopyByValue.cs" />
+    <Compile Include="src\XLua\Sources\DelegateBridge.cs" />
+    <Compile Include="src\XLua\Sources\GenAttributes.cs" />
+    <Compile Include="src\XLua\Sources\GenConfig.cs" />
+    <Compile Include="src\XLua\Sources\LuaBase.cs" />
+    <Compile Include="src\XLua\Sources\LuaDLL.cs" />
+    <Compile Include="src\XLua\Sources\LuaEnv.cs" />
+    <Compile Include="src\XLua\Sources\LuaException.cs" />
+    <Compile Include="src\XLua\Sources\LuaFunction.cs" />
+    <Compile Include="src\XLua\Sources\LuaTable.cs" />
+    <Compile Include="src\XLua\Sources\MethodWarpsCache.cs" />
+    <Compile Include="src\XLua\Sources\ObjectCasters.cs" />
+    <Compile Include="src\XLua\Sources\ObjectPool.cs" />
+    <Compile Include="src\XLua\Sources\ObjectTranslator.cs" />
+    <Compile Include="src\XLua\Sources\ObjectTranslatorPool.cs" />
+    <Compile Include="src\XLua\Sources\StaticLuaCallbacks.cs" />
+    <Compile Include="src\XLua\Sources\TemplateEngine\TemplateEngine.cs" />
+    <Compile Include="src\XLua\Sources\Utils.cs" />
+    <Compile Include="src\XLua\Gen\ActorDamageEffectWrap.cs" />
+    <Compile Include="src\XLua\Gen\ActorDamageValueItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\ActorSkillCastInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\ActorSlotBoneItemDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\ActorWrap.cs" />
+    <Compile Include="src\XLua\Gen\AnimationControllerCallBackInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\AnimationControllerWrap.cs" />
+    <Compile Include="src\XLua\Gen\AnimatorSpeedWrap.cs" />
+    <Compile Include="src\XLua\Gen\AutoScaleWrap.cs" />
+    <Compile Include="src\XLua\Gen\BatteryUpdateWrap.cs" />
+    <Compile Include="src\XLua\Gen\CameraControlWrap.cs" />
+    <Compile Include="src\XLua\Gen\CEventBaseArgsWrap.cs" />
+    <Compile Include="src\XLua\Gen\CEventEventParamArgsWrap.cs" />
+    <Compile Include="src\XLua\Gen\ChatVoicePressCtrlWrap.cs" />
+    <Compile Include="src\XLua\Gen\ClientEventMgrWrap.cs" />
+    <Compile Include="src\XLua\Gen\ComTouchPressWrap.cs" />
+    <Compile Include="src\XLua\Gen\ContentImmediateWrap.cs" />
+    <Compile Include="src\XLua\Gen\CoupleWrap.cs" />
+    <Compile Include="src\XLua\Gen\DateHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\DBBuffSevDBBuffInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\DBBuffSevWrap.cs" />
+    <Compile Include="src\XLua\Gen\DBOSManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\DelayDestroyComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\DelegatesGensBridge.cs" />
+    <Compile Include="src\XLua\Gen\DynamicScorllItemInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\DynamicScorllWrap.cs" />
+    <Compile Include="src\XLua\Gen\EmojiTextWrap.cs" />
+    <Compile Include="src\XLua\Gen\EnumWrap.cs" />
+    <Compile Include="src\XLua\Gen\GameDebugWrap.cs" />
+    <Compile Include="src\XLua\Gen\GrayServerManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\GreyMaterialComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\HttpRequestWrap.cs" />
+    <Compile Include="src\XLua\Gen\IBridgeWrap.cs" />
+    <Compile Include="src\XLua\Gen\InstanceHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\LoadMaJiaImageWrap.cs" />
+    <Compile Include="src\XLua\Gen\LongTimePressWrap.cs" />
+    <Compile Include="src\XLua\Gen\LuaDragComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\LuaMonoBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\LuaTestMgrWrap.cs" />
+    <Compile Include="src\XLua\Gen\MiniMapHelpWrap.cs" />
+    <Compile Include="src\XLua\Gen\MonsterCreateParamWrap.cs" />
+    <Compile Include="src\XLua\Gen\MonsterWrap.cs" />
+    <Compile Include="src\XLua\Gen\NeptuneDataContainerWrap.cs" />
+    <Compile Include="src\XLua\Gen\NeptuneDataManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\NeptuneDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\NetNetClientIListenerWrap.cs" />
+    <Compile Include="src\XLua\Gen\NetNetClientMutiPacketHelpWrap.cs" />
+    <Compile Include="src\XLua\Gen\NetNetClientNetCoreHeaderWrap.cs" />
+    <Compile Include="src\XLua\Gen\NetNetClientWrap.cs" />
+    <Compile Include="src\XLua\Gen\NpcPlayerWrap.cs" />
+    <Compile Include="src\XLua\Gen\NpcScenePositionWrap.cs" />
+    <Compile Include="src\XLua\Gen\PackUnpack.cs" />
+    <Compile Include="src\XLua\Gen\ParticleAutoHideWrap.cs" />
+    <Compile Include="src\XLua\Gen\PlayerWrap.cs" />
+    <Compile Include="src\XLua\Gen\RandomObjectEmitterWrap.cs" />
+    <Compile Include="src\XLua\Gen\SafeIntegerWrap.cs" />
+    <Compile Include="src\XLua\Gen\ScrollPagePointWrap.cs" />
+    <Compile Include="src\XLua\Gen\ScrollPageWrap.cs" />
+    <Compile Include="src\XLua\Gen\ScrollViewExWrap.cs" />
+    <Compile Include="src\XLua\Gen\SGameEngineAssetResourceWrap.cs" />
+    <Compile Include="src\XLua\Gen\SGameEngineResourceLoaderWrap.cs" />
+    <Compile Include="src\XLua\Gen\SkillBaseComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\SliderLimitWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32SystemUInt32Wrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32xcActorAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32xcDBTitleDBTitleItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32xcGoodsElementEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32xcGoodsGodEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32xcGoodsLightWeaponSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32xcGoodsMountEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt32xcGoodsSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt64xcGoodsEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorSystemUInt64xcGoodsWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2EnumeratorxcUnitIDActorWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32SystemUInt32Wrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32xcActorAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32xcDBTitleDBTitleItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32xcGoodsElementEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32xcGoodsGodEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32xcGoodsLightWeaponSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32xcGoodsMountEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt32xcGoodsSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt64xcGoodsEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2SystemUInt64xcGoodsWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericDictionary2xcUnitIDActorWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericKeyValuePair2SystemUInt64xcGoodsEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1EnumeratorSystemStringWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1EnumeratorSystemUInt32Wrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1EnumeratorxcDBTextResourceDBAttrItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1EnumeratorxcEquipPosInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1EnumeratorxcGoodsSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1SystemCollectionsGenericList1SystemStringWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1SystemCollectionsGenericList1SystemUInt32Wrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1SystemInt32Wrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1SystemStringWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1SystemUInt32Wrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcDBDataAllSkillAllSkillInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcDBGrowSkinDBGrowSkinItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcDBPetPetInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcDBStigmaDBStigmaInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcDBTextResourceDBAttrItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcDBTextResourceDBGoodsItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcEquipEquipHelperAttributeDescItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcEquipIEquipAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcEquipPosInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcGoodsLightWeaponSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcGoodsSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcGoodsWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcinstance_behaviourBossBehaviourRedefineBossInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsGenericList1xcTaskWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsIEnumeratorBridge.cs" />
+    <Compile Include="src\XLua\Gen\SystemCollectionsIEnumeratorWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemDateTimeWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemEnumWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemObjectWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemTypeWrap.cs" />
+    <Compile Include="src\XLua\Gen\SystemValueTypeWrap.cs" />
+    <Compile Include="src\XLua\Gen\TargetModelInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\TextHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\TrackAnimationComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\TrigramItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\UI3DTextStyleInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\UI3DTextWrap.cs" />
+    <Compile Include="src\XLua\Gen\UIBuffUpdateWrap.cs" />
+    <Compile Include="src\XLua\Gen\UIPreviewModelWrap.cs" />
+    <Compile Include="src\XLua\Gen\UIPreviewTextureWrap.cs" />
+    <Compile Include="src\XLua\Gen\UIRollNumWidgetWrap.cs" />
+    <Compile Include="src\XLua\Gen\UIVisibleControlComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineAnimationClipWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineAnimationCurveWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineAnimationWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineAnimatorWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineApplicationWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineAssetBundleWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineAsyncOperationWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineBoundsWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineCanvasGroupWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineCanvasWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineColorWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineEventsUnityEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineGameObjectWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineMonoBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineObjectWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineQuaternionWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineRectTransformWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineRendererWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineSpriteWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineSystemInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineTextAssetWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineTexture2DWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineTextureWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineTimeWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineTransformWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIButtonButtonClickedEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIButtonWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIContentSizeFitterWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIDropdownDropdownEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIDropdownOptionDataListWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIDropdownOptionDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIDropdownWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIExtensionsUIFlippableWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIGridLayoutGroupWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIHorizontalLayoutGroupWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIHorizontalOrVerticalLayoutGroupWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIImageWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIInputFieldOnChangeEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIInputFieldSubmitEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIInputFieldWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUILayoutRebuilderWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIRawImageWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIScrollRectScrollRectEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIScrollRectWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUISliderSliderEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUISliderWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUITextWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIToggleGroupWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIToggleToggleEventWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIToggleWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineUIVerticalLayoutGroupWrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineVector2Wrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineVector3Wrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineVector4Wrap.cs" />
+    <Compile Include="src\XLua\Gen\UnityEngineWWWWrap.cs" />
+    <Compile Include="src\XLua\Gen\UranusRuntimeSingleton1UranusRuntimeUranusManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\UranusRuntimeUranusManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\UtilHtmlWrap.cs" />
+    <Compile Include="src\XLua\Gen\UtilsAESWrap.cs" />
+    <Compile Include="src\XLua\Gen\UtilsTimerWrap.cs" />
+    <Compile Include="src\XLua\Gen\WrapPusher.cs" />
+    <Compile Include="src\XLua\Gen\WWWLoadImageWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcActorAttributeDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcActorAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcActorHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcActorMachineDeathInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcActorMachineWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcActorManagerCreateInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcActorManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcAudioManagerDynamicAudioItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcAudioManagerDynamicAudioParamWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcAudioManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcAuditManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcAvatarCtrlFlyActorItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcAvatarCtrlWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcAvatarPropertyWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBagConditionHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBagItemInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBountyTaskInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBuffBuffInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBuffCtrlWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBuffImageLoaderWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBuffWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcBuriedPointHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcCEventActorArgsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcChannelHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcChatHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcChatItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcChatNoticeInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcClassConstructHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcClientEventBaseArgsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcClientEventParamArgsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcClientEventStringArgsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcClientEventUintArgsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcClientModelWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcCommonInstanceStateWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcCommonLuaInstanceStateWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcCommonToolWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcControlServerLogHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcCooldownManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcCustomDataMgrWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBActorActorDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBActorWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBAvatarPartDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBAvatarPartWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeAttrStandardDBBaptizeAttrStandardInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeAttrStandardWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeColorPoolDBBaptizeColorPoolInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeColorPoolWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeCostDBBaptizeCostInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeCostWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeGrooveDBBaptizeGrooveInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBBaptizeGrooveWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBConstTextWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDataAllSkillAllSkillInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDataAllSkillOneVocationActiveSkillInfosWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDataAllSkillWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDeadSpaceLvDeadSpaceLvInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDeadSpaceLvWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDecorateDBDecorateItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDecorateLegendAttrDescItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDecoratePosDBDecoratePosItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDecoratePosWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBDecorateWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBEngraveEngraveInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBEngraveWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBEquipPosDBEquipPosItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBEquipPosWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBErrorCodeErrorInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBErrorCodeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGemGemInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGemHoleGemHoleInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGemHoleWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGrowSkinDBGrowSkinItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGrowSkinWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildBossDBGuildBossItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildBossDBGuildBossRewardItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildBossDBGuildBossStatisticItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildBossWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildDutyDBGuildDutyItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildDutyWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildLvDBGuildLvItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildLvWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildSkillDBCommonAttrItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildSkillDBGuildSkillItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildSkillWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildTotemDBGuildTotemItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBGuildTotemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBHangWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBHonorDBHonorItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBHonorWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBInstanceInstanceInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBInstancePhaseInstancePhaseInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBInstancePhaseWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBInstanceTypeControlInstanceTypeInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBInstanceTypeControlWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBInstanceWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMagicDBMagicItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMagicEquipDBMagicEquipItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMagicEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMagicWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMallTypeDBMallTypeItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMallTypeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBManagerColumnInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBManagerDBBaseWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBManagerSqliteCacheWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMapMapInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBMapWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBNoticeNoticeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBNoticeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetFetterDBPetFetterItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetFetterFetterSkillItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetFetterWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetPetInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetPetSkillItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetUnLockGoodsConditionWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetUnLockPrePetConditionWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBPetWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBRedPointDBRedPointItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBRedPointWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBRewardRewardInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBRewardWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBShemaleShemaleInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBShemaleWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSpecialMonDBSpecialMonItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSpecialMonWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBStigmaDBStigmaInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBStigmaDBStigmaSkillItemSkillItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBStigmaWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSuitAttrDBSuitAttrInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSuitAttrWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSuitDBSuitInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSuitRefineDBSuitRefineItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSuitRefineWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSuitWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSysConfigSysConfigWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSysConfigWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSysPreviewDBSysPreviewInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSysPreviewWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSystemToggleSystemToggleWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBSystemToggleWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTaskGuideTaskGuideInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTaskGuideWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTaskWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTextResourceDBAttrItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTextResourceDBGoodsItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTextResourceWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTitleDBTitleItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBTitleWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBVocationInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBWorldBossDBWorldBossItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBWorldBossDBWorldBossRewardItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDBWorldBossWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDebugCommandWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDebugProfileWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDecorateDecorateHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDefaultActorAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDialogManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonCollectionObjectBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonCollectionObjectManagerShowCollectionBarDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonCollectionObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonColliderObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonDeadSpaceScoreWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonDoorObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonFairyValleyInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonLevelManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonLevelObjectHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcDungeonOrdinaryObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEcanConvertToChWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEffectEmitterWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEffectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcElementEquipElementEquipHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEnumUtilWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipBaptizeInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipDefaultAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipEquipAttributesWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipEquipHelperAttributeDescItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipEquipHelperEquipEffectWashSelectDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipEquipHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipIEquipAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipModDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipPosInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcEquipSuitInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcFriendsHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcFriendShipInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcFriendsInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcFriendsManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcFriendsNetWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGameConstHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGameInitStateWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGameInputHandScaleDistinguishWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGameInputWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGameWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGlobalConfigLoginInfoStructWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGlobalConfigWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGlobalConstWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGlobalSettingsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGodEquipGodEquipHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsCompositeDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsCompositeStuffDataWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsDecorateWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsElementEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsGodEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsHelperColorQualityItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsLightWeaponHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsLightWeaponSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsLuaExWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsMagicEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsMountEquipWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsSoulWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsWeddingRingWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGoodsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGuideHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGuideManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGuildLeagueManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcGuildTaskInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcHandbookHandbookHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcHookSettingManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcIActorAttributeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcInstanceManagerInstancePollInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcInstanceManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcinstance_behaviourBossBehaviourBossInfoItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcinstance_behaviourBossBehaviourRedefineBossInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcinstance_behaviourBossBehaviourRedefineBossKillerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcinstance_behaviourBossBehaviourRedefinePosWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcinstance_behaviourBossBehaviourUpdateBossAffiItemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcinstance_behaviourBossBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcinstance_behaviourLuaBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcItemManagerTmpGetGoodsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcItemManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcLocalizeManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcLocalPlayerManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMachineStateWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMachineWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMagicMagicEquipHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMailHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMailInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMailManager2Wrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMailNetWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMainmapManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMarryFireworkManagerEmitInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMarryFireworkManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMarryHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMarryManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcModelHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMoneyWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMountEquipHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMoveCtrlMoveStepWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcMoveCtrlWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcNetworkManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcNpcDefineWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcNpcHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcNpcManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcObjCachePoolMgrWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcPhysicsHelpWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcPingTimeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcPKModeManagerExWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcPlayingTestStateWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcPoolGameObjectWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcQualitySettingWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcRedPointDataMgrWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcResNameMappingWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcRockCommandSystemCommandWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcRockCommandSystemWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcRoleHelpWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcRouterManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSceneHelpWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSDKConfigWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSDKHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSensitiveWordsFilterWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcShieldManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1ClientEventMgrWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcControlServerLogHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcDBManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcDungeonCollectionObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcDungeonColliderObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcDungeonDoorObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcDungeonLevelManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcDungeonOrdinaryObjectManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcGameInputWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcGlobalConfigWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcGlobalSettingsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcGuideManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcHookSettingManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcInstanceManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcLocalPlayerManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcMarryManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcNpcManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcPingTimeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcPKModeManagerExWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcRouterManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcSceneHelpWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcSkillHoleManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcSkillManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcSysConfigManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcTaskManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcTeamManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcTimelineManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcUINoticeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcuiuguiUIManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSingleton1xcWaterWaveEffectWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSkillHoleManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSkillManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSocietyManagerExMemberInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSocietyManagerExWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSpanServerManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSysConfigManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcSysPreviewManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTargetPathManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTaskDefineTaskStepWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTaskDefineWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTaskHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTaskManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTaskNetWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTaskStepProgressWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTaskWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTeamHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTeamManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTextHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTimelineManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcTreasureHuntTreasureHuntHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcUIChatBubbleWidgetWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiClickLimitWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiLockIconWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcUINoticeWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcUIPhotoFrameWidgetWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiRedPointWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiEventTriggerListenerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiIUIBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiLoginNoticeUtilWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiSliderExWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiToggleExWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiTweenAlphaWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiTweenAnchoredPositionWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiTweenCircleAnchoredPositionWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiTweenPositionWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiTweenScrollNormalizedPositionWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUIBaseWindowBackupWinWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUIBaseWindowWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUIHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUILoadingWindowWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUILuaBaseWindowWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUILuaBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUIMainMapAnimationBehaviourWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUIManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiuguiUINoticeWindowWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUIHandBookItemSlotWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUIItemNewSlotTypeParseWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUIItemNewSlotWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUIItemRefWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUIJoystickWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUILockCDSlotWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUIMainmapJoystickWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUINewLockCDSlotWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcuiUIWidgetHelpWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcUnitIDWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcUserPlayerPrefsWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcVipHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcVocationInfoWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcVoiceControlComponentWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcVoiceManagerWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcWaterWaveEffectWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcWeddingRingHelperWrap.cs" />
+    <Compile Include="src\XLua\Gen\xcWorshipModelWrap.cs" />
+    <Compile Include="src\XLua\Gen\XLuaGenAutoRegister.cs" />
+    <Compile Include="src\XLua\Gen\XLuaLuaTableWrap.cs" />
+    <Compile Include="src\XLua\Gen\xpatchExtendPatchProgressWrap.cs" />
+    <Compile Include="src\XLua\Gen\xpatchPatchProgressWrap.cs" />
+    <Compile Include="src\XLua\Gen\xpatchXPatchManagerDownloadSpeedCalclatorWrap.cs" />
+    <Compile Include="src\XLua\Gen\xpatchXPatchManagerWrap.cs" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <CSharpFormattingPolicy IndentSwitchBody="True" IndentCaseBody="False" AnonymousMethodBraceStyle="NextLine" PropertyBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" PropertySetBraceStyle="NextLine" EventBraceStyle="NextLine" EventAddBraceStyle="NextLine" EventRemoveBraceStyle="NextLine" StatementBraceStyle="NextLine" ElseNewLinePlacement="NewLine" ArrayInitializerBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeDelegateDeclarationParentheses="False" NewParentheses="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/plain" />
+          <XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/xml" />
+          <TextStylePolicy inheritsSet="null" scope="application/xml" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup>
+    <None Include="src\FrameWork\Net\protobuf-net\protobuf-net.csproj" />
+    <None Include="src\FrameWork\Net\protobuf-net\Web\TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\Logic\UI\Voice\" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <PropertyGroup>
+    <PostBuildEvent>IF $(ConfigurationName) == IOS_Debug GOTO end 
+IF $(ConfigurationName) == IOS_Release GOTO end 
+IF $(ConfigurationName) == IOS_Release_HD GOTO end 
+call postprocess.bat 
+echo copy dll 
+:end 
+echo finish dll</PostBuildEvent>
+  </PropertyGroup>
+</Project>
