@@ -1,0 +1,21 @@
+﻿<Properties StartupItem="Game\Game.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Game\src\UI\Voice\VoiceInterface.cs">
+    <Files>
+      <File FileName="Game\src\AnimatorTimeLine\Files\CinematicManager.cs" Line="1" Column="1" />
+      <File FileName="Game\src\Lua\Wrap\GameObjectWrap.cs" Line="728" Column="1" />
+      <File FileName="Game\src\Component\Main.cs" Line="333" Column="1" />
+      <File FileName="Game\src\Lua\Source\Base\LuaScriptMgr.cs" Line="1" Column="1" />
+      <File FileName="Game\src\Mainmap\Relation\Chat\ChatVoicePressCtrl.cs" Line="1" Column="1" />
+      <File FileName="f:\branch\5.xTest\ClientLibs\Game\src\Lua\LuaBinder.cs" Line="1" Column="1" />
+      <File FileName="Game\src\UI\Voice\VoiceInterface.cs" Line="54" Column="13" />
+      <File FileName="Game\src\Instance\InstanceManager.cs" Line="1" Column="1" />
+      <File FileName="Game\src\UI\UIDialogWindow.cs" Line="323" Column="1" />
+      <File FileName="Game\src\UserCfg\UserPlayerPrefs.cs" Line="64" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

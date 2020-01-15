@@ -1,0 +1,102 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{B1FAA772-1ED2-4A38-929D-2E3617A5483D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base", "..\BaseLibs\Base\Base.csproj", "{E6F96A27-529A-4AD9-B905-F58041F18961}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Android_Cmpt_Release|Any CPU = Android_Cmpt_Release|Any CPU
+		Android_Debug|Any CPU = Android_Debug|Any CPU
+		Android_Dev_Debug|Any CPU = Android_Dev_Debug|Any CPU
+		Android_Plus_Release|Any CPU = Android_Plus_Release|Any CPU
+		Android_Pre_Release|Any CPU = Android_Pre_Release|Any CPU
+		Android_Release|Any CPU = Android_Release|Any CPU
+		AndroidHD_Release|Any CPU = AndroidHD_Release|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		IOS_Debug|Any CPU = IOS_Debug|Any CPU
+		IOS_Release_HD|Any CPU = IOS_Release_HD|Any CPU
+		IOS_Release|Any CPU = IOS_Release|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Cmpt_Release|Any CPU.ActiveCfg = Android_Cmpt_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Cmpt_Release|Any CPU.Build.0 = Android_Cmpt_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Debug|Any CPU.ActiveCfg = Android_Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Debug|Any CPU.Build.0 = Android_Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Dev_Debug|Any CPU.ActiveCfg = Android_Dev_Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Dev_Debug|Any CPU.Build.0 = Android_Dev_Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Plus_Release|Any CPU.ActiveCfg = Android_Plus_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Plus_Release|Any CPU.Build.0 = Android_Plus_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Pre_Release|Any CPU.ActiveCfg = Android_Pre_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Pre_Release|Any CPU.Build.0 = Android_Pre_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Release|Any CPU.ActiveCfg = Android_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Android_Release|Any CPU.Build.0 = Android_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.AndroidHD_Release|Any CPU.ActiveCfg = AndroidHD_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.AndroidHD_Release|Any CPU.Build.0 = AndroidHD_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.IOS_Debug|Any CPU.ActiveCfg = IOS_Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.IOS_Debug|Any CPU.Build.0 = IOS_Debug|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.IOS_Release_HD|Any CPU.ActiveCfg = IOS_Release_HD|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.IOS_Release_HD|Any CPU.Build.0 = IOS_Release_HD|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.IOS_Release|Any CPU.ActiveCfg = IOS_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.IOS_Release|Any CPU.Build.0 = IOS_Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1FAA772-1ED2-4A38-929D-2E3617A5483D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Cmpt_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Cmpt_Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Dev_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Dev_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Plus_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Plus_Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Pre_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Pre_Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Android_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.AndroidHD_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.AndroidHD_Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.IOS_Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.IOS_Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.IOS_Release_HD|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.IOS_Release_HD|Any CPU.Build.0 = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.IOS_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.IOS_Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F96A27-529A-4AD9-B905-F58041F18961}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9ADA65BF-EB8E-4955-A4E2-EFE66D4ED43F}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.VersionControlPolicy = $2
+		$2.inheritsSet = Mono
+		$0.TextStylePolicy = $3
+		$3.TabWidth = 4
+		$3.EolMarker = Windows
+		$3.inheritsSet = Mono
+		$3.inheritsScope = text/plain
+		$3.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $4
+		$4.inheritsSet = Mono
+		$4.inheritsScope = text/x-csharp
+		$4.scope = text/x-csharp
+		$0.StandardHeader = $5
+		$5.Text = 
+		$5.IncludeInNewFiles = True
+		outputpath = Game\bin
+	EndGlobalSection
+EndGlobal
