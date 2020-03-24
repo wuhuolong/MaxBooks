@@ -1,0 +1,14 @@
+<Project Name="New Obfuscator Project" UseRelativePaths="True" CheckVersionsWhileResolvingAssemblies="True" ID="{1a1c0dd0-8480-452a-bca6-76d47401cfb1}">
+  <SearchDirectories />
+  <OutputSettings OutputPath=".\CryptoObfuscator_Output" EncryptDependancies="False" CompressDependancies="False" MainAssemblyPath="" RunAssemblyPath="" SNPath="" SignToolPath="" LicensingDLLPath="" LicensingMergeAssemblyName="" OverwriteInputFiles="False">
+    <AdditionalAssemblies />
+  </OutputSettings>
+  <ObfuscationSettings RenamingScheme="0" UseOverloadedFieldNames="False" UseOverloadedMethodNames="False" HonorObfuscationAttributes="True" ExcludeSerializedTypes="True" ProcessInlineStrings="True" ForceXAMLProcessingModeExclude="False" ForceRenameParams="False" />
+  <ObfuscationRules />
+  <Assembly Load="true" Path=".\Base\bin\Release\Base.dll" XapEntryName="" KeyFilePath="" CertFilePath="" TimeStampURL="" Embed="True" PfxPassword="" PfxPasswordCert="">
+    <ObfuscationSettings EncryptStrings="True" SuppressReflector="True" ReduceMetaData="False" ObfuscationDisposition="1" FlowObfuscation="2" SuppressILDASM="True" SuppressReflection="False" CombineResources="True" EncryptResources="True" CompressResources="True" MarkAsSealed="False" EnableTamperDetection="False" EnableAntiDebugging="False" SymbolRenaming="True" HideExternalCalls="False" HideInternalCalls="False" GeneratePdbFile="True" ObfuscatePdbFileNames="True">
+      <Watermarks Watermark0="" Watermark1="" Watermark2="" Watermark3="" Watermark4="" Watermark5="" Watermark6="" Watermark7="" Watermark8="" Watermark9="" />
+    </ObfuscationSettings>
+  </Assembly>
+  <WarningSuppressions />
+</Project>

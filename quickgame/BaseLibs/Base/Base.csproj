@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E6F96A27-529A-4AD9-B905-F58041F18961}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>BaseLib</RootNamespace>
+    <AssemblyName>Base</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <CodePage>65001</CodePage>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="${TargetDir}\postprocess.bat" workingdir="${TargetDir}" />
+      </CustomCommands>
+    </CustomCommands>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\Assets\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\lib\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Src\Utils\Coroutine\WaitForCondition.cs" />
+    <Compile Include="Src\Utils\DecimalTimer.cs" />
+    <Compile Include="Src\Utils\Pool\GenericDictionary.cs" />
+    <Compile Include="Src\Utils\Pool\GenericHashSet.cs" />
+    <Compile Include="Src\Utils\Pool\GenericList.cs" />
+    <Compile Include="Src\Utils\Pool\IPoolable.cs" />
+    <Compile Include="Src\Utils\Pool\ObjectPool.cs" />
+    <Compile Include="Src\Utils\DataFormatHelper.cs" />
+    <Compile Include="Src\Utils\Identifier.cs" />
+    <Compile Include="Src\Utils\Timer.cs" />
+    <Compile Include="Src\Utils\Utf8Parse.cs" />
+    <Compile Include="Src\Utils\Coroutine\Coroutine.cs" />
+    <Compile Include="Src\Utils\Coroutine\CoroutineManager.cs" />
+    <Compile Include="Src\Utils\Coroutine\IYieldInstruction.cs" />
+    <Compile Include="Src\Utils\Coroutine\WaitForSeconds.cs" />
+    <Compile Include="Src\Utils\Reader\csv.cs" />
+    <Compile Include="Src\Utils\Coroutine\WaitForHeavyCall.cs" />
+    <Compile Include="Src\Utils\PathHelp.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourTree.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourNode.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourWithParametersNode.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourSelectorNode.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourSequenceNode.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourActionNode.cs" />
+    <Compile Include="Src\BehaviourTree\IBehaviourEmployee.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourConditionalNode.cs" />
+    <Compile Include="Src\Utils\SimpleFSMachine.cs" />
+    <Compile Include="Src\Utils\SimpleFiniteState.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourInverterNode.cs" />
+    <Compile Include="Src\BehaviourTree\BehaviourRandomNode.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <PropertyGroup>
+    <PostBuildEvent>postprocess.bat</PostBuildEvent>
+  </PropertyGroup>
+</Project>

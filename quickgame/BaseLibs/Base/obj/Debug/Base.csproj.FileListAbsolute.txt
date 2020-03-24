@@ -1,0 +1,7 @@
+D:\Project\ZL\BaseLibs\Base\bin\Debug\Base.dll
+D:\Project\ZL\BaseLibs\Base\bin\Debug\Base.pdb
+D:\Project\ZL\BaseLibs\Base\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\Project\ZL\BaseLibs\Base\bin\Debug\UnityEngine.dll
+D:\Project\ZL\BaseLibs\Base\obj\Debug\Base.csprojResolveAssemblyReference.cache
+D:\Project\ZL\BaseLibs\Base\obj\Debug\Base.dll
+D:\Project\ZL\BaseLibs\Base\obj\Debug\Base.pdb
